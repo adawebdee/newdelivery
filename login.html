@@ -288,6 +288,15 @@
       align-items: center;
       margin: 0 0 1px 0;
       justify-content: center;
+      flex-wrap: wrap;
+    }
+    .admin-add-user-row .add-user-cell {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      min-width: 90px;
+      flex: 1 1 100px;
+      margin: 2px;
     }
     .admin-add-user-row input {
       font-size: 1em;
@@ -298,8 +307,8 @@
       font-weight: 700;
       border: none;
       outline: none;
-      width: 110px;
-      margin-right: 3px;
+      width: 100%;
+      margin-right: 0;
     }
     .admin-add-user-row .add-btn {
       font-size: 1em;
@@ -312,6 +321,8 @@
       font-weight: 700;
       transition: background 0.17s;
       margin-left: 2px;
+      margin-top: 10px;
+      flex: 1 1 100%;
     }
     .admin-add-user-row .add-btn:hover { background: var(--primary-hover);}
     .admin-logout-btn {
@@ -363,21 +374,22 @@
     .admin-show-reports-btn:hover {
       background: #333;
     }
-@media (max-width: 600px) {
-  html, body { font-size: 15px; }
-  .login-card, .admin-panel {
-    max-width: 98vw;
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: 8px;
-    padding-right: 8px;
-  }
-  .edit-user-modal input { width: 98%; }
-  .login-form-row { flex-direction: column; gap: 7px; }
-  .login-form-row > div { width: 100%; min-width: 0; max-width: none; }
-  .login-form select, .login-form input { width: 100%; min-width: 0; max-width: none; }
-  .login-card, .admin-panel, .header { text-align: center; }
-}
+    @media (max-width: 600px) {
+      html, body { font-size: 15px; }
+      .login-card, .admin-panel {
+        max-width: 98vw;
+        margin-left: auto;
+        margin-right: auto;
+        padding-left: 8px;
+        padding-right: 8px;
+      }
+      .edit-user-modal input { width: 98%; }
+      .login-form-row { flex-direction: column; gap: 7px; }
+      .login-form-row > div { width: 100%; min-width: 0; max-width: none; }
+      .login-form select, .login-form input { width: 100%; min-width: 0; max-width: none; }
+      .login-card, .admin-panel, .header { text-align: center; }
+      .admin-add-user-row { flex-direction: column; gap: 7px; }
+    }
     @media (max-width: 450px) {
       html, body { font-size: 14px; }
       .login-card, .admin-panel { max-width: 99vw;}
@@ -431,9 +443,23 @@
   <!-- Admin Panel -->
   <div id="adminPanel" class="admin-panel">
     <div class="admin-users-title"><i class="fas fa-user-shield"></i> Admin Panel – Manage Users</div>
-    <div class="admin-add-user-row">
-      <input type="text" id="addUserName" placeholder="Username" maxlength="20"/>
-      <input type="password" id="addUserPin" placeholder="PIN" maxlength="4" pattern="[0-9]{4}"/>
+    <div class="admin-add-user-row" id="adminAddUserRow">
+      <div class="add-user-cell">
+        <label for="addUserName" style="font-size:0.98em;margin-bottom:2px;">Username</label>
+        <input type="text" id="addUserName" placeholder="Username" maxlength="20"/>
+      </div>
+      <div class="add-user-cell">
+        <label for="addUserPin" style="font-size:0.98em;margin-bottom:2px;">PIN</label>
+        <input type="password" id="addUserPin" placeholder="PIN" maxlength="4" pattern="[0-9]{4}"/>
+      </div>
+      <div class="add-user-cell">
+        <label for="addUserCar" style="font-size:0.98em;margin-bottom:2px;">Car Reg#</label>
+        <input type="text" id="addUserCar" placeholder="Car Reg#" maxlength="20"/>
+      </div>
+      <div class="add-user-cell">
+        <label for="addUserAddress" style="font-size:0.98em;margin-bottom:2px;">Address</label>
+        <input type="text" id="addUserAddress" placeholder="Address" maxlength="80"/>
+      </div>
       <button class="add-btn" id="addUserBtn"><i class="fas fa-plus"></i> Add</button>
     </div>
     <ul class="admin-users-list" id="adminUsersList"></ul>
@@ -465,6 +491,8 @@
       <div class="modal-title" id="editUserModalTitle">Edit User</div>
       <input type="text" id="editUserName" maxlength="20"/>
       <input type="password" id="editUserPin" maxlength="4" pattern="[0-9]{4}"/>
+      <input type="text" id="editUserCar" maxlength="20" placeholder="Car Reg#"/>
+      <input type="text" id="editUserAddress" maxlength="80" placeholder="Address"/>
       <button class="modal-done-btn" id="editUserSaveBtn">Save</button>
     </div>
   </div>
@@ -514,10 +542,12 @@
   };
 
   let editingUserId = null;
-  function showEditModal(userId, userName, userPin) {
+  function showEditModal(userId, user) {
     editingUserId = userId;
-    document.getElementById('editUserName').value = userName;
-    document.getElementById('editUserPin').value = userPin;
+    document.getElementById('editUserName').value = user.name;
+    document.getElementById('editUserPin').value = user.pin;
+    document.getElementById('editUserCar').value = user.car || '';
+    document.getElementById('editUserAddress').value = user.address || '';
     document.getElementById('editModalBg').classList.add('active');
     setTimeout(() => { document.getElementById('editUserName').focus(); }, 100);
   }
@@ -527,7 +557,7 @@
 
   let allUsers = {};
   let isAdmin = false;
-  let pinRevealState = {}; // state for pin reveal/hide
+  let pinRevealState = {};
 
   function getUsersFromFirebase() {
     db.ref("users").on("value", snap => {
@@ -634,7 +664,9 @@
             <i class="fa${reveal ? 's' : 'r'} fa-eye${reveal ? '-slash' : ''}"></i>
           </button>
         </span>
-        <button class="edit-btn" title="Edit" onclick="editUser('${id}','${user.name}','${user.pin}')"><i class="fas fa-edit"></i></button>
+        <span style="flex:1 1 0; font-size:0.97em; color:#7ec5fd; text-align:center;">${user.car ? user.car : '-'}</span>
+        <span style="flex:2 2 0; font-size:0.97em; color:#bbdefb; text-align:center; word-break:break-all;">${user.address ? user.address : '-'}</span>
+        <button class="edit-btn" title="Edit" onclick='editUser("${id}")'><i class="fas fa-edit"></i></button>
         <button class="delete-btn" title="Delete" onclick="deleteUser('${id}')"><i class="fas fa-trash"></i></button>
       </li>`;
     });
@@ -645,8 +677,8 @@
     renderAdminUsersList();
   };
 
-  window.editUser = function(id,name,pin){
-    showEditModal(id,name,pin);
+  window.editUser = function(id){
+    showEditModal(id, allUsers[id]);
   }
   window.deleteUser = function(id){
     showConfirmModal("Delete User", "Are you sure you want to delete this user?", function(){
@@ -658,6 +690,8 @@
   document.getElementById('addUserBtn').onclick = function(){
     const uname = document.getElementById('addUserName').value.trim();
     const upin = document.getElementById('addUserPin').value.trim();
+    const ucar = document.getElementById('addUserCar').value.trim();
+    const uaddress = document.getElementById('addUserAddress').value.trim();
     if(!uname||!upin||upin.length!==4||!/^\d{4}$/.test(upin)) {
       showModal("Error", "Enter valid username and 4-digit PIN.");
       return;
@@ -668,20 +702,24 @@
       return;
     }
     const id = db.ref("users").push().key;
-    db.ref("users/"+id).set({name:uname,pin:upin});
+    db.ref("users/"+id).set({name:uname,pin:upin,car:ucar,address:uaddress});
     document.getElementById('addUserName').value = '';
     document.getElementById('addUserPin').value = '';
+    document.getElementById('addUserCar').value = '';
+    document.getElementById('addUserAddress').value = '';
     showModal("Added", "User added successfully.");
   };
 
   document.getElementById('editUserSaveBtn').onclick = function(){
     const uname = document.getElementById('editUserName').value.trim();
     const upin = document.getElementById('editUserPin').value.trim();
+    const ucar = document.getElementById('editUserCar').value.trim();
+    const uaddress = document.getElementById('editUserAddress').value.trim();
     if(!uname||!upin||upin.length!==4||!/^\d{4}$/.test(upin)) {
       showModal("Error", "Enter valid username and 4-digit PIN.");
       return;
     }
-    db.ref("users/"+editingUserId).set({name:uname,pin:upin});
+    db.ref("users/"+editingUserId).set({name:uname,pin:upin,car:ucar,address:uaddress});
     hideEditModal();
     showModal("Updated", "User updated successfully.");
   };
