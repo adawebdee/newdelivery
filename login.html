@@ -319,15 +319,32 @@
       vertical-align: middle;
     }
     .admin-users-table .admin-pin-eye:hover { color: var(--primary); }
-    .admin-users-table .delete-btn { color: var(--red);}
-    /* changed edit icon color to theme primary (user requested) - size/style unchanged */
-    .admin-users-table .edit-btn { color: var(--primary); }
+
+    /* Make edit/delete icons have transparent backgrounds (remove white bg) while preserving original sizes/styles */
     .admin-users-table .admin-actions-btns {
       display: flex;
       gap: 6px;
       justify-content: center;
       align-items: center;
     }
+    .admin-users-table .admin-actions-btns button {
+      background: transparent; /* ensure transparent bg */
+      border: none;
+      padding: 0;
+      margin: 0;
+      cursor: pointer;
+      color: inherit;
+      font-size: 1.06em;
+      line-height: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* keep edit, delete colors as requested */
+    .admin-users-table .delete-btn { color: var(--red); }
+    .admin-users-table .edit-btn { color: var(--primary); }
+
     .admin-users-table td { background: #212a40;}
     .admin-users-table th, .admin-users-table td { min-width: 110px;}
     .admin-show-reports-btn {
@@ -404,6 +421,18 @@
       .login-form-row { flex-direction: column; gap: 7px; }
       .login-form-row > div { width: 100%; min-width: 0; max-width: none; }
       .login-form select, .login-form input { width: 100%; min-width: 0; max-width: none; }
+
+      /* Make the "enter field cells" (admin-add-user-form input area) a little smaller in padding/height so they fit on small screens */
+      .admin-add-user-form {
+        padding-left: 8px;
+        padding-right: 8px;
+        gap: 12px;
+      }
+      .admin-add-user-form input {
+        padding: 8px 10px; /* slightly smaller so fields don't overflow */
+        font-size: 1.02em;
+      }
+
       .login-card, .admin-panel, .header { text-align: center; }
       .admin-add-user-form { padding-left: 6px; padding-right: 6px;}
     }
@@ -722,7 +751,11 @@
   window.editUser = function(id){
     showEditModal(id, allUsers[id]);
   }
+
   window.deleteUser = function(id){
+    // Ensure the confirm modal shows "Delete" and "Cancel" for delete actions
+    document.getElementById('confirmDeleteBtn').textContent = 'Delete';
+    document.getElementById('cancelDeleteBtn').textContent = 'Cancel';
     showConfirmModal("Delete User", "Are you sure you want to delete this user?", function(){
       db.ref("users/"+id).remove();
       showModal("Deleted", "User deleted successfully.");
@@ -768,7 +801,7 @@
   };
 
   document.getElementById('adminLogoutBtn').onclick = function(){
-    // Ensure the confirm modal shows "Logout" as the confirm button and "Cancel" as the cancel button
+    // For logout, ensure confirm modal shows "Logout" and "Cancel"
     document.getElementById('confirmDeleteBtn').textContent = 'Logout';
     document.getElementById('cancelDeleteBtn').textContent = 'Cancel';
     showConfirmModal("Logout", "Are you sure you want to logout?", function(){
