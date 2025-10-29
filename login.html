@@ -18,6 +18,7 @@
       --gap: 24px;
       --card-radius: 15px;
       --shadow: 0 6px 32px #42a5f526;
+      --admin-panel-max-width: 1150px;
     }
     html, body {
       min-height: 100vh;
@@ -190,171 +191,141 @@
       letter-spacing: 0.01em;
       min-height: 1.4em;
     }
+
+    /* ===== ADMIN PANEL FULL WIDTH ===== */
     .admin-panel {
-      width: 100%;
-      max-width: 420px;
+      width: 100vw;
+      max-width: var(--admin-panel-max-width);
       background: var(--card-bg);
       border-radius: var(--card-radius);
       box-shadow: var(--shadow);
-      padding: 32px 26px 28px 26px;
+      padding: 35px 30px 32px 30px;
       margin: 0 auto;
       margin-top: 12px;
       display: none;
       flex-direction: column;
       align-items: stretch;
-      gap: 21px;
+      gap: 33px;
       border: 1.5px solid var(--border);
+      box-sizing: border-box;
     }
     .admin-users-title {
-      font-size: 1.13em;
+      font-size: 1.26em;
       font-weight: 700;
       color: var(--primary);
-      margin-bottom: 8px;
+      margin-bottom: 14px;
       margin-top: 1px;
       text-align: center;
+      letter-spacing: 0.02em;
+      text-shadow: 0 2px 8px #42a5f532;
     }
-    .admin-users-list {
-      margin: 0;
-      padding: 0;
-      list-style: none;
+    .admin-add-user-form {
       width: 100%;
-      border-radius: 10px;
-      background: #212a40;
-      box-shadow: 0 1px 7px #009de018;
-      overflow: hidden;
-    }
-    .admin-users-list li {
+      max-width: 600px;
+      margin: 0 auto 10px auto;
       display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 11px 11px;
-      border-bottom: 1px solid #384164;
-      font-size: 1.01em;
-      color: #bbdefb;
+      flex-direction: column;
+      gap: 19px;
+      background: #232b3a;
+      border-radius: 13px;
+      box-shadow: 0 1.5px 8px #009de018;
+      padding: 21px 17px 15px 17px;
+      border: 1.3px solid #364164;
+      align-items: stretch;
+    }
+    .admin-add-user-form label {
+      font-size: 1em;
       font-weight: 600;
-      justify-content: space-between;
+      color: #bbdefb;
+      margin-bottom: 4px;
+      margin-left: 2px;
+      letter-spacing: 0.02em;
+    }
+    .admin-add-user-form input {
+      font-size: 1.07em;
+      padding: 10px 12px;
+      background: #23304b;
+      border-radius: 8px;
+      color: #fff;
+      font-weight: 700;
+      border: 1.2px solid #384164;
+      outline: none;
+      width: 100%;
+      margin-bottom: 2px;
+      box-sizing: border-box;
+      transition: border 0.18s, background 0.18s;
+    }
+    .admin-add-user-form input:focus { background: #28385b; border-color: var(--primary);}
+    .admin-add-user-form .add-btn {
+      font-size: 1.11em;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 11px 0;
+      cursor: pointer;
+      font-weight: 700;
+      transition: background 0.17s;
+      margin-top: 7px;
+      margin-bottom: 2px;
+      box-shadow: 0 2px 8px #42a5f533;
+      letter-spacing: 0.03em;
+    }
+    .admin-add-user-form .add-btn:hover { background: var(--primary-hover);}
+    .admin-user-table-section {
+      width: 100%;
+      margin: 0 auto 12px auto;
+      max-width: var(--admin-panel-max-width);
+    }
+    .admin-users-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
       background: #212a40;
+      border-radius: 11px;
+      overflow: hidden;
+      box-shadow: 0 1.5px 8px #009de018;
     }
-    .admin-users-list li:last-child { border-bottom: none;}
-    .admin-user-name {
-      flex: 1 1 0;
-      font-size: 1.09em;
-      color: #fff;
-      font-weight: 700;
-      letter-spacing: 0.02em;
+    .admin-users-table th, .admin-users-table td {
+      font-size: 1.02em;
+      padding: 10px 6px;
+      border-bottom: 1px solid #384164;
+      color: #bbdefb;
       text-align: center;
+      font-weight: 600;
     }
-    .admin-user-pin {
-      flex: 1 1 0;
-      font-size: 1.09em;
+    .admin-users-table th {
+      background: #223053;
       color: #fff;
-      font-weight: 700;
+      font-weight: 800;
       letter-spacing: 0.02em;
-      text-align: center;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      position: relative;
+      border-top: 1.5px solid #384164;
     }
-    .admin-pin-eye {
+    .admin-users-table tr:last-child td { border-bottom: none; }
+    .admin-users-table .admin-user-name { color: #fff; font-weight: 700;}
+    .admin-users-table .admin-user-pin { letter-spacing: 0.13em;}
+    .admin-users-table .admin-pin-eye {
       background: none;
       border: none;
       color: #bbdefb;
-      font-size: 1.1em;
+      font-size: 1.08em;
       cursor: pointer;
       margin-left: 6px;
       padding: 0 2px;
       transition: color 0.18s;
+      vertical-align: middle;
     }
-    .admin-pin-eye:hover { color: var(--primary); }
-    .admin-users-list button {
-      font-size: 1.05em;
-      background: none;
-      border: none;
-      color: var(--primary);
-      cursor: pointer;
-      border-radius: 50%;
-      padding: 0.1em 0.4em;
-      margin-left: 2px;
-      transition: background 0.11s;
-    }
-    .admin-users-list button:hover { background: #232c45;}
-    .admin-users-list .delete-btn { color: var(--red);}
-    .admin-users-list .edit-btn { color: #ffc107;}
-    .admin-add-user-row {
+    .admin-users-table .admin-pin-eye:hover { color: var(--primary); }
+    .admin-users-table .delete-btn { color: var(--red);}
+    .admin-users-table .edit-btn { color: #ffc107;}
+    .admin-users-table .admin-actions-btns {
       display: flex;
-      gap: 10px;
-      align-items: center;
-      margin: 0 0 1px 0;
+      gap: 6px;
       justify-content: center;
-      flex-wrap: wrap;
+      align-items: center;
     }
-    .admin-add-user-row .add-user-cell {
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-      min-width: 90px;
-      flex: 1 1 100px;
-      margin: 2px;
-    }
-    .admin-add-user-row input {
-      font-size: 1em;
-      padding: 7px 12px;
-      background: #232c45;
-      border-radius: 8px;
-      color: #fff;
-      font-weight: 700;
-      border: none;
-      outline: none;
-      width: 100%;
-      margin-right: 0;
-    }
-    .admin-add-user-row .add-btn {
-      font-size: 1em;
-      background: var(--primary);
-      color: #fff;
-      border: none;
-      border-radius: 9px;
-      padding: 7px 19px;
-      cursor: pointer;
-      font-weight: 700;
-      transition: background 0.17s;
-      margin-left: 2px;
-      margin-top: 10px;
-      flex: 1 1 100%;
-    }
-    .admin-add-user-row .add-btn:hover { background: var(--primary-hover);}
-    .admin-logout-btn {
-      background: var(--red);
-      color: #fff;
-      border: none;
-      border-radius: 10px;
-      font-size: 1.07em;
-      font-weight: 700;
-      padding: 10px 0;
-      cursor: pointer;
-      transition: background 0.18s;
-      margin-top: 10px;
-      margin-bottom: 0;
-      font-family: inherit;
-      box-shadow: 0 2px 8px #ff3b3033;
-      letter-spacing: 0.03em;
-    }
-    .admin-logout-btn:hover { background: #c11;}
-    .edit-user-modal input {
-      font-size: 1.07em;
-      padding: 8px 15px;
-      background: #232c45;
-      border-radius: 8px;
-      color: #fff;
-      font-weight: 700;
-      border: none;
-      outline: none;
-      margin-bottom: 14px;
-      margin-top: 5px;
-      width: 90%;
-    }
+    .admin-users-table td { background: #212a40;}
+    .admin-users-table th, .admin-users-table td { min-width: 110px;}
     .admin-show-reports-btn {
       background: var(--primary-hover);
       color: #fff;
@@ -370,29 +341,72 @@
       font-family: inherit;
       box-shadow: 0 2px 8px #42a5f533;
       letter-spacing: 0.03em;
+      width: 100%;
+      max-width: 300px;
+      align-self: center;
     }
-    .admin-show-reports-btn:hover {
-      background: #333;
+    .admin-show-reports-btn:hover { background: #333; }
+    .admin-logout-btn {
+      background: var(--red);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.07em;
+      font-weight: 700;
+      padding: 10px 0;
+      cursor: pointer;
+      transition: background 0.18s;
+      margin-top: 10px;
+      margin-bottom: 0;
+      font-family: inherit;
+      box-shadow: 0 2px 8px #ff3b3033;
+      letter-spacing: 0.03em;
+      width: 100%;
+      max-width: 300px;
+      align-self: center;
+    }
+    .admin-logout-btn:hover { background: #c11;}
+    .edit-user-modal input {
+      font-size: 1.07em;
+      padding: 8px 15px;
+      background: #232c45;
+      border-radius: 8px;
+      color: #fff;
+      font-weight: 700;
+      border: none;
+      outline: none;
+      margin-bottom: 14px;
+      margin-top: 5px;
+      width: 90%;
+    }
+    @media (max-width: 1100px) {
+      .admin-panel { max-width: 99vw; }
+      .admin-user-table-section { max-width: 99vw; }
+    }
+    @media (max-width: 800px) {
+      .admin-users-table th, .admin-users-table td { font-size: 0.92em; min-width: 80px;}
+      .admin-add-user-form { max-width: 99vw; }
     }
     @media (max-width: 600px) {
       html, body { font-size: 15px; }
       .login-card, .admin-panel {
-        max-width: 98vw;
+        max-width: 99vw;
         margin-left: auto;
         margin-right: auto;
-        padding-left: 8px;
-        padding-right: 8px;
+        padding-left: 4px;
+        padding-right: 4px;
       }
       .edit-user-modal input { width: 98%; }
       .login-form-row { flex-direction: column; gap: 7px; }
       .login-form-row > div { width: 100%; min-width: 0; max-width: none; }
       .login-form select, .login-form input { width: 100%; min-width: 0; max-width: none; }
       .login-card, .admin-panel, .header { text-align: center; }
-      .admin-add-user-row { flex-direction: column; gap: 7px; }
+      .admin-add-user-form { padding-left: 6px; padding-right: 6px;}
     }
     @media (max-width: 450px) {
-      html, body { font-size: 14px; }
+      html, body { font-size: 13.2px; }
       .login-card, .admin-panel { max-width: 99vw;}
+      .admin-users-table th, .admin-users-table td { font-size: 0.86em;}
     }
     .modal-bg { display: none; position: fixed; z-index: 500; top: 0; left: 0; right: 0; bottom: 0; width: 100vw; height: 100vh; background: rgba(13, 32, 70, 0.82); align-items: center; justify-content: center;}
     .modal-bg.active { display: flex;}
@@ -443,26 +457,40 @@
   <!-- Admin Panel -->
   <div id="adminPanel" class="admin-panel">
     <div class="admin-users-title"><i class="fas fa-user-shield"></i> Admin Panel – Manage Users</div>
-    <div class="admin-add-user-row" id="adminAddUserRow">
-      <div class="add-user-cell">
-        <label for="addUserName" style="font-size:0.98em;margin-bottom:2px;">Username</label>
+    <form class="admin-add-user-form" id="adminAddUserForm" autocomplete="off" onsubmit="return false;">
+      <div>
+        <label for="addUserName">Username</label>
         <input type="text" id="addUserName" placeholder="Username" maxlength="20"/>
       </div>
-      <div class="add-user-cell">
-        <label for="addUserPin" style="font-size:0.98em;margin-bottom:2px;">PIN</label>
+      <div>
+        <label for="addUserPin">PIN</label>
         <input type="password" id="addUserPin" placeholder="PIN" maxlength="4" pattern="[0-9]{4}"/>
       </div>
-      <div class="add-user-cell">
-        <label for="addUserCar" style="font-size:0.98em;margin-bottom:2px;">Car Reg#</label>
+      <div>
+        <label for="addUserCar">Car Registration Number</label>
         <input type="text" id="addUserCar" placeholder="Car Reg#" maxlength="20"/>
       </div>
-      <div class="add-user-cell">
-        <label for="addUserAddress" style="font-size:0.98em;margin-bottom:2px;">Address</label>
+      <div>
+        <label for="addUserAddress">Address</label>
         <input type="text" id="addUserAddress" placeholder="Address" maxlength="80"/>
       </div>
       <button class="add-btn" id="addUserBtn"><i class="fas fa-plus"></i> Add</button>
+    </form>
+    <div class="admin-user-table-section">
+      <table class="admin-users-table">
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>PIN</th>
+            <th>Car Reg#</th>
+            <th>Address</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="adminUsersTableBody">
+        </tbody>
+      </table>
     </div>
-    <ul class="admin-users-list" id="adminUsersList"></ul>
     <button class="admin-show-reports-btn" id="adminShowReportsBtn"><i class="fas fa-list-alt"></i> Show All Reports</button>
     <button class="admin-logout-btn" id="adminLogoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
   </div>
@@ -562,7 +590,7 @@
   function getUsersFromFirebase() {
     db.ref("users").on("value", snap => {
       allUsers = snap.val() || {};
-      renderAdminUsersList();
+      renderAdminUsersTable();
       populateUserDropdown();
     });
   }
@@ -650,31 +678,35 @@
     getUsersFromFirebase();
   }
 
-  function renderAdminUsersList() {
-    const ul = document.getElementById('adminUsersList');
-    ul.innerHTML = '';
+  function renderAdminUsersTable() {
+    const tbody = document.getElementById('adminUsersTableBody');
+    tbody.innerHTML = '';
     Object.entries(allUsers).forEach(([id, user])=>{
       const reveal = pinRevealState[id] === true;
       const pinMasked = "****";
-      ul.innerHTML += `<li>
-        <span class="admin-user-name">${user.name}</span>
-        <span class="admin-user-pin" id="adminPin_${id}">
+      tbody.innerHTML += `<tr>
+        <td class="admin-user-name">${user.name}</td>
+        <td class="admin-user-pin" id="adminPin_${id}">
           ${reveal ? user.pin : pinMasked}
           <button class="admin-pin-eye" title="${reveal ? "Hide" : "Show"} PIN" onclick="togglePinReveal('${id}')">
             <i class="fa${reveal ? 's' : 'r'} fa-eye${reveal ? '-slash' : ''}"></i>
           </button>
-        </span>
-        <span style="flex:1 1 0; font-size:0.97em; color:#7ec5fd; text-align:center;">${user.car ? user.car : '-'}</span>
-        <span style="flex:2 2 0; font-size:0.97em; color:#bbdefb; text-align:center; word-break:break-all;">${user.address ? user.address : '-'}</span>
-        <button class="edit-btn" title="Edit" onclick='editUser("${id}")'><i class="fas fa-edit"></i></button>
-        <button class="delete-btn" title="Delete" onclick="deleteUser('${id}')"><i class="fas fa-trash"></i></button>
-      </li>`;
+        </td>
+        <td>${user.car ? user.car : '-'}</td>
+        <td style="word-break:break-all;">${user.address ? user.address : '-'}</td>
+        <td>
+          <div class="admin-actions-btns">
+            <button class="edit-btn" title="Edit" onclick='editUser("${id}")'><i class="fas fa-edit"></i></button>
+            <button class="delete-btn" title="Delete" onclick="deleteUser('${id}')"><i class="fas fa-trash"></i></button>
+          </div>
+        </td>
+      </tr>`;
     });
   }
 
   window.togglePinReveal = function(id) {
     pinRevealState[id] = !pinRevealState[id];
-    renderAdminUsersList();
+    renderAdminUsersTable();
   };
 
   window.editUser = function(id){
@@ -687,7 +719,8 @@
     });
   }
 
-  document.getElementById('addUserBtn').onclick = function(){
+  document.getElementById('addUserBtn').onclick = function(e){
+    e.preventDefault();
     const uname = document.getElementById('addUserName').value.trim();
     const upin = document.getElementById('addUserPin').value.trim();
     const ucar = document.getElementById('addUserCar').value.trim();
