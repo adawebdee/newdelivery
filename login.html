@@ -1,8 +1,8 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <title>Delivery Drivers Login – Ravintola Tandoori Villa</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
@@ -19,44 +19,43 @@
       --card-radius: 15px;
       --shadow: 0 6px 32px #42a5f526;
       --admin-panel-max-width: 1150px;
+      --table-min-width: 820px; /* ensures the table can scroll horizontally when the screen is smaller */
     }
+
+    /* Base layout */
+    *, *::before, *::after { box-sizing: border-box; }
     html, body {
-      min-height: 100vh;
+      height: 100%;
       margin: 0;
       padding: 0;
       background: var(--main-bg);
-      box-sizing: border-box;
-      width: 100vw;
       font-family: 'Poppins', Arial, sans-serif;
       color: #fff;
-      overflow-x: hidden;
       -webkit-text-size-adjust: 100%;
       text-size-adjust: 100%;
+      overflow-x: hidden; /* ensure no horizontal page scroll by default */
     }
     body {
-      width: 100vw;
-      min-height: 100vh;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
+      padding: 18px;
     }
     .page-wrapper {
-      width: 100vw;
-      min-height: 100vh;
+      width: 100%;
+      max-width: 1150px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      box-sizing: border-box;
-      padding: 0;
+      gap: 18px;
     }
+
+    /* Header */
     .header {
       width: 100%;
       max-width: 420px;
       text-align: center;
-      margin-bottom: 22px;
-      margin-top: 10px;
+      margin-bottom: 6px;
     }
     .header-title {
       font-size: 1.33em;
@@ -65,709 +64,725 @@
       letter-spacing: 0.03em;
       text-shadow: 0 2px 19px #42a5f526;
       margin-bottom: 3px;
-      margin-top: 2px;
       display: block;
     }
     .header-desc {
       font-size: 1.05em;
-      color: #bbdefb;
+      color: var(--accent);
       opacity: 0.88;
       font-weight: 600;
-      letter-spacing: 0.01em;
       margin-bottom: 2px;
       display: block;
-    }
-    .login-card {
-      width: 100%;
-      max-width: 410px;
-      background: var(--card-bg);
-      border-radius: var(--card-radius);
-      box-shadow: var(--shadow);
-      padding: 32px 28px 28px 28px;
-      margin: 0 auto;
-      display: flex;
-      flex-direction: column;
-      align-items: stretch;
-      gap: 21px;
-      border: 1.5px solid var(--border);
-      position: relative;
-    }
-    .login-title {
-      font-size: 1.18em;
-      font-weight: 700;
-      color: var(--primary);
-      letter-spacing: 0.01em;
-      text-align: center;
-      margin-bottom: 8px;
-      margin-top: 2px;
-    }
-    .login-form {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      margin: 0 auto;
-      align-items: stretch;
-    }
-    .login-form-row {
-      display: flex;
-      gap: 13px;
-      justify-content: center;
-      align-items: flex-end;
-    }
-    .login-form label {
-      font-size: 1em;
-      font-weight: 600;
-      color: #bbdefb;
-      margin-bottom: 6px;
-      margin-left: 2px;
-      letter-spacing: 0.02em;
-      display: block;
-    }
-    .login-form select,
-    .login-form input {
-      font-size: 1.09em;
-      padding: 11px 16px;
-      background: #212a40;
-      border: 1.5px solid var(--border);
-      border-radius: 9px;
-      color: #fff;
-      outline: none;
-      font-family: 'Poppins', Arial, sans-serif;
-      font-weight: 700;
-      margin-bottom: 2px;
-      box-shadow: 0 1.5px 8px #009de018;
-      width: 100%;
-      min-width: 0;
-      max-width: none;
-      box-sizing: border-box;
-      transition: border 0.18s, background 0.18s;
-    }
-    .login-form select:focus,
-    .login-form input:focus { background: #232c45; border-color: var(--primary);}
-    .login-form .pin-input {
-      font-family: 'Poppins', monospace, Arial;
-      letter-spacing: 0.12em;
-      font-size: 1.16em;
-      width: 100%;
-      text-align: center;
-      background: #232c45;
-      border: 1.5px solid var(--border);
-      border-radius: 9px;
-    }
-    .login-form .login-btn {
-      background: var(--primary);
-      color: #fff;
-      border: none;
-      border-radius: 11px;
-      font-size: 1.11em;
-      font-weight: 700;
-      padding: 11px 0;
-      cursor: pointer;
-      transition: background 0.18s;
-      margin-top: 9px;
-      font-family: inherit;
-      box-shadow: 0 2px 8px #42a5f533;
-      letter-spacing: 0.03em;
-    }
-    .login-form .login-btn:hover { background: var(--primary-hover);}
-    .login-form .admin-link {
-      color: var(--primary-hover);
-      font-size: 1em;
-      font-weight: 700;
-      text-decoration: underline;
-      background: none;
-      border: none;
-      margin: 0 auto;
-      margin-top: 8px;
-      cursor: pointer;
-      letter-spacing: 0.01em;
-    }
-    .login-error {
-      color: var(--red);
-      font-size: 1em;
-      font-weight: 700;
-      margin: 7px 0 0 0;
-      text-align: center;
-      letter-spacing: 0.01em;
-      min-height: 1.4em;
     }
 
-    /* ===== ADMIN PANEL FULL WIDTH ===== */
+    /* Login card */
+    .login-card {
+      width: 100%;
+      max-width: 420px;
+      background: var(--card-bg);
+      border-radius: var(--card-radius);
+      box-shadow: var(--shadow);
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      border: 1.5px solid var(--border);
+    }
+    .login-title { color: var(--primary); font-weight: 700; text-align:center; font-size:1.14em; }
+    .login-form { display:flex; flex-direction:column; gap:12px; }
+    .login-form-row { display:flex; gap:12px; align-items:flex-end; }
+    label { font-weight:600; color:var(--accent); font-size:0.98em; margin-bottom:6px; display:block; }
+    select, input[type="password"], input[type="text"] {
+      font-size:1.03em; padding:10px 12px; background:#212a40; border:1.5px solid var(--border); border-radius:9px;
+      color:#fff; outline:none; font-weight:700; width:100%;
+    }
+    select:focus, input:focus { border-color: var(--primary); background:#232c45; }
+    .pin-input { font-family:'Poppins', monospace, Arial; letter-spacing:0.14em; text-align:center; }
+    .login-btn {
+      background: var(--primary); color:#fff; border:none; padding:11px; border-radius:10px; font-weight:700; cursor:pointer;
+      box-shadow: 0 2px 8px #42a5f533;
+    }
+    .login-btn:hover { background: var(--primary-hover); }
+    .admin-link { background:none; border:none; color:var(--primary); text-decoration:underline; cursor:pointer; font-weight:700; }
+
+    .login-error { color: var(--red); font-weight:700; text-align:center; min-height: 1.4em; }
+
+    /* Admin panel */
     .admin-panel {
-      width: 100vw;
+      width: 100%;
       max-width: var(--admin-panel-max-width);
       background: var(--card-bg);
       border-radius: var(--card-radius);
       box-shadow: var(--shadow);
-      padding: 35px 30px 32px 30px;
-      margin: 0 auto;
-      margin-top: 12px;
+      padding: 30px;
       display: none;
       flex-direction: column;
-      align-items: stretch;
-      gap: 33px;
+      gap: 22px;
       border: 1.5px solid var(--border);
-      box-sizing: border-box;
     }
-    .admin-users-title {
-      font-size: 1.26em;
-      font-weight: 700;
-      color: var(--primary);
-      margin-bottom: 14px;
-      margin-top: 1px;
-      text-align: center;
-      letter-spacing: 0.02em;
-      text-shadow: 0 2px 8px #42a5f532;
-    }
+    .admin-users-title { color: var(--primary); font-weight:700; text-align:center; font-size:1.18em; }
+
     .admin-add-user-form {
-      width: 100%;
-      max-width: 600px;
-      margin: 0 auto 10px auto;
-      display: flex;
-      flex-direction: column;
-      gap: 19px;
-      background: #232b3a;
-      border-radius: 13px;
-      box-shadow: 0 1.5px 8px #009de018;
-      padding: 21px 17px 15px 17px;
-      border: 1.3px solid #364164;
-      align-items: stretch;
+      width:100%;
+      max-width: 700px;
+      margin: 0 auto;
+      background:#232b3a;
+      padding:18px;
+      border-radius:12px;
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      border:1.2px solid #364164;
+      align-items:center;
+      justify-content:space-between;
     }
-    .admin-add-user-form label {
-      font-size: 1em;
-      font-weight: 600;
-      color: #bbdefb;
-      margin-bottom: 4px;
-      margin-left: 2px;
-      letter-spacing: 0.02em;
-    }
-    .admin-add-user-form input {
-      font-size: 1.07em;
-      padding: 10px 12px;
-      background: #23304b;
-      border-radius: 8px;
-      color: #fff;
-      font-weight: 700;
-      border: 1.2px solid #384164;
-      outline: none;
-      width: 100%;
-      margin-bottom: 2px;
-      box-sizing: border-box;
-      transition: border 0.18s, background 0.18s;
-    }
-    .admin-add-user-form input:focus { background: #28385b; border-color: var(--primary);}
-    .admin-add-user-form .add-btn {
-      font-size: 1.11em;
-      background: var(--primary);
-      color: #fff;
-      border: none;
-      border-radius: 10px;
-      padding: 11px 0;
-      cursor: pointer;
-      font-weight: 700;
-      transition: background 0.17s;
-      margin-top: 7px;
-      margin-bottom: 2px;
-      box-shadow: 0 2px 8px #42a5f533;
-      letter-spacing: 0.03em;
-    }
-    .admin-add-user-form .add-btn:hover { background: var(--primary-hover);}
+    .admin-add-user-form > div { flex:1 1 200px; min-width:150px; }
+    .admin-add-user-form input { background:#23304b; border:1px solid #384164; padding:10px; color:#fff; border-radius:8px; font-weight:700; }
+    .add-btn { background: var(--primary); color:#fff; border:none; padding:10px 14px; border-radius:10px; font-weight:700; cursor:pointer; }
+    .add-btn:hover { background: var(--primary-hover); }
+
+    /* Table container: only this will scroll horizontally */
     .admin-user-table-section {
       width: 100%;
-      margin: 0 auto 12px auto;
-      max-width: var(--admin-panel-max-width);
+      overflow-x: auto; /* the only element allowed to scroll horizontally */
+      -webkit-overflow-scrolling: touch;
+      border-radius: 11px;
+      background: transparent;
+      padding-bottom: 6px;
     }
+
     .admin-users-table {
       width: 100%;
-      border-collapse: separate;
-      border-spacing: 0;
-      background: #212a40;
-      border-radius: 11px;
+      min-width: var(--table-min-width); /* force table to go beyond container width to enable horizontal scroll on small screens */
+      border-collapse: collapse;
+      background:#212a40;
+      border-radius: 10px;
       overflow: hidden;
       box-shadow: 0 1.5px 8px #009de018;
     }
-    .admin-users-table th, .admin-users-table td {
-      font-size: 1.02em;
-      padding: 10px 6px;
-      border-bottom: 1px solid #384164;
-      color: #bbdefb;
-      text-align: center;
-      font-weight: 600;
+    .admin-users-table thead th {
+      background:#223053; color:#fff; font-weight:800; padding:12px 8px; text-align:center; border-top:1.5px solid #384164;
     }
-    .admin-users-table th {
-      background: #223053;
-      color: #fff;
-      font-weight: 800;
-      letter-spacing: 0.02em;
-      border-top: 1.5px solid #384164;
+    .admin-users-table td, .admin-users-table th {
+      padding:10px 8px; color: #bbdefb; font-weight:600; text-align:center; border-bottom:1px solid #384164; min-width:110px;
     }
-    .admin-users-table tr:last-child td { border-bottom: none; }
-    .admin-users-table .admin-user-name { color: #fff; font-weight: 700;}
-    .admin-users-table .admin-user-pin { letter-spacing: 0.13em;}
-    .admin-users-table .admin-pin-eye {
-      background: none;
-      border: none;
-      color: #bbdefb;
-      font-size: 1.08em;
-      cursor: pointer;
-      margin-left: 6px;
-      padding: 0 2px;
-      transition: color 0.18s;
-      vertical-align: middle;
+    .admin-users-table td { background:#212a40; }
+    .admin-user-name { color:#fff; font-weight:700; }
+    .admin-user-pin { letter-spacing:0.13em; }
+
+    /* action buttons styling */
+    .admin-actions-btns { display:flex; gap:8px; justify-content:center; align-items:center; }
+    .icon-btn {
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:36px;
+      height:36px;
+      border-radius:8px;
+      border:none;
+      background:transparent;
+      cursor:pointer;
+      font-size:1.02em;
+      transition: transform .08s ease, background .12s ease;
+      padding:0;
     }
-    .admin-users-table .admin-pin-eye:hover { color: var(--primary); }
-    .admin-users-table .delete-btn { color: var(--red);}
-    .admin-users-table .edit-btn { color: #ffc107;}
-    .admin-users-table .admin-actions-btns {
-      display: flex;
-      gap: 6px;
-      justify-content: center;
-      align-items: center;
-    }
-    .admin-users-table td { background: #212a40;}
-    .admin-users-table th, .admin-users-table td { min-width: 110px;}
-    .admin-show-reports-btn {
-      background: var(--primary-hover);
-      color: #fff;
-      border: none;
-      border-radius: 10px;
-      font-size: 1.07em;
-      font-weight: 700;
-      padding: 10px 0;
-      cursor: pointer;
-      transition: background 0.18s;
-      margin-top: 5px;
-      margin-bottom: 8px;
-      font-family: inherit;
-      box-shadow: 0 2px 8px #42a5f533;
-      letter-spacing: 0.03em;
+    .icon-btn:active { transform: translateY(1px); }
+    .edit-btn { color: var(--primary); }
+    .edit-btn:hover { background: rgba(66,165,245,0.08); }
+    .delete-btn { color: var(--red); }
+    .delete-btn:hover { background: rgba(255,59,48,0.06); }
+
+    /* other admin buttons */
+    .admin-show-reports-btn, .admin-logout-btn {
       width: 100%;
       max-width: 300px;
       align-self: center;
+      font-weight:700;
+      padding:10px 12px;
+      border-radius:10px;
+      border:none;
+      cursor:pointer;
     }
-    .admin-show-reports-btn:hover { background: #333; }
-    .admin-logout-btn {
-      background: var(--red);
-      color: #fff;
-      border: none;
-      border-radius: 10px;
-      font-size: 1.07em;
-      font-weight: 700;
-      padding: 10px 0;
-      cursor: pointer;
-      transition: background 0.18s;
-      margin-top: 10px;
-      margin-bottom: 0;
-      font-family: inherit;
-      box-shadow: 0 2px 8px #ff3b3033;
-      letter-spacing: 0.03em;
-      width: 100%;
-      max-width: 300px;
-      align-self: center;
+    .admin-show-reports-btn { background: var(--primary-hover); color:#fff; }
+    .admin-logout-btn { background: var(--red); color:#fff; box-shadow: 0 2px 8px #ff3b3033; }
+
+    /* Modals */
+    .modal-bg { display:none; position:fixed; inset:0; z-index:600; background: rgba(13,32,70,0.82); align-items:center; justify-content:center; }
+    .modal-bg.active { display:flex; }
+    .modal-content, .modal-confirm, .edit-user-modal {
+      background: var(--card-bg);
+      color: var(--accent);
+      border-radius: 14px;
+      border: 2px solid var(--primary);
+      padding: 22px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      min-width:260px;
+      max-width: 95vw;
+      box-shadow: 0 7px 32px #42a5f547;
     }
-    .admin-logout-btn:hover { background: #c11;}
-    .edit-user-modal input {
-      font-size: 1.07em;
-      padding: 8px 15px;
-      background: #232c45;
-      border-radius: 8px;
-      color: #fff;
-      font-weight: 700;
-      border: none;
-      outline: none;
-      margin-bottom: 14px;
-      margin-top: 5px;
-      width: 90%;
+    .modal-title { color:#fff; font-weight:700; text-align:center; }
+    .modal-details { color:var(--accent); text-align:center; }
+    .modal-done-btn, .modal-confirm-btn, .modal-cancel-btn {
+      padding:10px 20px; border-radius:10px; border:none; font-weight:700; cursor:pointer;
     }
-    @media (max-width: 1100px) {
-      .admin-panel { max-width: 99vw; }
-      .admin-user-table-section { max-width: 99vw; }
-    }
-    @media (max-width: 800px) {
-      .admin-users-table th, .admin-users-table td { font-size: 0.92em; min-width: 80px;}
-      .admin-add-user-form { max-width: 99vw; }
+    .modal-done-btn { background: var(--primary); color:#fff; }
+    .modal-confirm-btn { background: var(--red); color:#fff; }
+    .modal-cancel-btn { background: var(--border); color: var(--accent); }
+
+    .modal-confirm-btns { display:flex; gap:12px; justify-content:center; align-items:center; }
+
+    .modal-close { position:absolute; right:12px; top:8px; background:none; border:none; color: #bbdefb; font-size:1.2em; cursor:pointer; }
+
+    /* Edit modal inputs */
+    .edit-user-modal input { padding:8px 12px; border-radius:8px; border:none; background:#232c45; color:#fff; font-weight:700; width:100%; }
+
+    /* responsiveness */
+    @media (max-width: 900px) {
+      .admin-add-user-form { gap:8px; }
+      .admin-users-table th, .admin-users-table td { padding:10px 6px; min-width:95px; }
     }
     @media (max-width: 600px) {
-      html, body { font-size: 15px; }
-      .login-card, .admin-panel {
-        max-width: 99vw;
-        margin-left: auto;
-        margin-right: auto;
-        padding-left: 4px;
-        padding-right: 4px;
-      }
-      .edit-user-modal input { width: 98%; }
-      .login-form-row { flex-direction: column; gap: 7px; }
-      .login-form-row > div { width: 100%; min-width: 0; max-width: none; }
-      .login-form select, .login-form input { width: 100%; min-width: 0; max-width: none; }
-      .login-card, .admin-panel, .header { text-align: center; }
-      .admin-add-user-form { padding-left: 6px; padding-right: 6px;}
+      html, body { font-size:15px; }
+      .login-card, .admin-panel { padding:12px; max-width:99vw; }
+      .login-form-row { flex-direction:column; gap:8px; }
+      .admin-add-user-form { flex-direction:column; align-items:stretch; gap:8px; }
+      /* The table container handles horizontal scroll on small devices; the rest will fit */
+      .admin-user-table-section { padding-bottom:8px; }
+      .admin-users-table { min-width: 720px; }
     }
-    @media (max-width: 450px) {
-      html, body { font-size: 13.2px; }
-      .login-card, .admin-panel { max-width: 99vw;}
-      .admin-users-table th, .admin-users-table td { font-size: 0.86em;}
+    @media (max-width: 420px) {
+      html, body { font-size:13.4px; }
+      .admin-users-table { min-width: 680px; }
     }
-    .modal-bg { display: none; position: fixed; z-index: 500; top: 0; left: 0; right: 0; bottom: 0; width: 100vw; height: 100vh; background: rgba(13, 32, 70, 0.82); align-items: center; justify-content: center;}
-    .modal-bg.active { display: flex;}
-    .modal-content, .modal-confirm, .edit-user-modal {
-      background: var(--card-bg); color: var(--accent); border-radius: 18px; border: 2px solid var(--primary);
-      box-shadow: 0 7px 32px #42a5f547; padding: 28px 30px 22px 30px; display: flex; flex-direction: column; align-items: center;
-      min-width: 270px; max-width: 95vw; min-height: 135px; font-family: 'Poppins', Arial, sans-serif; animation: pop .18s cubic-bezier(.45,1.4,.68,1.02); position: relative;
-    }
-    .modal-title { font-size: 1.12em; font-weight: 700; color: #fff; margin-bottom: 9px; text-align: center; letter-spacing: 0.02em;}
-    .modal-details, .modal-confirm-details { margin-bottom: 16px; color: var(--accent); font-size: 1em; font-weight: 500; text-align: center; word-break: break-word;}
-    .modal-done-btn, .modal-confirm-btn, .modal-cancel-btn {
-      background: var(--primary); color: #fff; border: none; border-radius: 10px; font-size: 1.01em; font-weight: 700; padding: 10px 34px; cursor: pointer; transition: background 0.18s; margin-top: 2px; font-family: inherit; box-shadow: 0 2px 8px #42a5f533; letter-spacing: 0.03em;
-    }
-    .modal-done-btn:hover, .modal-confirm-btn:hover { background: var(--primary-hover);}
-    .modal-close { position: absolute; top: 11px; right: 16px; background: none; border: none; color: #bbdefb; font-size: 1.22em; cursor: pointer; padding: 0; border-radius: 50%; transition: background 0.12s;}
-    .modal-close:active { background: #212a40;}
-    .modal-confirm-btn { background: var(--red); }
-    .modal-cancel-btn { background: var(--border); color: #bbdefb; }
-    .modal-confirm-btns { display: flex; gap: 18px; margin-top: 5px;}
-    .modal-confirm-title { font-size: 1.09em; font-weight: 700; color: #fff; margin-bottom: 9px; text-align: center; letter-spacing: 0.02em;}
-    @keyframes pop { from { transform: scale(0.91); opacity: 0.3;} to   { transform: scale(1);    opacity: 1;} }
   </style>
 </head>
 <body>
-<div class="page-wrapper">
-  <div class="header">
-    <span class="header-title"><i class="fas fa-user"></i> Delivery Drivers Login</span>
-    <span class="header-desc">Ravintola Tandoori Villa</span>
-  </div>
-  <div id="loginCard" class="login-card">
-    <div class="login-title">Login to continue</div>
-    <form class="login-form" id="loginForm" autocomplete="off">
-      <div class="login-form-row">
-        <div style="flex:1;">
-          <label for="usernameSelect">Username</label>
-          <select id="usernameSelect"></select>
+  <div class="page-wrapper">
+    <div class="header">
+      <span class="header-title"><i class="fas fa-user"></i> Delivery Drivers Login</span>
+      <span class="header-desc">Ravintola Tandoori Villa</span>
+    </div>
+
+    <div id="loginCard" class="login-card" aria-live="polite">
+      <div class="login-title">Login to continue</div>
+      <form class="login-form" id="loginForm" autocomplete="off">
+        <div class="login-form-row">
+          <div style="flex:1;">
+            <label for="usernameSelect">Username</label>
+            <select id="usernameSelect" aria-label="Select username"></select>
+          </div>
+          <div style="flex:1;">
+            <label for="pinInput">PIN (4 digits)</label>
+            <input type="password" id="pinInput" class="pin-input" maxlength="4" pattern="[0-9]{4}" required autocomplete="off" disabled aria-label="PIN input"/>
+          </div>
         </div>
-        <div style="flex:1;">
-          <label for="pinInput">PIN (4 digits)</label>
-          <input type="password" id="pinInput" class="pin-input" maxlength="4" pattern="[0-9]{4}" required autocomplete="off" disabled/>
+        <button type="submit" class="login-btn" id="loginSubmitBtn">Login</button>
+        <button type="button" class="admin-link" id="adminLoginBtn">Admin Login</button>
+      </form>
+      <div class="login-error" id="loginError" role="status" aria-live="polite"></div>
+    </div>
+
+    <!-- Admin Panel -->
+    <div id="adminPanel" class="admin-panel" role="region" aria-labelledby="adminTitle">
+      <div class="admin-users-title" id="adminTitle"><i class="fas fa-user-shield"></i> Admin Panel – Manage Users</div>
+
+      <form class="admin-add-user-form" id="adminAddUserForm" autocomplete="off" onsubmit="return false;">
+        <div>
+          <label for="addUserName">Username</label>
+          <input type="text" id="addUserName" placeholder="Username" maxlength="20"/>
+        </div>
+        <div>
+          <label for="addUserPin">PIN</label>
+          <input type="password" id="addUserPin" placeholder="PIN" maxlength="4" pattern="[0-9]{4}"/>
+        </div>
+        <div>
+          <label for="addUserCar">Car Registration Number</label>
+          <input type="text" id="addUserCar" placeholder="Car Reg#" maxlength="20"/>
+        </div>
+        <div>
+          <label for="addUserAddress">Address</label>
+          <input type="text" id="addUserAddress" placeholder="Address" maxlength="80"/>
+        </div>
+        <div style="align-self:center;">
+          <button class="add-btn" id="addUserBtn" title="Add user"><i class="fas fa-plus"></i> Add</button>
+        </div>
+      </form>
+
+      <div class="admin-user-table-section" aria-label="Users table - horizontally scrollable on smaller screens">
+        <table class="admin-users-table" role="table" aria-label="Users list">
+          <thead>
+            <tr>
+              <th scope="col">Username</th>
+              <th scope="col">PIN</th>
+              <th scope="col">Car Reg#</th>
+              <th scope="col">Address</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="adminUsersTableBody"></tbody>
+        </table>
+      </div>
+
+      <button class="admin-show-reports-btn" id="adminShowReportsBtn"><i class="fas fa-list-alt"></i> Show All Reports</button>
+      <button class="admin-logout-btn" id="adminLogoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+    </div>
+
+    <!-- Modals -->
+    <div class="modal-bg" id="modalBg" aria-hidden="true">
+      <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-describedby="modalDetails">
+        <button class="modal-close" id="modalClose" title="Close">&times;</button>
+        <div class="modal-title" id="modalTitle"></div>
+        <div class="modal-details" id="modalDetails"></div>
+        <div style="display:flex;justify-content:center;"><button class="modal-done-btn" id="modalDone">Done</button></div>
+      </div>
+    </div>
+
+    <div class="modal-bg" id="confirmModalBg" aria-hidden="true">
+      <div class="modal-confirm" role="dialog" aria-modal="true" aria-labelledby="confirmModalTitle" aria-describedby="confirmModalDetails">
+        <div class="modal-confirm-title" id="confirmModalTitle"></div>
+        <div class="modal-confirm-details" id="confirmModalDetails"></div>
+        <div class="modal-confirm-btns">
+          <button class="modal-confirm-btn" id="confirmActionBtn">Confirm</button>
+          <button class="modal-cancel-btn" id="cancelActionBtn">Cancel</button>
         </div>
       </div>
-      <button type="submit" class="login-btn">Login</button>
-      <button type="button" class="admin-link" id="adminLoginBtn">Admin Login</button>
-    </form>
-    <div class="login-error" id="loginError"></div>
-  </div>
-  <!-- Admin Panel -->
-  <div id="adminPanel" class="admin-panel">
-    <div class="admin-users-title"><i class="fas fa-user-shield"></i> Admin Panel – Manage Users</div>
-    <form class="admin-add-user-form" id="adminAddUserForm" autocomplete="off" onsubmit="return false;">
-      <div>
-        <label for="addUserName">Username</label>
-        <input type="text" id="addUserName" placeholder="Username" maxlength="20"/>
-      </div>
-      <div>
-        <label for="addUserPin">PIN</label>
-        <input type="password" id="addUserPin" placeholder="PIN" maxlength="4" pattern="[0-9]{4}"/>
-      </div>
-      <div>
-        <label for="addUserCar">Car Registration Number</label>
-        <input type="text" id="addUserCar" placeholder="Car Reg#" maxlength="20"/>
-      </div>
-      <div>
-        <label for="addUserAddress">Address</label>
-        <input type="text" id="addUserAddress" placeholder="Address" maxlength="80"/>
-      </div>
-      <button class="add-btn" id="addUserBtn"><i class="fas fa-plus"></i> Add</button>
-    </form>
-    <div class="admin-user-table-section">
-      <table class="admin-users-table">
-        <thead>
-          <tr>
-            <th>Username</th>
-            <th>PIN</th>
-            <th>Car Reg#</th>
-            <th>Address</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody id="adminUsersTableBody">
-        </tbody>
-      </table>
     </div>
-    <button class="admin-show-reports-btn" id="adminShowReportsBtn"><i class="fas fa-list-alt"></i> Show All Reports</button>
-    <button class="admin-logout-btn" id="adminLogoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
-  </div>
-  <!-- Modals -->
-  <div class="modal-bg" id="modalBg">
-    <div class="modal-content" id="modalContent">
-      <button class="modal-close" id="modalClose" title="Close">&times;</button>
-      <div class="modal-title" id="modalTitle"></div>
-      <div class="modal-details" id="modalDetails"></div>
-      <button class="modal-done-btn" id="modalDone">Done</button>
-    </div>
-  </div>
-  <div class="modal-bg" id="confirmModalBg">
-    <div class="modal-confirm" id="confirmModalContent">
-      <div class="modal-confirm-title" id="confirmModalTitle"></div>
-      <div class="modal-confirm-details" id="confirmModalDetails"></div>
-      <div class="modal-confirm-btns">
-        <button class="modal-confirm-btn" id="confirmDeleteBtn">Delete</button>
-        <button class="modal-cancel-btn" id="cancelDeleteBtn">Cancel</button>
+
+    <div class="modal-bg" id="editModalBg" aria-hidden="true">
+      <div class="edit-user-modal" role="dialog" aria-modal="true" aria-labelledby="editUserModalTitle">
+        <button class="modal-close" id="editModalClose" title="Close">&times;</button>
+        <div class="modal-title" id="editUserModalTitle">Edit User</div>
+        <input type="text" id="editUserName" maxlength="20" placeholder="Username" />
+        <input type="password" id="editUserPin" maxlength="4" pattern="[0-9]{4}" placeholder="PIN" />
+        <input type="text" id="editUserCar" maxlength="20" placeholder="Car Reg#" />
+        <input type="text" id="editUserAddress" maxlength="80" placeholder="Address" />
+        <div style="display:flex;gap:10px;justify-content:center;width:100%;">
+          <button class="modal-done-btn" id="editUserSaveBtn">Save</button>
+        </div>
       </div>
     </div>
   </div>
-  <div class="modal-bg" id="editModalBg">
-    <div class="edit-user-modal" id="editUserModal">
-      <button class="modal-close" id="editModalClose" title="Close">&times;</button>
-      <div class="modal-title" id="editUserModalTitle">Edit User</div>
-      <input type="text" id="editUserName" maxlength="20"/>
-      <input type="password" id="editUserPin" maxlength="4" pattern="[0-9]{4}"/>
-      <input type="text" id="editUserCar" maxlength="20" placeholder="Car Reg#"/>
-      <input type="text" id="editUserAddress" maxlength="80" placeholder="Address"/>
-      <button class="modal-done-btn" id="editUserSaveBtn">Save</button>
-    </div>
-  </div>
-</div>
-<!-- Firebase -->
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-<script>
-  // Firebase config
-  const firebaseConfig = {
-    apiKey: "AIzaSyCirYQ_46JiSkMIwCNs1nSi89dvB1MUg_A",
-    authDomain: "deliverylog12.firebaseapp.com",
-    databaseURL: "https://deliverylog12-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "deliverylog12",
-    storageBucket: "deliverylog12.firebasestorage.app",
-    messagingSenderId: "19081371357",
-    appId: "1:19081371357:web:b9b59e732a4d90d4d44534",
-    measurementId: "G-FSZXXZQSL0"
-  };
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.database();
 
-  function showModal(title, details) {
-    document.getElementById('modalTitle').innerHTML = title;
-    document.getElementById('modalDetails').innerHTML = details;
-    document.getElementById('modalBg').classList.add('active');
-    setTimeout(() => { document.getElementById('modalDone').focus(); }, 100);
-  }
-  function hideModal() { document.getElementById('modalBg').classList.remove('active'); }
-  document.getElementById('modalClose').onclick = hideModal;
-  document.getElementById('modalDone').onclick = hideModal;
-  document.getElementById('modalBg').onclick = function(e){ if(e.target===document.getElementById('modalBg')) hideModal(); };
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
-  let pendingDelete = null;
-  function showConfirmModal(title, details, onConfirm) {
-    document.getElementById('confirmModalTitle').innerHTML = title;
-    document.getElementById('confirmModalDetails').innerHTML = details;
-    document.getElementById('confirmModalBg').classList.add('active');
-    pendingDelete = onConfirm;
-    setTimeout(() => { document.getElementById('confirmDeleteBtn').focus(); }, 100);
-  }
-  function hideConfirmModal() { document.getElementById('confirmModalBg').classList.remove('active'); pendingDelete=null; }
-  document.getElementById('cancelDeleteBtn').onclick = hideConfirmModal;
-  document.getElementById('confirmModalBg').onclick = function(e){ if(e.target===document.getElementById('confirmModalBg')) hideConfirmModal(); };
-  document.getElementById('confirmDeleteBtn').onclick = function(){
-    if(pendingDelete){ pendingDelete(); hideConfirmModal(); }
-  };
+  <script>
+    // Firebase config (unchanged)
+    const firebaseConfig = {
+      apiKey: "AIzaSyCirYQ_46JiSkMIwCNs1nSi89dvB1MUg_A",
+      authDomain: "deliverylog12.firebaseapp.com",
+      databaseURL: "https://deliverylog12-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "deliverylog12",
+      storageBucket: "deliverylog12.firebasestorage.app",
+      messagingSenderId: "19081371357",
+      appId: "1:19081371357:web:b9b59e732a4d90d4d44534",
+      measurementId: "G-FSZXXZQSL0"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
 
-  let editingUserId = null;
-  function showEditModal(userId, user) {
-    editingUserId = userId;
-    document.getElementById('editUserName').value = user.name;
-    document.getElementById('editUserPin').value = user.pin;
-    document.getElementById('editUserCar').value = user.car || '';
-    document.getElementById('editUserAddress').value = user.address || '';
-    document.getElementById('editModalBg').classList.add('active');
-    setTimeout(() => { document.getElementById('editUserName').focus(); }, 100);
-  }
-  function hideEditModal() { document.getElementById('editModalBg').classList.remove('active'); editingUserId=null; }
-  document.getElementById('editModalClose').onclick = hideEditModal;
-  document.getElementById('editModalBg').onclick = function(e){ if(e.target===document.getElementById('editModalBg')) hideEditModal(); };
+    // Utility: general modal
+    function showModal(title, details) {
+      document.getElementById('modalTitle').innerHTML = title;
+      document.getElementById('modalDetails').innerHTML = details;
+      const bg = document.getElementById('modalBg');
+      bg.classList.add('active');
+      bg.setAttribute('aria-hidden', 'false');
+      setTimeout(()=>{ document.getElementById('modalDone').focus(); }, 120);
+    }
+    function hideModal() {
+      const bg = document.getElementById('modalBg');
+      bg.classList.remove('active');
+      bg.setAttribute('aria-hidden', 'true');
+    }
+    document.getElementById('modalClose').onclick = hideModal;
+    document.getElementById('modalDone').onclick = hideModal;
+    document.getElementById('modalBg').onclick = function (e) { if (e.target === this) hideModal(); };
 
-  let allUsers = {};
-  let isAdmin = false;
-  let pinRevealState = {};
+    // Confirm modal - configurable labels and styles
+    let pendingConfirm = null;
+    function showConfirmModal(title, details, onConfirm, options = {}) {
+      // options: { confirmText, cancelText, danger }
+      const confirmText = options.confirmText || 'Confirm';
+      const cancelText = options.cancelText || 'Cancel';
+      const danger = !!options.danger;
 
-  function getUsersFromFirebase() {
-    db.ref("users").on("value", snap => {
-      allUsers = snap.val() || {};
-      renderAdminUsersTable();
-      populateUserDropdown();
-    });
-  }
+      document.getElementById('confirmModalTitle').innerHTML = title;
+      document.getElementById('confirmModalDetails').innerHTML = details;
+      const confirmBtn = document.getElementById('confirmActionBtn');
+      const cancelBtn = document.getElementById('cancelActionBtn');
 
-  function populateUserDropdown() {
-    const usernameSelect = document.getElementById('usernameSelect');
-    let html = `<option value="">-- Select Username --</option>`;
-    Object.entries(allUsers).forEach(([id, user]) => {
-      html += `<option value="${user.name}" data-id="${id}">${user.name}</option>`;
-    });
-    usernameSelect.innerHTML = html + `<option value="admin">admin</option>`;
-    document.getElementById('pinInput').value = "";
-    document.getElementById('pinInput').disabled = true;
-  }
+      confirmBtn.textContent = confirmText;
+      cancelBtn.textContent = cancelText;
 
-  getUsersFromFirebase();
+      // toggle button visual: danger uses red, otherwise primary style
+      if (danger) {
+        confirmBtn.style.background = getComputedStyle(document.documentElement).getPropertyValue('--red') || '#ff3b30';
+        confirmBtn.style.color = '#fff';
+      } else {
+        confirmBtn.style.background = getComputedStyle(document.documentElement).getPropertyValue('--primary') || '#42a5f5';
+        confirmBtn.style.color = '#fff';
+      }
 
-  const loginCard = document.getElementById('loginCard');
-  const adminPanel = document.getElementById('adminPanel');
-  const loginForm = document.getElementById('loginForm');
-  const usernameSelect = document.getElementById('usernameSelect');
-  const pinInput = document.getElementById('pinInput');
-  const loginError = document.getElementById('loginError');
-  const adminLoginBtn = document.getElementById('adminLoginBtn');
+      // Show
+      const bg = document.getElementById('confirmModalBg');
+      bg.classList.add('active');
+      bg.setAttribute('aria-hidden', 'false');
+      pendingConfirm = onConfirm;
 
-  usernameSelect.onchange = function(){
-    if(!usernameSelect.value || usernameSelect.value === "") {
+      // focus the confirm button for keyboard users
+      setTimeout(()=>{ confirmBtn.focus(); }, 80);
+    }
+    function hideConfirmModal() {
+      const bg = document.getElementById('confirmModalBg');
+      bg.classList.remove('active');
+      bg.setAttribute('aria-hidden','true');
+      pendingConfirm = null;
+    }
+    document.getElementById('cancelActionBtn').onclick = hideConfirmModal;
+    document.getElementById('confirmModalBg').onclick = function (e) { if (e.target === this) hideConfirmModal(); };
+    document.getElementById('confirmActionBtn').onclick = function () {
+      if (typeof pendingConfirm === 'function') {
+        try { pendingConfirm(); } catch (err) { console.error(err); }
+      }
+      hideConfirmModal();
+    };
+
+    // Edit modal
+    let editingUserId = null;
+    function showEditModal(userId, user) {
+      editingUserId = userId;
+      document.getElementById('editUserName').value = user.name || '';
+      document.getElementById('editUserPin').value = user.pin || '';
+      document.getElementById('editUserCar').value = user.car || '';
+      document.getElementById('editUserAddress').value = user.address || '';
+      const bg = document.getElementById('editModalBg');
+      bg.classList.add('active');
+      bg.setAttribute('aria-hidden','false');
+      setTimeout(()=>{ document.getElementById('editUserName').focus(); }, 80);
+    }
+    function hideEditModal() {
+      const bg = document.getElementById('editModalBg');
+      bg.classList.remove('active');
+      bg.setAttribute('aria-hidden','true');
+      editingUserId = null;
+    }
+    document.getElementById('editModalClose').onclick = hideEditModal;
+    document.getElementById('editModalBg').onclick = function (e) { if (e.target === this) hideEditModal(); };
+
+    // Data / state
+    let allUsers = {};
+    let isAdmin = false;
+    let pinRevealState = {};
+
+    // Load users from Firebase
+    function getUsersFromFirebase() {
+      db.ref("users").on("value", snap => {
+        allUsers = snap.val() || {};
+        renderAdminUsersTable();
+        populateUserDropdown();
+      });
+    }
+
+    // populate username select
+    function populateUserDropdown() {
+      const usernameSelect = document.getElementById('usernameSelect');
+      let html = `<option value="">-- Select Username --</option>`;
+      Object.entries(allUsers).forEach(([id, user]) => {
+        // option value = user's name (keep backwards compatibility)
+        html += `<option value="${escapeHtml(user.name)}" data-id="${id}">${escapeHtml(user.name)}</option>`;
+      });
+      html += `<option value="admin">admin</option>`;
+      usernameSelect.innerHTML = html;
+      // reset pin
+      const pinInput = document.getElementById('pinInput');
       pinInput.value = "";
       pinInput.disabled = true;
-      return;
     }
-    pinInput.disabled = false;
-    pinInput.value = "";
-    pinInput.focus();
-  };
 
-  loginForm.onsubmit = function(e){
-    e.preventDefault();
-    loginError.textContent = '';
-    const username = usernameSelect.value;
-    const pin = pinInput.value.trim();
-    if(!username || !pin || pin.length!==4 || !/^\d{4}$/.test(pin)) {
-      loginError.textContent = "Select username and enter valid 4-digit PIN.";
-      return;
+    // escape helper for safety when injecting into innerHTML
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
     }
-    if(isAdmin || username === "admin") {
-      if(pin === "2025") {
-        localStorage.setItem('user', JSON.stringify({ name: "admin", role: "admin" }));
-        showAdminPanel();
-        return;
-      } else {
-        loginError.textContent = "Invalid admin PIN.";
-        return;
-      }
-    }
-    let found = null;
-    Object.entries(allUsers).forEach(([id, user])=>{
-      if(user.name === username && user.pin === pin) {
-        found = {id, ...user};
-      }
-    });
-    if(found) {
-      localStorage.setItem('user', JSON.stringify({ name: found.name, role: "driver" }));
-      showModal("Login Successful", `Welcome, <b>${found.name}</b>!`);
-      setTimeout(()=>{ window.location.href="index.html"; }, 900);
-    } else {
-      loginError.textContent = "Invalid username or PIN.";
-    }
-  };
 
-  adminLoginBtn.onclick = function(){
-    isAdmin = true;
-    usernameSelect.value = "admin";
-    pinInput.value = "";
-    pinInput.disabled = false;
-    pinInput.focus();
-    loginError.textContent = '';
-    adminLoginBtn.style.display = "none";
-    loginForm.querySelector(".login-btn").textContent = "Login as Admin";
-  };
-
-  function showAdminPanel() {
-    loginCard.style.display = "none";
-    adminPanel.style.display = "flex";
+    // initial load
     getUsersFromFirebase();
-  }
 
-  function renderAdminUsersTable() {
-    const tbody = document.getElementById('adminUsersTableBody');
-    tbody.innerHTML = '';
-    Object.entries(allUsers).forEach(([id, user])=>{
-      const reveal = pinRevealState[id] === true;
-      const pinMasked = "****";
-      tbody.innerHTML += `<tr>
-        <td class="admin-user-name">${user.name}</td>
-        <td class="admin-user-pin" id="adminPin_${id}">
-          ${reveal ? user.pin : pinMasked}
-          <button class="admin-pin-eye" title="${reveal ? "Hide" : "Show"} PIN" onclick="togglePinReveal('${id}')">
-            <i class="fa${reveal ? 's' : 'r'} fa-eye${reveal ? '-slash' : ''}"></i>
-          </button>
-        </td>
-        <td>${user.car ? user.car : '-'}</td>
-        <td style="word-break:break-all;">${user.address ? user.address : '-'}</td>
-        <td>
-          <div class="admin-actions-btns">
-            <button class="edit-btn" title="Edit" onclick='editUser("${id}")'><i class="fas fa-edit"></i></button>
-            <button class="delete-btn" title="Delete" onclick="deleteUser('${id}')"><i class="fas fa-trash"></i></button>
-          </div>
-        </td>
-      </tr>`;
+    // elements
+    const loginCard = document.getElementById('loginCard');
+    const adminPanel = document.getElementById('adminPanel');
+    const loginForm = document.getElementById('loginForm');
+    const usernameSelect = document.getElementById('usernameSelect');
+    const pinInput = document.getElementById('pinInput');
+    const loginError = document.getElementById('loginError');
+    const adminLoginBtn = document.getElementById('adminLoginBtn');
+
+    // When user selects a username: enable and auto-focus & select the PIN input
+    usernameSelect.addEventListener('change', function () {
+      const val = this.value;
+      if (!val || val === "") {
+        pinInput.value = "";
+        pinInput.disabled = true;
+        return;
+      }
+      // enable and focus and select (so user can immediately type)
+      pinInput.disabled = false;
+      pinInput.value = ""; // clear existing content
+      // give the browser a tiny time to enable before focus/select to ensure it works on mobile
+      setTimeout(() => {
+        try {
+          pinInput.focus();
+          if (pinInput.select) pinInput.select();
+        } catch (err) {
+          // ignore
+        }
+      }, 50);
     });
-  }
 
-  window.togglePinReveal = function(id) {
-    pinRevealState[id] = !pinRevealState[id];
-    renderAdminUsersTable();
-  };
+    // login handler
+    loginForm.onsubmit = function (e) {
+      e.preventDefault();
+      loginError.textContent = '';
+      const username = usernameSelect.value;
+      const pin = pinInput.value.trim();
+      if (!username || !pin || pin.length !== 4 || !/^\d{4}$/.test(pin)) {
+        loginError.textContent = "Select username and enter valid 4-digit PIN.";
+        return;
+      }
+      if (isAdmin || username === "admin") {
+        // admin PIN
+        if (pin === "2025") {
+          localStorage.setItem('user', JSON.stringify({ name: "admin", role: "admin" }));
+          showAdminPanel();
+          return;
+        } else {
+          loginError.textContent = "Invalid admin PIN.";
+          return;
+        }
+      }
 
-  window.editUser = function(id){
-    showEditModal(id, allUsers[id]);
-  }
-  window.deleteUser = function(id){
-    showConfirmModal("Delete User", "Are you sure you want to delete this user?", function(){
-      db.ref("users/"+id).remove();
-      showModal("Deleted", "User deleted successfully.");
+      // driver login
+      let found = null;
+      Object.entries(allUsers).forEach(([id, user]) => {
+        if (user.name === username && user.pin === pin) {
+          found = { id, ...user };
+        }
+      });
+
+      if (found) {
+        localStorage.setItem('user', JSON.stringify({ name: found.name, role: "driver" }));
+        showModal("Login Successful", `Welcome, <b>${escapeHtml(found.name)}</b>!`);
+        // navigate after a short delay (keeps original behaviour)
+        setTimeout(() => {
+          window.location.href = "index.html";
+        }, 900);
+      } else {
+        loginError.textContent = "Invalid username or PIN.";
+      }
+    };
+
+    // Admin quick login button: sets admin mode and focuses PIN input
+    adminLoginBtn.onclick = function () {
+      isAdmin = true;
+      usernameSelect.value = "admin";
+      pinInput.disabled = false;
+      pinInput.value = "";
+      setTimeout(() => {
+        pinInput.focus();
+        if (pinInput.select) pinInput.select();
+      }, 80);
+      loginError.textContent = '';
+      adminLoginBtn.style.display = "none";
+      document.getElementById('loginSubmitBtn').textContent = "Login as Admin";
+    };
+
+    // show admin panel
+    function showAdminPanel() {
+      loginCard.style.display = "none";
+      adminPanel.style.display = "flex";
+      // ensure table area is ready
+      getUsersFromFirebase();
+      // scroll only user list if beyond width - handled by CSS overflow-x:auto on .admin-user-table-section
+    }
+
+    // render users table
+    function renderAdminUsersTable() {
+      const tbody = document.getElementById('adminUsersTableBody');
+      tbody.innerHTML = '';
+      Object.entries(allUsers).forEach(([id, user]) => {
+        const reveal = pinRevealState[id] === true;
+        const pinDisplay = reveal ? escapeHtml(user.pin || '') : '****';
+        const car = user.car ? escapeHtml(user.car) : '-';
+        const address = user.address ? escapeHtml(user.address) : '-';
+
+        const tr = document.createElement('tr');
+
+        const tdName = document.createElement('td');
+        tdName.className = 'admin-user-name';
+        tdName.innerHTML = escapeHtml(user.name || '');
+        tr.appendChild(tdName);
+
+        const tdPin = document.createElement('td');
+        tdPin.className = 'admin-user-pin';
+        tdPin.innerHTML = `${pinDisplay} <button class="admin-pin-eye icon-btn" title="${reveal ? 'Hide PIN' : 'Show PIN'}" data-id="${id}"><i class="fa${reveal ? 's' : 'r'} fa-eye${reveal ? '-slash' : ''}"></i></button>`;
+        tr.appendChild(tdPin);
+
+        const tdCar = document.createElement('td');
+        tdCar.innerHTML = car;
+        tr.appendChild(tdCar);
+
+        const tdAddress = document.createElement('td');
+        tdAddress.style.wordBreak = 'break-all';
+        tdAddress.innerHTML = address;
+        tr.appendChild(tdAddress);
+
+        const tdActions = document.createElement('td');
+        const actionsWrap = document.createElement('div');
+        actionsWrap.className = 'admin-actions-btns';
+
+        const editBtn = document.createElement('button');
+        editBtn.className = 'edit-btn icon-btn';
+        editBtn.title = 'Edit';
+        editBtn.innerHTML = '<i class="fas fa-edit"></i>';
+        editBtn.onclick = function () { editUser(id); };
+        actionsWrap.appendChild(editBtn);
+
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'delete-btn icon-btn';
+        deleteBtn.title = 'Delete';
+        deleteBtn.innerHTML = '<i class="fas fa-trash"></i>';
+        deleteBtn.onclick = function () { deleteUser(id); };
+        actionsWrap.appendChild(deleteBtn);
+
+        tdActions.appendChild(actionsWrap);
+        tr.appendChild(tdActions);
+
+        tbody.appendChild(tr);
+      });
+
+      // attach toggle handlers for pin eye buttons (for delegated buttons that might exist)
+      document.querySelectorAll('.admin-pin-eye').forEach(btn => {
+        btn.onclick = function () {
+          const id = this.dataset.id;
+          togglePinReveal(id);
+        };
+      });
+    }
+
+    // toggle reveal
+    window.togglePinReveal = function (id) {
+      pinRevealState[id] = !pinRevealState[id];
+      renderAdminUsersTable();
+    };
+
+    // edit and delete actions
+    window.editUser = function (id) {
+      showEditModal(id, allUsers[id] || {});
+    };
+
+    window.deleteUser = function (id) {
+      showConfirmModal("Delete User", "Are you sure you want to delete this user?", function () {
+        db.ref("users/" + id).remove().then(() => {
+          showModal("Deleted", "User deleted successfully.");
+        }).catch(err => {
+          showModal("Error", "Could not delete user.");
+          console.error(err);
+        });
+      }, { confirmText: 'Delete', cancelText: 'Cancel', danger: true });
+    };
+
+    // Add user
+    document.getElementById('addUserBtn').onclick = function (e) {
+      e.preventDefault();
+      const uname = document.getElementById('addUserName').value.trim();
+      const upin = document.getElementById('addUserPin').value.trim();
+      const ucar = document.getElementById('addUserCar').value.trim();
+      const uaddress = document.getElementById('addUserAddress').value.trim();
+
+      if (!uname || !upin || upin.length !== 4 || !/^\d{4}$/.test(upin)) {
+        showModal("Error", "Enter valid username and 4-digit PIN.");
+        return;
+      }
+      const exists = Object.values(allUsers || {}).some(u => u.name && u.name.toLowerCase() === uname.toLowerCase());
+      if (exists) {
+        showModal("Error", "Username already exists.");
+        return;
+      }
+      const id = db.ref("users").push().key;
+      db.ref("users/" + id).set({ name: uname, pin: upin, car: ucar, address: uaddress })
+        .then(() => {
+          document.getElementById('addUserName').value = '';
+          document.getElementById('addUserPin').value = '';
+          document.getElementById('addUserCar').value = '';
+          document.getElementById('addUserAddress').value = '';
+          showModal("Added", "User added successfully.");
+        }).catch(err => {
+          showModal("Error", "Failed to add user.");
+          console.error(err);
+        });
+    };
+
+    // Save edited user
+    document.getElementById('editUserSaveBtn').onclick = function () {
+      const uname = document.getElementById('editUserName').value.trim();
+      const upin = document.getElementById('editUserPin').value.trim();
+      const ucar = document.getElementById('editUserCar').value.trim();
+      const uaddress = document.getElementById('editUserAddress').value.trim();
+      if (!uname || !upin || upin.length !== 4 || !/^\d{4}$/.test(upin)) {
+        showModal("Error", "Enter valid username and 4-digit PIN.");
+        return;
+      }
+      if (!editingUserId) {
+        showModal("Error", "No user selected to update.");
+        return;
+      }
+      db.ref("users/" + editingUserId).set({ name: uname, pin: upin, car: ucar, address: uaddress })
+        .then(() => {
+          hideEditModal();
+          showModal("Updated", "User updated successfully.");
+        }).catch(err => {
+          showModal("Error", "Failed to update user.");
+          console.error(err);
+        });
+    };
+
+    // Logout button asks confirmation with Logout/Cancel buttons (confirm is styled as danger)
+    document.getElementById('adminLogoutBtn').onclick = function () {
+      showConfirmModal("Logout", "Are you sure you want to logout?", function () {
+        localStorage.removeItem('user');
+        // redirect to login page - keep as it was in original code, page name is login.html
+        window.location.href = "login.html";
+      }, { confirmText: 'Logout', cancelText: 'Cancel', danger: true });
+    };
+
+    // Show All Reports - just navigate
+    document.getElementById('adminShowReportsBtn').onclick = function () {
+      window.location.href = "allreports.html";
+    };
+
+    // Accessibility: close modals with Escape
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        if (document.getElementById('confirmModalBg').classList.contains('active')) hideConfirmModal();
+        else if (document.getElementById('editModalBg').classList.contains('active')) hideEditModal();
+        else if (document.getElementById('modalBg').classList.contains('active')) hideModal();
+      }
     });
-  }
 
-  document.getElementById('addUserBtn').onclick = function(e){
-    e.preventDefault();
-    const uname = document.getElementById('addUserName').value.trim();
-    const upin = document.getElementById('addUserPin').value.trim();
-    const ucar = document.getElementById('addUserCar').value.trim();
-    const uaddress = document.getElementById('addUserAddress').value.trim();
-    if(!uname||!upin||upin.length!==4||!/^\d{4}$/.test(upin)) {
-      showModal("Error", "Enter valid username and 4-digit PIN.");
-      return;
-    }
-    const exists = Object.values(allUsers).some(u=>u.name.toLowerCase()===uname.toLowerCase());
-    if(exists) {
-      showModal("Error", "Username already exists.");
-      return;
-    }
-    const id = db.ref("users").push().key;
-    db.ref("users/"+id).set({name:uname,pin:upin,car:ucar,address:uaddress});
-    document.getElementById('addUserName').value = '';
-    document.getElementById('addUserPin').value = '';
-    document.getElementById('addUserCar').value = '';
-    document.getElementById('addUserAddress').value = '';
-    showModal("Added", "User added successfully.");
-  };
-
-  document.getElementById('editUserSaveBtn').onclick = function(){
-    const uname = document.getElementById('editUserName').value.trim();
-    const upin = document.getElementById('editUserPin').value.trim();
-    const ucar = document.getElementById('editUserCar').value.trim();
-    const uaddress = document.getElementById('editUserAddress').value.trim();
-    if(!uname||!upin||upin.length!==4||!/^\d{4}$/.test(upin)) {
-      showModal("Error", "Enter valid username and 4-digit PIN.");
-      return;
-    }
-    db.ref("users/"+editingUserId).set({name:uname,pin:upin,car:ucar,address:uaddress});
-    hideEditModal();
-    showModal("Updated", "User updated successfully.");
-  };
-
-  document.getElementById('adminLogoutBtn').onclick = function(){
-    showConfirmModal("Logout", "Are you sure you want to logout?", function(){
-      localStorage.removeItem('user');
-      window.location.href="login.html";
-    });
-  };
-
-  // Show All Reports Button Handler
-  document.getElementById('adminShowReportsBtn').onclick = function(){
-    window.location.href = "allreports.html";
-  };
-</script>
+    // Prevent page horizontal scroll while allowing table to scroll horizontally
+    // (ensures mobile fit: everything else will wrap)
+    (function ensureNoBodyScroll() {
+      document.documentElement.style.overflowX = 'hidden';
+      document.body.style.overflowX = 'hidden';
+    })();
+  </script>
 </body>
 </html>
