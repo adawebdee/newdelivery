@@ -20,6 +20,7 @@
       --shadow: 0 6px 32px #42a5f526;
       --admin-panel-max-width: 1150px;
     }
+
     html, body {
       min-height: 100vh;
       margin: 0;
@@ -33,6 +34,7 @@
       -webkit-text-size-adjust: 100%;
       text-size-adjust: 100%;
     }
+
     body {
       width: 100vw;
       min-height: 100vh;
@@ -41,6 +43,7 @@
       align-items: center;
       justify-content: center;
     }
+
     .page-wrapper {
       width: 100vw;
       min-height: 100vh;
@@ -51,6 +54,7 @@
       box-sizing: border-box;
       padding: 0;
     }
+
     .header {
       width: 100%;
       max-width: 420px;
@@ -58,6 +62,7 @@
       margin-bottom: 22px;
       margin-top: 10px;
     }
+
     .header-title {
       font-size: 1.33em;
       font-weight: 800;
@@ -68,6 +73,7 @@
       margin-top: 2px;
       display: block;
     }
+
     .header-desc {
       font-size: 1.05em;
       color: #bbdefb;
@@ -77,6 +83,7 @@
       margin-bottom: 2px;
       display: block;
     }
+
     .login-card {
       width: 100%;
       max-width: 410px;
@@ -92,6 +99,7 @@
       border: 1.5px solid var(--border);
       position: relative;
     }
+
     .login-title {
       font-size: 1.18em;
       font-weight: 700;
@@ -101,6 +109,7 @@
       margin-bottom: 8px;
       margin-top: 2px;
     }
+
     .login-form {
       display: flex;
       flex-direction: column;
@@ -108,12 +117,14 @@
       margin: 0 auto;
       align-items: stretch;
     }
+
     .login-form-row {
       display: flex;
       gap: 13px;
       justify-content: center;
       align-items: flex-end;
     }
+
     .login-form label {
       font-size: 1em;
       font-weight: 600;
@@ -123,6 +134,7 @@
       letter-spacing: 0.02em;
       display: block;
     }
+
     .login-form select,
     .login-form input {
       font-size: 1.09em;
@@ -142,8 +154,10 @@
       box-sizing: border-box;
       transition: border 0.18s, background 0.18s;
     }
+
     .login-form select:focus,
     .login-form input:focus { background: #232c45; border-color: var(--primary);}
+
     .login-form .pin-input {
       font-family: 'Poppins', monospace, Arial;
       letter-spacing: 0.12em;
@@ -154,6 +168,7 @@
       border: 1.5px solid var(--border);
       border-radius: 9px;
     }
+
     .login-form .login-btn {
       background: var(--primary);
       color: #fff;
@@ -169,7 +184,9 @@
       box-shadow: 0 2px 8px #42a5f533;
       letter-spacing: 0.03em;
     }
+
     .login-form .login-btn:hover { background: var(--primary-hover);}
+
     .login-form .admin-link {
       color: var(--primary-hover);
       font-size: 1em;
@@ -182,6 +199,7 @@
       cursor: pointer;
       letter-spacing: 0.01em;
     }
+
     .login-error {
       color: var(--red);
       font-size: 1em;
@@ -209,6 +227,7 @@
       border: 1.5px solid var(--border);
       box-sizing: border-box;
     }
+
     .admin-users-title {
       font-size: 1.26em;
       font-weight: 700;
@@ -219,6 +238,7 @@
       letter-spacing: 0.02em;
       text-shadow: 0 2px 8px #42a5f532;
     }
+
     .admin-add-user-form {
       width: 100%;
       max-width: 600px;
@@ -233,6 +253,7 @@
       border: 1.3px solid #364164;
       align-items: stretch;
     }
+
     .admin-add-user-form label {
       font-size: 1em;
       font-weight: 600;
@@ -241,6 +262,7 @@
       margin-left: 2px;
       letter-spacing: 0.02em;
     }
+
     .admin-add-user-form input {
       font-size: 1.07em;
       padding: 10px 12px;
@@ -255,7 +277,9 @@
       box-sizing: border-box;
       transition: border 0.18s, background 0.18s;
     }
+
     .admin-add-user-form input:focus { background: #28385b; border-color: var(--primary);}
+
     .admin-add-user-form .add-btn {
       font-size: 1.11em;
       background: var(--primary);
@@ -271,7 +295,9 @@
       box-shadow: 0 2px 8px #42a5f533;
       letter-spacing: 0.03em;
     }
+
     .admin-add-user-form .add-btn:hover { background: var(--primary-hover);}
+
     .admin-user-table-section {
       width: 100%;
       margin: 0 auto 12px auto;
@@ -280,6 +306,7 @@
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
     }
+
     .admin-users-table {
       width: 100%;
       border-collapse: separate;
@@ -289,6 +316,7 @@
       overflow: hidden;
       box-shadow: 0 1.5px 8px #009de018;
     }
+
     .admin-users-table th, .admin-users-table td {
       font-size: 1.02em;
       padding: 10px 6px;
@@ -297,6 +325,7 @@
       text-align: center;
       font-weight: 600;
     }
+
     .admin-users-table th {
       background: #223053;
       color: #fff;
@@ -304,7 +333,9 @@
       letter-spacing: 0.02em;
       border-top: 1.5px solid #384164;
     }
+
     .admin-users-table tr:last-child td { border-bottom: none; }
+
     .admin-users-table .admin-user-name { color: #fff; font-weight: 700;}
     .admin-users-table .admin-user-pin { letter-spacing: 0.13em;}
     .admin-users-table .admin-pin-eye {
@@ -320,7 +351,7 @@
     }
     .admin-users-table .admin-pin-eye:hover { color: var(--primary); }
 
-    /* Make edit/delete icons have transparent backgrounds (remove white bg) while preserving original sizes/styles */
+    /* Make edit/delete icons transparent background and preserve original size/style */
     .admin-users-table .admin-actions-btns {
       display: flex;
       gap: 6px;
@@ -328,7 +359,7 @@
       align-items: center;
     }
     .admin-users-table .admin-actions-btns button {
-      background: transparent; /* ensure transparent bg */
+      background: transparent; /* transparent background */
       border: none;
       padding: 0;
       margin: 0;
@@ -341,12 +372,15 @@
       justify-content: center;
     }
 
-    /* keep edit, delete colors as requested */
+    /* delete icon red color */
     .admin-users-table .delete-btn { color: var(--red); }
+
+    /* edit icon theme color */
     .admin-users-table .edit-btn { color: var(--primary); }
 
     .admin-users-table td { background: #212a40;}
     .admin-users-table th, .admin-users-table td { min-width: 110px;}
+
     .admin-show-reports-btn {
       background: var(--primary-hover);
       color: #fff;
@@ -367,6 +401,7 @@
       align-self: center;
     }
     .admin-show-reports-btn:hover { background: #333; }
+
     .admin-logout-btn {
       background: var(--red);
       color: #fff;
@@ -387,6 +422,7 @@
       align-self: center;
     }
     .admin-logout-btn:hover { background: #c11;}
+
     .edit-user-modal input {
       font-size: 1.07em;
       padding: 8px 15px;
@@ -400,14 +436,18 @@
       margin-top: 5px;
       width: 90%;
     }
+
     @media (max-width: 1100px) {
       .admin-panel { max-width: 99vw; }
       .admin-user-table-section { max-width: 99vw; }
     }
+
     @media (max-width: 800px) {
       .admin-users-table th, .admin-users-table td { font-size: 0.92em; min-width: 80px;}
       .admin-add-user-form { max-width: 99vw; }
     }
+
+    /* Mobile adjustments: make the admin add-user fields a little smaller so they fit with a small left/right space */
     @media (max-width: 600px) {
       html, body { font-size: 15px; }
       .login-card, .admin-panel {
@@ -422,25 +462,31 @@
       .login-form-row > div { width: 100%; min-width: 0; max-width: none; }
       .login-form select, .login-form input { width: 100%; min-width: 0; max-width: none; }
 
-      /* Make the "enter field cells" (admin-add-user-form input area) a little smaller in padding/height so they fit on small screens */
+      /* Reduce padding and input height slightly for admin add-user form so the fields don't overflow horizontally and there's small space left/right */
       .admin-add-user-form {
-        padding-left: 8px;
-        padding-right: 8px;
+        padding-left: 10px;
+        padding-right: 10px;
         gap: 12px;
       }
+      .admin-add-user-form > div {
+        padding-left: 6px;
+        padding-right: 6px;
+      }
       .admin-add-user-form input {
-        padding: 8px 10px; /* slightly smaller so fields don't overflow */
+        padding: 8px 10px; /* slightly smaller */
         font-size: 1.02em;
       }
 
       .login-card, .admin-panel, .header { text-align: center; }
       .admin-add-user-form { padding-left: 6px; padding-right: 6px;}
     }
+
     @media (max-width: 450px) {
       html, body { font-size: 13.2px; }
       .login-card, .admin-panel { max-width: 99vw;}
       .admin-users-table th, .admin-users-table td { font-size: 0.86em;}
     }
+
     .modal-bg { display: none; position: fixed; z-index: 500; top: 0; left: 0; right: 0; bottom: 0; width: 100vw; height: 100vh; background: rgba(13, 32, 70, 0.82); align-items: center; justify-content: center;}
     .modal-bg.active { display: flex;}
     .modal-content, .modal-confirm, .edit-user-modal {
@@ -469,6 +515,7 @@
     <span class="header-title"><i class="fas fa-user"></i> Delivery Drivers Login</span>
     <span class="header-desc">Ravintola Tandoori Villa</span>
   </div>
+
   <div id="loginCard" class="login-card">
     <div class="login-title">Login to continue</div>
     <form class="login-form" id="loginForm" autocomplete="off">
@@ -487,9 +534,11 @@
     </form>
     <div class="login-error" id="loginError"></div>
   </div>
+
   <!-- Admin Panel -->
   <div id="adminPanel" class="admin-panel">
     <div class="admin-users-title"><i class="fas fa-user-shield"></i> Admin Panel – Manage Users</div>
+
     <form class="admin-add-user-form" id="adminAddUserForm" autocomplete="off" onsubmit="return false;">
       <div>
         <label for="addUserName">Username</label>
@@ -509,6 +558,7 @@
       </div>
       <button class="add-btn" id="addUserBtn"><i class="fas fa-plus"></i> Add</button>
     </form>
+
     <div class="admin-user-table-section">
       <table class="admin-users-table">
         <thead>
@@ -524,9 +574,11 @@
         </tbody>
       </table>
     </div>
+
     <button class="admin-show-reports-btn" id="adminShowReportsBtn"><i class="fas fa-list-alt"></i> Show All Reports</button>
     <button class="admin-logout-btn" id="adminLogoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
   </div>
+
   <!-- Modals -->
   <div class="modal-bg" id="modalBg">
     <div class="modal-content" id="modalContent">
@@ -536,6 +588,7 @@
       <button class="modal-done-btn" id="modalDone">Done</button>
     </div>
   </div>
+
   <div class="modal-bg" id="confirmModalBg">
     <div class="modal-confirm" id="confirmModalContent">
       <div class="modal-confirm-title" id="confirmModalTitle"></div>
@@ -546,6 +599,7 @@
       </div>
     </div>
   </div>
+
   <div class="modal-bg" id="editModalBg">
     <div class="edit-user-modal" id="editUserModal">
       <button class="modal-close" id="editModalClose" title="Close">&times;</button>
@@ -558,6 +612,7 @@
     </div>
   </div>
 </div>
+
 <!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
