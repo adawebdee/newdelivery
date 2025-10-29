@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalalable=no"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
   <title>Delivery Drivers Log – Ravintola Tandoori Villa</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
@@ -29,6 +29,8 @@
       font-family: 'Poppins', Arial, sans-serif;
       color: #fff;
       overflow-x: hidden;
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
     }
     body {
       width: 100vw;
@@ -191,8 +193,44 @@
       vertical-align: middle;
       box-shadow: 0 0 6px 2px #33ff588a;
     }
-    /* --- 2x2 GRID LAYOUT FOR FIELDS --- */
-    .driver-fields-grid2x2 {
+    .driver-card-header .driver-name {
+      font-size: 1.08em;
+      font-weight: 700;
+      color: #fff;
+      flex: 1 1 auto;
+      min-width: 0;
+      letter-spacing: 0.04em;
+      overflow-wrap: break-word;
+      word-break: break-word;
+      white-space: normal;
+      display: inline-block;
+      margin-right: 10px;
+    }
+    .driver-card-header .driver-date {
+      font-size: 0.97em;
+      color: #d5f5ff;
+      background: #183350;
+      border-radius: 0.5em;
+      padding: 3px 8px;
+      border: none;
+      outline: none;
+      font-family: inherit;
+      font-weight: 600;
+      width: 120px;
+      min-width: 120px;
+      max-width: 160px;
+      text-align: center;
+      flex-shrink: 0;
+      margin-right: 10px;
+      position: relative;
+      z-index: 1;
+      cursor: pointer;
+    }
+    .driver-card-header .driver-date[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer;}
+    .driver-card-header .driver-delete { color: var(--red); font-size: 1.14em; border: none; background: none; cursor: pointer; margin-left: auto; border-radius: 50%; padding: 0.07em 0.36em; transition: background 0.11s; flex-shrink: 0;}
+
+    /* --- TWO ROWS GRID LAYOUT FOR FIELDS --- */
+    .driver-fields-2rows {
       display: grid;
       grid-template-columns: 1fr 1fr;
       grid-template-rows: 1fr 1fr;
@@ -201,7 +239,7 @@
       align-items: center;
       justify-items: stretch;
     }
-    .driver-fields-grid2x2 label {
+    .driver-fields-2rows label {
       font-size: 1em;
       font-weight: 600;
       color: #bbdefb;
@@ -209,7 +247,7 @@
       white-space: nowrap;
       margin-bottom: 4px;
     }
-    .driver-fields-grid2x2 .grid-cell {
+    .driver-fields-2rows .grid-cell {
       display: flex;
       flex-direction: column;
       align-items: stretch;
@@ -290,11 +328,11 @@
     @media (max-width: 1100px) { .log-board { max-width: 99vw; } .driver-card { min-width: 0; max-width: 99vw; } }
     @media (max-width: 900px) { .log-board { grid-template-columns: 1fr; padding: 0 8px; gap: 16px; } .driver-card { min-width: 98vw; max-width: 98vw; font-size: 0.97em; } }
     @media (max-width: 650px) {
-      .driver-fields-grid2x2 {grid-template-columns: 1fr; grid-template-rows: 1fr 1fr 1fr 1fr;}
+      .driver-fields-2rows {grid-template-columns: 1fr; grid-template-rows: 1fr 1fr 1fr 1fr;}
     }
     @media (max-width: 450px) {
       html, body { font-size: 14px; }
-      .driver-card-header, .driver-fields-grid2x2, .driver-btns, .driver-km-result {padding-left:4px;padding-right:4px;}
+      .driver-card-header, .driver-fields-2rows, .driver-btns, .driver-km-result {padding-left:4px;padding-right:4px;}
       .driver-card { font-size: 0.93em;}
     }
     .modal-bg { display: none; position: fixed; z-index: 500; top: 0; left: 0; right: 0; bottom: 0; width: 100vw; height: 100vh; background: rgba(13, 32, 70, 0.82); align-items: center; justify-content: center;}
@@ -451,6 +489,16 @@
     }
 
     function pad2(n){return String(n).padStart(2,'0');}
+    function formatTime(sec) {
+      const h = String(Math.floor(sec/3600)).padStart(2,'0');
+      const m = String(Math.floor((sec%3600)/60)).padStart(2,'0');
+      const s = String(sec%60).padStart(2,'0');
+      return `${h}:${m}:${s}`;
+    }
+    function nowTimeStr() {
+      const d = new Date();
+      return pad2(d.getHours()) + ":" + pad2(d.getMinutes()) + ":" + pad2(d.getSeconds());
+    }
     function toDisplayDate(isoStr) {
       if (!isoStr) return '';
       const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
@@ -540,9 +588,9 @@
         }
         card.appendChild(headerRow);
 
-        // --- 2x2 GRID FIELDS ---
+        // --- 2 ROWS FIELDS ---
         const fieldsGrid = document.createElement('div');
-        fieldsGrid.className = 'driver-fields-grid2x2';
+        fieldsGrid.className = 'driver-fields-2rows';
 
         // KM IN (Top Left)
         const cellKmIn = document.createElement('div');
@@ -652,11 +700,11 @@
         cellTimeOut.appendChild(timeOutLbl);
         cellTimeOut.appendChild(timeOutWrap);
 
-        // Add to grid, order: top left, top right, bottom left, bottom right
-        fieldsGrid.appendChild(cellKmIn);    // grid-row: 1, grid-column: 1
-        fieldsGrid.appendChild(cellKmOut);   // grid-row: 1, grid-column: 2
-        fieldsGrid.appendChild(cellTimeIn);  // grid-row: 2, grid-column: 1
-        fieldsGrid.appendChild(cellTimeOut); // grid-row: 2, grid-column: 2
+        // Add to grid: top left, top right, bottom left, bottom right
+        fieldsGrid.appendChild(cellKmIn);
+        fieldsGrid.appendChild(cellKmOut);
+        fieldsGrid.appendChild(cellTimeIn);
+        fieldsGrid.appendChild(cellTimeOut);
 
         card.appendChild(fieldsGrid);
 
@@ -752,10 +800,10 @@
         const s = driverState[userId];
         if (!s) return;
         const btns = card.querySelectorAll('.driver-btns button');
-        const kmIn = card.querySelector('.driver-fields-grid2x2 .grid-cell:nth-child(1) input[type="number"]');
-        const kmOut = card.querySelector('.driver-fields-grid2x2 .grid-cell:nth-child(2) input[type="number"]');
-        const timeIn = card.querySelector('.driver-fields-grid2x2 .grid-cell:nth-child(3) input[type="time"]');
-        const timeOut = card.querySelector('.driver-fields-grid2x2 .grid-cell:nth-child(4) input[type="time"]');
+        const kmIn = card.querySelector('.driver-fields-2rows .grid-cell:nth-child(1) input[type="number"]');
+        const kmOut = card.querySelector('.driver-fields-2rows .grid-cell:nth-child(2) input[type="number"]');
+        const timeIn = card.querySelector('.driver-fields-2rows .grid-cell:nth-child(3) input[type="time"]');
+        const timeOut = card.querySelector('.driver-fields-2rows .grid-cell:nth-child(4) input[type="time"]');
         const greenDot = card.querySelector('.green-dot');
         if (btns.length === 2) {
           btns[0].disabled = s.running || !s.kmIn || !s.date || s.kmIn.length < 1 || s.kmIn.length > 9 || !s.timeIn;
