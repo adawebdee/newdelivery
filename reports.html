@@ -235,7 +235,7 @@
       border-collapse: separate;
       border-spacing: 0;
       width: 100%;
-      min-width: 700px;
+      min-width: 900px;
       margin: 0 auto;
       font-family: inherit;
       font-size: 0.98em;
@@ -296,13 +296,13 @@
     .pagination-bar .disabled, .pagination-bar button:disabled { opacity: 0.5; pointer-events: none;}
     @media (max-width: 900px) {
       .driver-report-table-wrap { max-width: 100vw; }
-      .driver-report-table { min-width: 530px; font-size: 0.96em;}
+      .driver-report-table { min-width: 730px; font-size: 0.96em;}
       .driver-report-table th, .driver-report-table td { padding: 8px 8px;}
     }
     @media (max-width: 600px) {
       html, body { font-size: 15px; }
       .driver-report-table-wrap { min-width: 99vw; }
-      .driver-report-table { min-width: 430px; font-size: 0.95em;}
+      .driver-report-table { min-width: 630px; font-size: 0.95em;}
       .driver-report-table th, .driver-report-table td { padding: 8px 8px;}
       .reports-bar .row2 {
         flex-direction: column;
@@ -318,7 +318,7 @@
     @media (max-width: 450px) {
       html, body { font-size: 14px; }
       .driver-report-table-wrap { min-width: 99vw;}
-      .driver-report-table { min-width: 370px;}
+      .driver-report-table { min-width: 570px;}
     }
     .modal-bg { display: none; position: fixed; z-index: 500; top: 0; left: 0; right: 0; bottom: 0; width: 100vw; height: 100vh; background: rgba(13, 32, 70, 0.82); align-items: center; justify-content: center;}
     .modal-bg.active { display: flex;}
@@ -632,19 +632,23 @@
         <th>Km In</th>
         <th>Km Out</th>
         <th>Total KM</th>
+        <th>Time In</th>
+        <th>Time Out</th>
         <th>Delete</th>
       </tr>
     </thead><tbody>`;
     if(pageRows.length===0){
-      tableHTML += `<tr><td colspan="5" style="text-align:center;color:#93c7e6;font-size:1.1em;font-weight:700;">No report data.</td></tr>`;
+      tableHTML += `<tr><td colspan="7" style="text-align:center;color:#93c7e6;font-size:1.1em;font-weight:700;">No report data.</td></tr>`;
     } else {
       pageRows.forEach(day=>{
         day.logs.forEach((row)=>{
           tableHTML += `<tr>
             <td>${toDisplayDate(row.date)}</td>
-            <td>${row.kmIn}</td>
-            <td>${row.kmOut}</td>
-            <td>${row.totalKm}</td>
+            <td>${row.kmIn ?? ''}</td>
+            <td>${row.kmOut ?? ''}</td>
+            <td>${row.totalKm ?? ''}</td>
+            <td>${row.timeIn ?? ''}</td>
+            <td>${row.timeOut ?? ''}</td>
             <td><button class="delete-row-btn" title="Delete this report" onclick="deleteReportRow('${row.id}')"><i class="fas fa-trash"></i></button></td>
           </tr>`;
         });
