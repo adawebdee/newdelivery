@@ -474,16 +474,6 @@
     }
 
     function pad2(n){return String(n).padStart(2,'0');}
-    function formatTime(sec) {
-      const h = String(Math.floor(sec/3600)).padStart(2,'0');
-      const m = String(Math.floor((sec%3600)/60)).padStart(2,'0');
-      const s = String(sec%60).padStart(2,'0');
-      return `${h}:${m}:${s}`;
-    }
-    function nowTimeStr() {
-      const d = new Date();
-      return pad2(d.getHours()) + ":" + pad2(d.getMinutes()) + ":" + pad2(d.getSeconds());
-    }
     function toDisplayDate(isoStr) {
       if (!isoStr) return '';
       const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
@@ -601,7 +591,6 @@
           renderKmResult();
         };
         kmIn.oninput = function(e) {
-          // Only update state, do not save or recalc until blur
           s.kmIn = e.target.value;
         };
         const kmInUnit = document.createElement('span');
@@ -636,7 +625,6 @@
           renderKmResult();
         };
         kmOut.oninput = function(e) {
-          // Only update state, do not save or recalc until blur
           s.kmOut = e.target.value;
         };
         const kmOutUnit = document.createElement('span');
@@ -739,6 +727,16 @@
             alert("Enter valid ending km (greater than or equal to start)");
             return;
           }
+          // Store all fields before clearing for the modal
+          const summary = {
+            name: userObj.name,
+            date: s.date,
+            kmIn: s.kmIn,
+            kmOut: s.kmOut,
+            totalKm: (+s.kmOut - +s.kmIn),
+            timeIn: s.timeIn,
+            timeOut: s.timeOut
+          };
           s.stopped = true;
           s.running = false;
           stopBtn.disabled = true;
@@ -752,20 +750,20 @@
           updateDriverState(userId);
           renderKmResult();
           showModal(
-            `<b><i class="fas fa-user"></i> ${userObj.name}</b><br>
-            <span style="color:#fff;">${toDisplayDate(s.date)}</span><br>
-            <span style="color:var(--primary)">Total: ${+s.kmOut - +s.kmIn} km</span><br>
-            <span>Time In: ${s.timeIn || '-'}</span><br>
-            <span>Time Out: ${s.timeOut || '-'}</span>`
+            `<b><i class="fas fa-user"></i> ${summary.name}</b><br>
+            <span style="color:#fff;">${toDisplayDate(summary.date)}</span><br>
+            <span style="color:var(--primary)">Total: ${summary.totalKm} km</span><br>
+            <span>Time In: ${summary.timeIn || '-'}</span><br>
+            <span>Time Out: ${summary.timeOut || '-'}</span>`
           );
           db.ref("logs").push({
-            date: s.date,
-            name: userObj.name,
-            kmIn: s.kmIn,
-            kmOut: s.kmOut,
-            totalKm: (+s.kmOut - +s.kmIn).toString(),
-            timeIn: s.timeIn || "",
-            timeOut: s.timeOut || "",
+            date: summary.date,
+            name: summary.name,
+            kmIn: summary.kmIn,
+            kmOut: summary.kmOut,
+            totalKm: summary.totalKm.toString(),
+            timeIn: summary.timeIn || "",
+            timeOut: summary.timeOut || "",
             timestamp: new Date().toISOString()
           });
           s.kmIn = ""; s.kmOut = ""; s.timeIn = ""; s.timeOut = ""; s.stopped = false;
