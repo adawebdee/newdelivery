@@ -6,8 +6,7 @@
   <title>Delivery Drivers Log – Ravintola Tandoori Villa</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
-  <style>
-    :root {
+  <style> :root {
       --main-bg: linear-gradient(135deg, #0d47a1 0%, #000 100%);
       --card-bg: #181c24;
       --primary: #42a5f5;
@@ -371,6 +370,7 @@
     .modal-confirm-btn { background: var(--red); color: #fff; border: none; border-radius: 10px; font-size: 1.01em; font-weight: 700; padding: 7px 22px; cursor: pointer; transition: background 0.18s; font-family: inherit; box-shadow: 0 2px 8px #ff3b3033; letter-spacing: 0.03em;}
     .modal-confirm-btn:hover { background: #c11;}
     .modal-cancel-btn { background: var(--border); color: #bbdefb; border: none; border-radius: 10px; font-size: 1.01em; font-weight: 700; padding: 7px 22px; cursor: pointer; transition: background 0.18s; font-family: inherit; box-shadow: 0 2px 8px #212a4033; letter-spacing: 0.03em;}
+ 
   </style>
 </head>
 <body>
@@ -517,10 +517,14 @@
       return `${pad2(d)}/${months[mIndex]}/${y}`;
     }
 
+    // MODIFIED renderDrivers FUNCTION (only this function changed)
     function renderDrivers() {
       const driverBoard = document.getElementById('driverBoard');
       driverBoard.innerHTML = "";
       Object.entries(allUsers).forEach(([userId, userObj]) => {
+        // Only show logged-in user's card if not admin
+        if (!isAdmin && userObj.name !== currentUser) return;
+
         if (!driverState[userId]) driverState[userId] = {
           kmIn: "",
           kmOut: "",
