@@ -312,6 +312,7 @@
       margin: 0.15em 0;
       padding-left: 0.15em;
       padding-right: 0.2em;
+      position: relative;
     }
     .grid-time-wrap input[type="time"] {
       width: 100%;
@@ -328,23 +329,23 @@
       white-space: nowrap;
       box-shadow: none;
       min-width: 0;
+      z-index: 2;
     }
-    .grid-time-wrap .time-icon {
-      color: #bbdefb;
-      font-size: 1.17em;
-      margin-left: 7px;
-      cursor: pointer;
-      transition: color 0.13s;
+    .time-picker-icon {
+      position: absolute;
+      right: 8px;
       z-index: 3;
-      background: none;
-      border: none;
-      outline: none;
-      padding: 2px;
-      border-radius: 5px;
-    }
-    .grid-time-wrap .time-icon:hover {
       color: var(--primary);
-      background: #26315977;
+      font-size: 1.06em;
+      cursor: pointer;
+      top: 0; bottom: 0;
+      margin: auto 0;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      background: transparent;
+      border: none;
+      padding: 0;
     }
     .driver-km-result { margin: 0 0 2px 0; font-size: 1.08em; font-weight: 700; color: var(--primary); font-family: inherit; letter-spacing: 0.04em; text-align: left; padding: 0 15px; min-height: 21px; display: flex; align-items: center; gap: 0.4em;}
     .driver-btns { display: flex; gap: 0.7em; margin-top: 8px; padding: 0 15px 15px 15px;}
@@ -538,7 +539,7 @@
       const driverBoard = document.getElementById('driverBoard');
       driverBoard.innerHTML = "";
       Object.entries(allUsers).forEach(([userId, userObj]) => {
-        // Only show logged-in user's card if not admin
+        // Show only the logged-in user's driver card unless admin
         if (!isAdmin && userObj.name !== currentUser) return;
 
         if (!driverState[userId]) driverState[userId] = {
@@ -635,18 +636,18 @@
         kmIn.value = s.kmIn;
         kmIn.disabled = s.running;
         kmIn.maxLength = 9;
-        kmIn.autocomplete = "off";
-        kmIn.oninput = function(e) {
-          s.kmIn = e.target.value;
-          renderBtnStates();
-        };
-        kmIn.onblur = function(e) {
-          s.kmIn = e.target.value;
-          updateDriverState(userId);
-          renderBtnStates();
-        };
         kmIn.onfocus = function() {
           kmIn.disabled = false;
+        };
+        kmIn.onblur = function(e) {
+          kmIn.disabled = s.running;
+          if (e.target.value.length < 1 || e.target.value.length > 9) return;
+          s.kmIn = e.target.value;
+          updateDriverState(userId);
+          renderKmResult();
+        };
+        kmIn.oninput = function(e) {
+          s.kmIn = e.target.value;
         };
         const kmInUnit = document.createElement('span');
         kmInUnit.className = 'km-unit';
@@ -669,18 +670,18 @@
         kmOut.value = s.kmOut;
         kmOut.disabled = !s.running;
         kmOut.maxLength = 9;
-        kmOut.autocomplete = "off";
-        kmOut.oninput = function(e) {
-          s.kmOut = e.target.value;
-          renderBtnStates();
+        kmOut.onfocus = function() {
+          kmOut.disabled = false;
         };
         kmOut.onblur = function(e) {
+          kmOut.disabled = !s.running;
+          if (e.target.value.length < 1 || e.target.value.length > 9) return;
           s.kmOut = e.target.value;
           updateDriverState(userId);
-          renderBtnStates();
+          renderKmResult();
         };
-        kmOut.onfocus = function() {
-          kmOut.disabled = !s.running;
+        kmOut.oninput = function(e) {
+          s.kmOut = e.target.value;
         };
         const kmOutUnit = document.createElement('span');
         kmOutUnit.className = 'km-unit';
@@ -703,25 +704,24 @@
         timeIn.disabled = s.running;
         timeIn.oninput = function(e) {
           s.timeIn = e.target.value;
-          renderBtnStates();
-        };
-        timeIn.onblur = function(e) {
-          s.timeIn = e.target.value;
           updateDriverState(userId);
-          renderBtnStates();
         };
-        // Add clock icon
+        timeInWrap.appendChild(timeIn);
+
+        // Time In Icon
         const timeInIcon = document.createElement('button');
-        timeInIcon.type = "button";
-        timeInIcon.className = 'time-icon';
-        timeInIcon.innerHTML = '<i class="fas fa-clock"></i>';
+        timeInIcon.className = 'time-picker-icon';
+        timeInIcon.type = 'button';
+        timeInIcon.title = "Pick Time";
+        timeInIcon.innerHTML = `<i class="far fa-clock"></i>`;
         timeInIcon.onclick = function(e) {
           e.preventDefault();
+          if (timeIn.disabled) return;
           timeIn.showPicker && timeIn.showPicker();
           timeIn.focus();
         };
-        timeInWrap.appendChild(timeIn);
         timeInWrap.appendChild(timeInIcon);
+
         cellTimeIn.appendChild(timeInLbl);
         cellTimeIn.appendChild(timeInWrap);
 
@@ -738,25 +738,24 @@
         timeOut.disabled = !s.running;
         timeOut.oninput = function(e) {
           s.timeOut = e.target.value;
-          renderBtnStates();
-        };
-        timeOut.onblur = function(e) {
-          s.timeOut = e.target.value;
           updateDriverState(userId);
-          renderBtnStates();
         };
-        // Add clock icon
+        timeOutWrap.appendChild(timeOut);
+
+        // Time Out Icon
         const timeOutIcon = document.createElement('button');
-        timeOutIcon.type = "button";
-        timeOutIcon.className = 'time-icon';
-        timeOutIcon.innerHTML = '<i class="fas fa-clock"></i>';
+        timeOutIcon.className = 'time-picker-icon';
+        timeOutIcon.type = 'button';
+        timeOutIcon.title = "Pick Time";
+        timeOutIcon.innerHTML = `<i class="far fa-clock"></i>`;
         timeOutIcon.onclick = function(e) {
           e.preventDefault();
+          if (timeOut.disabled) return;
           timeOut.showPicker && timeOut.showPicker();
           timeOut.focus();
         };
-        timeOutWrap.appendChild(timeOut);
         timeOutWrap.appendChild(timeOutIcon);
+
         cellTimeOut.appendChild(timeOutLbl);
         cellTimeOut.appendChild(timeOutWrap);
 
@@ -775,8 +774,8 @@
           if(s.kmIn && s.kmOut && 
              !isNaN(+s.kmIn) && !isNaN(+s.kmOut) && 
              +s.kmOut >= +s.kmIn && 
-             (s.kmIn+"").length >= 1 && (s.kmIn+"").length <= 9 &&
-             (s.kmOut+"").length >= 1 && (s.kmOut+"").length <= 9
+             s.kmIn.length >= 1 && s.kmIn.length <= 9 &&
+             s.kmOut.length >= 1 && s.kmOut.length <= 9
           ) {
             kmResult.innerHTML = `<i class="fas fa-road"></i> Today: <span style="font-weight:900;color:var(--primary)">` + (+s.kmOut - +s.kmIn) + ` km</span>`;
           } else { kmResult.textContent = ''; }
@@ -789,37 +788,32 @@
         btns.className = 'driver-btns';
         const startBtn = document.createElement('button');
         startBtn.innerHTML = `<i class="fas fa-play"></i> Start`;
-        const stopBtn = document.createElement('button');
-        stopBtn.innerHTML = `<i class="fas fa-stop"></i> Stop`;
-        stopBtn.className = "stop-btn";
-        btns.appendChild(startBtn);
-        btns.appendChild(stopBtn);
-        card.appendChild(btns);
-
-        function renderBtnStates() {
-          startBtn.disabled = s.running || !s.kmIn || !s.date || !s.timeIn || (s.kmIn+"").length < 1 || (s.kmIn+"").length > 9;
-          stopBtn.disabled = !s.running || !s.kmOut || (s.kmOut+"").length < 1 || (s.kmOut+"").length > 9 || !s.timeOut;
-          kmIn.disabled = s.running;
-          kmOut.disabled = !s.running;
-          timeIn.disabled = s.running;
-          timeOut.disabled = !s.running;
-        }
-        renderBtnStates();
-
+        startBtn.disabled = s.running || !s.kmIn || !s.date || s.kmIn.length < 1 || s.kmIn.length > 9 || !s.timeIn;
         startBtn.onclick = () => {
           s.running = true;
           s.stopped = false;
-          renderBtnStates();
+          startBtn.disabled = true;
+          stopBtn.disabled = false;
+          kmIn.disabled = true;
+          kmOut.disabled = false;
+          timeIn.disabled = true;
+          timeOut.disabled = false;
           card.classList.add('active');
           greenDot.style.display = "inline-block";
           updateDriverState(userId);
         };
+        btns.appendChild(startBtn);
 
+        const stopBtn = document.createElement('button');
+        stopBtn.innerHTML = `<i class="fas fa-stop"></i> Stop`;
+        stopBtn.className = "stop-btn";
+        stopBtn.disabled = !s.running || !s.kmOut || s.kmOut.length < 1 || s.kmOut.length > 9 || !s.timeOut;
         stopBtn.onclick = () => {
           if (!s.kmOut || Number(s.kmOut) < Number(s.kmIn)) {
             alert("Enter valid ending km (greater than or equal to start)");
             return;
           }
+          // Store all fields before clearing for the modal
           const summary = {
             name: userObj.name,
             date: s.date,
@@ -832,12 +826,18 @@
 
           s.stopped = true;
           s.running = false;
-          renderBtnStates();
+          stopBtn.disabled = true;
+          startBtn.disabled = false;
+          kmIn.disabled = false;
+          kmOut.disabled = true;
+          timeIn.disabled = false;
+          timeOut.disabled = true;
           card.classList.remove('active');
           greenDot.style.display = "none";
           updateDriverState(userId);
           renderKmResult();
 
+          // Show modal BEFORE clearing fields
           showModal(
             `<b><i class="fas fa-user"></i> ${summary.name}</b><br>
             <span style="color:#fff;">${toDisplayDate(summary.date)}</span><br>
@@ -857,10 +857,13 @@
             timestamp: new Date().toISOString()
           });
 
+          // Clear after modal shown!
           s.kmIn = ""; s.kmOut = ""; s.timeIn = ""; s.timeOut = ""; s.stopped = false;
           updateDriverState(userId);
           renderDrivers();
         };
+        btns.appendChild(stopBtn);
+        card.appendChild(btns);
 
         driverBoard.appendChild(card);
       });
@@ -868,7 +871,8 @@
 
     setInterval(() => {
       Array.from(driverBoard.children).forEach((card, i) => {
-        const userId = Object.keys(allUsers)[i];
+        // Only update the visible cards, which are the logged-in user (unless admin)
+        const userId = Object.keys(allUsers).filter((uid) => isAdmin || allUsers[uid].name === currentUser)[i];
         const s = driverState[userId];
         if (!s) return;
         const btns = card.querySelectorAll('.driver-btns button');
@@ -878,8 +882,8 @@
         const timeOut = card.querySelector('.driver-fields-2rows .grid-cell:nth-child(4) input[type="time"]');
         const greenDot = card.querySelector('.green-dot');
         if (btns.length === 2) {
-          btns[0].disabled = s.running || !s.kmIn || !s.date || !s.timeIn || (s.kmIn+"").length < 1 || (s.kmIn+"").length > 9;
-          btns[1].disabled = !s.running || !s.kmOut || (s.kmOut+"").length < 1 || (s.kmOut+"").length > 9 || !s.timeOut;
+          btns[0].disabled = s.running || !s.kmIn || !s.date || s.kmIn.length < 1 || s.kmIn.length > 9 || !s.timeIn;
+          btns[1].disabled = !s.running || !s.kmOut || s.kmOut.length < 1 || s.kmOut.length > 9 || !s.timeOut;
         }
         if (kmIn) kmIn.disabled = s.running;
         if (kmOut) kmOut.disabled = !s.running;
@@ -888,7 +892,7 @@
         if (greenDot) greenDot.style.display = s.running ? "inline-block" : "none";
         const kmResult = card.querySelector('.driver-km-result');
         if(kmResult) {
-          if(s.kmIn && s.kmOut && !isNaN(+s.kmIn) && !isNaN(+s.kmOut) && +s.kmOut >= +s.kmIn && (s.kmIn+"").length >= 1 && (s.kmIn+"").length <= 9 && (s.kmOut+"").length >= 1 && (s.kmOut+"").length <= 9) {
+          if(s.kmIn && s.kmOut && !isNaN(+s.kmIn) && !isNaN(+s.kmOut) && +s.kmOut >= +s.kmIn && s.kmIn.length >= 1 && s.kmIn.length <= 9 && s.kmOut.length >= 1 && s.kmOut.length <= 9) {
             kmResult.innerHTML = `<i class="fas fa-road"></i> Today: <span style="font-weight:900;color:var(--primary)">` + (+s.kmOut - +s.kmIn) + ` km</span>`;
           } else { kmResult.textContent = ''; }
         }
@@ -896,6 +900,7 @@
         else card.classList.remove('active');
       });
     }, 350);
+
   </script>
 </body>
 </html>
