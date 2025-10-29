@@ -638,7 +638,7 @@
         kmIn.autocomplete = "off";
         kmIn.oninput = function(e) {
           s.kmIn = e.target.value;
-          // Only update state on blur, so user enters full value first
+          renderBtnStates();
         };
         kmIn.onblur = function(e) {
           s.kmIn = e.target.value;
@@ -672,6 +672,7 @@
         kmOut.autocomplete = "off";
         kmOut.oninput = function(e) {
           s.kmOut = e.target.value;
+          renderBtnStates();
         };
         kmOut.onblur = function(e) {
           s.kmOut = e.target.value;
@@ -702,6 +703,7 @@
         timeIn.disabled = s.running;
         timeIn.oninput = function(e) {
           s.timeIn = e.target.value;
+          renderBtnStates();
         };
         timeIn.onblur = function(e) {
           s.timeIn = e.target.value;
@@ -736,6 +738,7 @@
         timeOut.disabled = !s.running;
         timeOut.oninput = function(e) {
           s.timeOut = e.target.value;
+          renderBtnStates();
         };
         timeOut.onblur = function(e) {
           s.timeOut = e.target.value;
