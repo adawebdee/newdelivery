@@ -638,7 +638,7 @@
         kmIn.autocomplete = "off";
         kmIn.oninput = function(e) {
           s.kmIn = e.target.value;
-          // Don't enable start button yet, wait for blur!
+          // Only update state on blur, so user enters full value first
         };
         kmIn.onblur = function(e) {
           s.kmIn = e.target.value;
@@ -708,6 +708,7 @@
           updateDriverState(userId);
           renderBtnStates();
         };
+        // Add clock icon
         const timeInIcon = document.createElement('button');
         timeInIcon.type = "button";
         timeInIcon.className = 'time-icon';
@@ -741,6 +742,7 @@
           updateDriverState(userId);
           renderBtnStates();
         };
+        // Add clock icon
         const timeOutIcon = document.createElement('button');
         timeOutIcon.type = "button";
         timeOutIcon.className = 'time-icon';
@@ -770,8 +772,8 @@
           if(s.kmIn && s.kmOut && 
              !isNaN(+s.kmIn) && !isNaN(+s.kmOut) && 
              +s.kmOut >= +s.kmIn && 
-             s.kmIn.length >= 1 && s.kmIn.length <= 9 &&
-             s.kmOut.length >= 1 && s.kmOut.length <= 9
+             (s.kmIn+"").length >= 1 && (s.kmIn+"").length <= 9 &&
+             (s.kmOut+"").length >= 1 && (s.kmOut+"").length <= 9
           ) {
             kmResult.innerHTML = `<i class="fas fa-road"></i> Today: <span style="font-weight:900;color:var(--primary)">` + (+s.kmOut - +s.kmIn) + ` km</span>`;
           } else { kmResult.textContent = ''; }
@@ -792,7 +794,6 @@
         card.appendChild(btns);
 
         function renderBtnStates() {
-          // KM and time must both be filled and then blurred (so that value is stored)
           startBtn.disabled = s.running || !s.kmIn || !s.date || !s.timeIn || (s.kmIn+"").length < 1 || (s.kmIn+"").length > 9;
           stopBtn.disabled = !s.running || !s.kmOut || (s.kmOut+"").length < 1 || (s.kmOut+"").length > 9 || !s.timeOut;
           kmIn.disabled = s.running;
@@ -803,7 +804,6 @@
         renderBtnStates();
 
         startBtn.onclick = () => {
-          if (startBtn.disabled) return;
           s.running = true;
           s.stopped = false;
           renderBtnStates();
@@ -813,12 +813,10 @@
         };
 
         stopBtn.onclick = () => {
-          if (stopBtn.disabled) return;
           if (!s.kmOut || Number(s.kmOut) < Number(s.kmIn)) {
             alert("Enter valid ending km (greater than or equal to start)");
             return;
           }
-          // Store all fields before clearing for the modal
           const summary = {
             name: userObj.name,
             date: s.date,
@@ -837,7 +835,6 @@
           updateDriverState(userId);
           renderKmResult();
 
-          // Show modal BEFORE clearing fields
           showModal(
             `<b><i class="fas fa-user"></i> ${summary.name}</b><br>
             <span style="color:#fff;">${toDisplayDate(summary.date)}</span><br>
@@ -857,7 +854,6 @@
             timestamp: new Date().toISOString()
           });
 
-          // Clear after modal shown!
           s.kmIn = ""; s.kmOut = ""; s.timeIn = ""; s.timeOut = ""; s.stopped = false;
           updateDriverState(userId);
           renderDrivers();
@@ -897,7 +893,6 @@
         else card.classList.remove('active');
       });
     }, 350);
-
   </script>
 </body>
 </html>
