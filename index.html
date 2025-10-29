@@ -17,6 +17,7 @@
       --red: #ff3b30;
       --gap: 24px;
       --card-radius: 15px;
+      --green: #33ff58;
     }
     html, body {
       min-height: 100vh;
@@ -221,6 +222,17 @@
       border-top-right-radius: var(--card-radius);
       box-sizing: border-box;
       flex-wrap: nowrap;
+      position: relative;
+    }
+    .green-dot {
+      display: inline-block;
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      background: var(--green);
+      margin-right: 9px;
+      vertical-align: middle;
+      box-shadow: 0 0 6px 2px #33ff588a;
     }
     .driver-card-header .driver-name {
       font-size: 1.08em;
@@ -263,8 +275,23 @@
     .input-km-wrap input[type="number"] { width: 5.5em; font-size: 1.07em; padding: 0.42em 0.12em 0.42em 0.55em; background: #212a40; border: 1px solid #384164; border-radius: 7px 0 0 7px; color: #fff; outline: none; text-align: center; font-family: inherit; font-weight: 700; white-space: nowrap; box-shadow: none;}
     .input-km-wrap .km-unit { font-size: 0.98em; color: #7ec5fd; margin-left: 0.2em; margin-right: 0.3em; font-weight: 700; white-space: nowrap; background: transparent; border: none; padding: 0; pointer-events: none; user-select: none;}
     .driver-km-result { margin: 0 0 2px 0; font-size: 1.08em; font-weight: 700; color: var(--primary); font-family: inherit; letter-spacing: 0.04em; text-align: left; padding: 0 15px; min-height: 21px; display: flex; align-items: center; gap: 0.4em;}
-    .driver-timer-bar { display: flex; align-items: center; gap: 0.6em; margin: 0 0 2px 0; min-height: 1.4em; padding: 0 15px;}
-    .driver-timer { font-size: 1.08em; font-weight: 800; color: #ffc107; background: #212a40; border-radius: 7px; padding: 2px 14px; min-width: 4.6em; text-align: center; letter-spacing: 0.025em; font-family: inherit; border: 1.1px solid #009de055; box-shadow: 0 1px 7px #009de022;}
+    .driver-time-row { display: flex; align-items: center; gap: 1.1em; margin: 4px 0 7px 0; padding: 0 15px;}
+    .driver-time-row label { font-size: 0.97em; font-weight: 600; color: #bbdefb; margin-right: 0.2em; white-space: nowrap;}
+    .driver-time-in, .driver-time-out {
+      font-size: 1.04em;
+      font-weight: 700;
+      color: #fff;
+      background: #212a40;
+      border-radius: 7px;
+      padding: 3px 15px;
+      min-width: 6em;
+      text-align: center;
+      font-family: inherit;
+      border: 1.1px solid #009de055;
+      margin-right: 0.2em;
+      letter-spacing: 0.02em;
+      user-select: none;
+    }
     .driver-btns { display: flex; gap: 0.7em; margin-top: 8px; padding: 0 15px 15px 15px;}
     .driver-btns button { flex: 1 1 0; font-size: 1.03em; font-weight: 700; border: none; border-radius: 9px; padding: 0.65em 0; background: linear-gradient(90deg,var(--primary),var(--primary-hover)); color: #fff; box-shadow: 0 1px 4px rgba(66,165,245,0.09); cursor: pointer; letter-spacing: 0.04em; transition: background 0.13s; min-width: 0; font-family: inherit;}
     .driver-btns button:active { background: var(--primary-hover);}
@@ -282,7 +309,7 @@
     }
     @media (max-width: 450px) {
       html, body { font-size: 14px; }
-      .driver-card-header, .driver-fields-row, .driver-btns, .driver-km-result, .driver-timer-bar {padding-left:4px;padding-right:4px;}
+      .driver-card-header, .driver-fields-row, .driver-btns, .driver-km-result, .driver-time-row {padding-left:4px;padding-right:4px;}
       .driver-card { font-size: 0.93em;}
     }
     .modal-bg { display: none; position: fixed; z-index: 500; top: 0; left: 0; right: 0; bottom: 0; width: 100vw; height: 100vh; background: rgba(13, 32, 70, 0.82); align-items: center; justify-content: center;}
@@ -445,6 +472,10 @@
       const s = String(sec%60).padStart(2,'0');
       return `${h}:${m}:${s}`;
     }
+    function nowTimeStr() {
+      const d = new Date();
+      return pad2(d.getHours()) + ":" + pad2(d.getMinutes()) + ":" + pad2(d.getSeconds());
+    }
     function toDisplayDate(isoStr) {
       if (!isoStr) return '';
       const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
@@ -463,15 +494,23 @@
           kmOut: "",
           running: false,
           date: (new Date()).toISOString().slice(0,10),
-          timer: 0,
-          startTime: null,
+          timeIn: "",
+          timeOut: "",
           stopped: false
         };
         const s = driverState[userId];
         const card = document.createElement('div');
         card.className = 'driver-card' + (s.running ? ' active' : '');
+
+        // HEADER
         const headerRow = document.createElement('div');
         headerRow.className = 'driver-card-header';
+        // Green dot
+        const greenDot = document.createElement('span');
+        greenDot.className = 'green-dot';
+        greenDot.style.display = s.running ? "inline-block" : "none";
+        headerRow.appendChild(greenDot);
+
         const nameEl = document.createElement('span');
         nameEl.className = 'driver-name';
         nameEl.textContent = userObj.name;
@@ -527,6 +566,7 @@
         }
         card.appendChild(headerRow);
 
+        // KM FIELDS
         const fieldsRow = document.createElement('div');
         fieldsRow.className = 'driver-fields-row';
         const kmInLbl = document.createElement('label');
@@ -600,6 +640,28 @@
         fieldsRow.appendChild(kmOutWrap);
         card.appendChild(fieldsRow);
 
+        // Time In/Out Row
+        const timeRow = document.createElement('div');
+        timeRow.className = 'driver-time-row';
+        const timeInLbl = document.createElement('label');
+        timeInLbl.textContent = "Time In";
+        const timeInVal = document.createElement('span');
+        timeInVal.className = 'driver-time-in';
+        timeInVal.textContent = s.timeIn || "-";
+        timeRow.appendChild(timeInLbl);
+        timeRow.appendChild(timeInVal);
+
+        const timeOutLbl = document.createElement('label');
+        timeOutLbl.textContent = "Time Out";
+        const timeOutVal = document.createElement('span');
+        timeOutVal.className = 'driver-time-out';
+        timeOutVal.textContent = s.timeOut || "-";
+        timeRow.appendChild(timeOutLbl);
+        timeRow.appendChild(timeOutVal);
+
+        card.appendChild(timeRow);
+
+        // KM Result
         const kmResult = document.createElement('div');
         kmResult.className = 'driver-km-result';
         function renderKmResult() {
@@ -615,14 +677,7 @@
         renderKmResult();
         card.appendChild(kmResult);
 
-        const timerBar = document.createElement('div');
-        timerBar.className = 'driver-timer-bar';
-        const timerDisplay = document.createElement('span');
-        timerDisplay.className = 'driver-timer';
-        timerDisplay.textContent = formatTime(s.timer);
-        timerBar.appendChild(timerDisplay);
-        card.appendChild(timerBar);
-
+        // Button Row
         const btns = document.createElement('div');
         btns.className = 'driver-btns';
         const startBtn = document.createElement('button');
@@ -631,20 +686,16 @@
         startBtn.onclick = () => {
           s.running = true;
           s.stopped = false;
-          s.startTime = new Date().toISOString();
-          s.timer = 0;
+          s.timeIn = nowTimeStr();
+          s.timeOut = "";
           updateDriverState(userId);
-          timerDisplay.textContent = formatTime(0);
+          timeInVal.textContent = s.timeIn;
           startBtn.disabled = true;
           stopBtn.disabled = false;
           kmIn.disabled = true;
           kmOut.disabled = false;
           card.classList.add('active');
-          if (s.timerInterval) clearInterval(s.timerInterval);
-          s.timerInterval = setInterval(() => {
-            s.timer = Math.floor((Date.now() - new Date(s.startTime).getTime())/1000);
-            timerDisplay.textContent = formatTime(s.timer);
-          }, 1000);
+          greenDot.style.display = "inline-block";
         };
         btns.appendChild(startBtn);
 
@@ -657,26 +708,20 @@
             alert("Enter valid ending km (greater than or equal to start)");
             return;
           }
-          if (s.startTime) {
-            s.timer = Math.floor((Date.now() - new Date(s.startTime).getTime())/1000);
-          }
+          s.timeOut = nowTimeStr();
           s.stopped = true;
           s.running = false;
-          s.startTime = null;
           updateDriverState(userId);
-          setTimeout(() => {
-            s.timer = 0;
-            updateDriverState(userId);
-          }, 50);
-          if (s.timerInterval) clearInterval(s.timerInterval);
-          s.timerInterval = null;
           renderKmResult();
           card.classList.remove('active');
+          greenDot.style.display = "none";
+          timeOutVal.textContent = s.timeOut;
           showModal(
             `<b><i class="fas fa-user"></i> ${userObj.name}</b><br>
             <span style="color:#fff;">${toDisplayDate(s.date)}</span><br>
             <span style="color:var(--primary)">Total: ${+s.kmOut - +s.kmIn} km</span><br>
-            <span>Time: ${formatTime(s.timer)}</span>`
+            <span>Time In: ${s.timeIn || '-'}</span><br>
+            <span>Time Out: ${s.timeOut || '-'}</span>`
           );
           db.ref("logs").push({
             date: s.date,
@@ -684,11 +729,11 @@
             kmIn: s.kmIn,
             kmOut: s.kmOut,
             totalKm: (+s.kmOut - +s.kmIn).toString(),
-            totalTime: formatTime(s.timer),
+            timeIn: s.timeIn || "",
+            timeOut: s.timeOut || "",
             timestamp: new Date().toISOString()
           });
-          s.kmIn = ""; s.kmOut = ""; s.startTime = null; s.stopped = false;
-          timerDisplay.textContent = formatTime(0);
+          s.kmIn = ""; s.kmOut = ""; s.timeIn = ""; s.timeOut = ""; s.stopped = false;
           updateDriverState(userId);
           renderDrivers();
         };
@@ -696,23 +741,6 @@
         card.appendChild(btns);
 
         driverBoard.appendChild(card);
-
-        if (s.running && s.startTime && !s.stopped) {
-          if (!s.timerInterval) {
-            s.timerInterval = setInterval(() => {
-              if (!s.stopped) {
-                s.timer = Math.floor((Date.now() - new Date(s.startTime).getTime())/1000);
-                timerDisplay.textContent = formatTime(s.timer);
-              }
-            }, 1000);
-          }
-        } else {
-          if (s.timerInterval) {
-            clearInterval(s.timerInterval);
-            s.timerInterval = null;
-          }
-          timerDisplay.textContent = formatTime(s.timer || 0);
-        }
       });
     }
 
@@ -724,21 +752,23 @@
         const btns = card.querySelectorAll('.driver-btns button');
         const kmIn = card.querySelector('.driver-fields-row .input-km-wrap input[type="number"]:nth-child(1)');
         const kmOut = card.querySelectorAll('.driver-fields-row .input-km-wrap input[type="number"]')[1];
-        const timerDisplay = card.querySelector('.driver-timer');
+        const greenDot = card.querySelector('.green-dot');
+        const timeInVal = card.querySelector('.driver-time-in');
+        const timeOutVal = card.querySelector('.driver-time-out');
         if (btns.length === 2) {
           btns[0].disabled = s.running || !s.kmIn || !s.date || s.kmIn.length < 1 || s.kmIn.length > 9;
           btns[1].disabled = !s.running || !s.kmOut || s.kmOut.length < 1 || s.kmOut.length > 9;
         }
         if (kmIn) kmIn.disabled = s.running;
         if (kmOut) kmOut.disabled = !s.running;
+        if (greenDot) greenDot.style.display = s.running ? "inline-block" : "none";
+        if (timeInVal) timeInVal.textContent = s.timeIn || "-";
+        if (timeOutVal) timeOutVal.textContent = s.timeOut || "-";
         const kmResult = card.querySelector('.driver-km-result');
         if(kmResult) {
           if(s.kmIn && s.kmOut && !isNaN(+s.kmIn) && !isNaN(+s.kmOut) && +s.kmOut >= +s.kmIn && s.kmIn.length >= 1 && s.kmIn.length <= 9 && s.kmOut.length >= 1 && s.kmOut.length <= 9) {
             kmResult.innerHTML = `<i class="fas fa-road"></i> Today: <span style="font-weight:900;color:var(--primary)">` + (+s.kmOut - +s.kmIn) + ` km</span>`;
           } else { kmResult.textContent = ''; }
-        }
-        if (timerDisplay) {
-          timerDisplay.textContent = formatTime(s.stopped ? 0 : (s.timer || 0));
         }
         if (s.running) card.classList.add('active');
         else card.classList.remove('active');
