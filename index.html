@@ -29,8 +29,6 @@
       font-family: 'Poppins', Arial, sans-serif;
       color: #fff;
       overflow-x: hidden;
-      -webkit-text-size-adjust: 100%;
-      text-size-adjust: 100%;
     }
     body {
       width: 100vw;
@@ -128,47 +126,6 @@
     .header-btnbar .logout-btn { background: var(--red);}
     .header-btnbar .logout-btn:hover { background: #c11;}
     .header-btnbar .reports-btn { background: var(--primary);}
-    .driver-addbar {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 0.45em;
-      margin: 13px 0 16px 0;
-      width: 100%;
-      max-width: 600px;
-      padding: 0 3px;
-      align-self: center;
-    }
-    .driver-addbar input[type="text"] {
-      flex: 1;
-      font-size: 1em;
-      padding: 0.55em 1em;
-      background: #212a40;
-      border: none;
-      border-radius: 9px;
-      color: var(--accent);
-      outline: none;
-      font-family: 'Poppins', Arial, sans-serif;
-      font-weight: 600;
-      margin-right: 0.07em;
-    }
-    .driver-addbar button {
-      background: var(--primary);
-      color: #fff;
-      border: none;
-      border-radius: 9px;
-      font-size: 0.97rem;
-      font-weight: 700;
-      padding: 7px 18px;
-      cursor: pointer;
-      transition: background 0.16s;
-      font-family: inherit;
-      letter-spacing: 0.01em;
-      display: flex;
-      align-items: center;
-      gap: 0.22em;
-    }
-    .driver-addbar button:hover { background: var(--primary-hover);}
     .log-board {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -234,64 +191,94 @@
       vertical-align: middle;
       box-shadow: 0 0 6px 2px #33ff588a;
     }
-    .driver-card-header .driver-name {
-      font-size: 1.08em;
-      font-weight: 700;
-      color: #fff;
-      flex: 1 1 auto;
-      min-width: 0;
-      letter-spacing: 0.04em;
-      overflow-wrap: break-word;
-      word-break: break-word;
-      white-space: normal;
-      display: inline-block;
-      margin-right: 10px;
+    /* --- GRID LAYOUT FOR CARD FIELDS --- */
+    .driver-fields-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1em;
+      padding: 16px 15px 0 15px;
+      align-items: center;
+      justify-items: stretch;
     }
-    .driver-card-header .driver-date {
-      font-size: 0.97em;
-      color: #d5f5ff;
-      background: #183350;
-      border-radius: 0.5em;
-      padding: 3px 8px;
-      border: none;
-      outline: none;
-      font-family: inherit;
+    .driver-fields-grid label {
+      font-size: 1em;
       font-weight: 600;
-      width: 120px;
-      min-width: 120px;
-      max-width: 160px;
-      text-align: center;
-      flex-shrink: 0;
-      margin-right: 10px;
-      position: relative;
-      z-index: 1;
-      cursor: pointer;
+      color: #bbdefb;
+      font-family: inherit;
+      white-space: nowrap;
+      margin-bottom: 4px;
     }
-    .driver-card-header .driver-date[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer;}
-    .driver-card-header .driver-delete { color: var(--red); font-size: 1.14em; border: none; background: none; cursor: pointer; margin-left: auto; border-radius: 50%; padding: 0.07em 0.36em; transition: background 0.11s; flex-shrink: 0;}
-    .driver-fields-row { display: flex; align-items: center; gap: 0.7em; margin: 13px 0 3px 0; padding: 0 15px; justify-content: stretch;}
-    .driver-fields-row label { font-size: 1em; font-weight: 600; color: #bbdefb; margin-right: 0; padding-right: 0; font-family: inherit; white-space: nowrap;}
-    .input-km-wrap { display: inline-flex; align-items: center; border-radius: 7px; background: #212a40; box-shadow: 0 1px 4px #009de018; margin: 0 0.15em; padding-left: 0.15em; padding-right: 0.2em;}
-    .input-km-wrap input[type="number"] { width: 5.5em; font-size: 1.07em; padding: 0.42em 0.12em 0.42em 0.55em; background: #212a40; border: 1px solid #384164; border-radius: 7px 0 0 7px; color: #fff; outline: none; text-align: center; font-family: inherit; font-weight: 700; white-space: nowrap; box-shadow: none;}
-    .input-km-wrap .km-unit { font-size: 0.98em; color: #7ec5fd; margin-left: 0.2em; margin-right: 0.3em; font-weight: 700; white-space: nowrap; background: transparent; border: none; padding: 0; pointer-events: none; user-select: none;}
-    .driver-km-result { margin: 0 0 2px 0; font-size: 1.08em; font-weight: 700; color: var(--primary); font-family: inherit; letter-spacing: 0.04em; text-align: left; padding: 0 15px; min-height: 21px; display: flex; align-items: center; gap: 0.4em;}
-    .driver-time-row { display: flex; align-items: center; gap: 1.1em; margin: 4px 0 7px 0; padding: 0 15px;}
-    .driver-time-row label { font-size: 0.97em; font-weight: 600; color: #bbdefb; margin-right: 0.2em; white-space: nowrap;}
-    .driver-time-in, .driver-time-out {
-      font-size: 1.04em;
-      font-weight: 700;
-      color: #fff;
-      background: #212a40;
+    .driver-fields-grid .grid-cell {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .input-km-wrap {
+      display: flex;
+      align-items: center;
       border-radius: 7px;
-      padding: 3px 15px;
-      min-width: 6em;
+      background: #212a40;
+      box-shadow: 0 1px 4px #009de018;
+      margin: 0.15em 0;
+      padding-left: 0.15em;
+      padding-right: 0.2em;
+    }
+    .input-km-wrap input[type="number"] {
+      width: 100%;
+      font-size: 1.07em;
+      padding: 0.42em 0.12em 0.42em 0.55em;
+      background: #212a40;
+      border: 1px solid #384164;
+      border-radius: 7px 0 0 7px;
+      color: #fff;
+      outline: none;
       text-align: center;
       font-family: inherit;
-      border: 1.1px solid #009de055;
-      margin-right: 0.2em;
-      letter-spacing: 0.02em;
+      font-weight: 700;
+      white-space: nowrap;
+      box-shadow: none;
+      min-width: 0;
+    }
+    .input-km-wrap .km-unit {
+      font-size: 0.98em;
+      color: #7ec5fd;
+      margin-left: 0.2em;
+      margin-right: 0.3em;
+      font-weight: 700;
+      white-space: nowrap;
+      background: transparent;
+      border: none;
+      padding: 0;
+      pointer-events: none;
       user-select: none;
     }
+    .grid-time-wrap {
+      display: flex;
+      align-items: center;
+      background: #212a40;
+      border-radius: 7px;
+      box-shadow: 0 1px 4px #009de018;
+      margin: 0.15em 0;
+      padding-left: 0.15em;
+      padding-right: 0.2em;
+    }
+    .grid-time-wrap input[type="time"] {
+      width: 100%;
+      font-size: 1.07em;
+      padding: 0.42em 0.12em 0.42em 0.55em;
+      background: #212a40;
+      border: 1px solid #384164;
+      border-radius: 7px;
+      color: #fff;
+      outline: none;
+      text-align: center;
+      font-family: inherit;
+      font-weight: 700;
+      white-space: nowrap;
+      box-shadow: none;
+      min-width: 0;
+    }
+    .driver-km-result { margin: 0 0 2px 0; font-size: 1.08em; font-weight: 700; color: var(--primary); font-family: inherit; letter-spacing: 0.04em; text-align: left; padding: 0 15px; min-height: 21px; display: flex; align-items: center; gap: 0.4em;}
     .driver-btns { display: flex; gap: 0.7em; margin-top: 8px; padding: 0 15px 15px 15px;}
     .driver-btns button { flex: 1 1 0; font-size: 1.03em; font-weight: 700; border: none; border-radius: 9px; padding: 0.65em 0; background: linear-gradient(90deg,var(--primary),var(--primary-hover)); color: #fff; box-shadow: 0 1px 4px rgba(66,165,245,0.09); cursor: pointer; letter-spacing: 0.04em; transition: background 0.13s; min-width: 0; font-family: inherit;}
     .driver-btns button:active { background: var(--primary-hover);}
@@ -301,15 +288,12 @@
     .how-to-use { width: 100vw; max-width: 1050px; margin: 18px auto 0 auto; padding: 13px 14px 11px 14px; background: #161a23cc; border-radius: 10px; color: #bbdefb; font-size: 0.97em; font-family: 'Poppins', Arial, sans-serif; text-align: left; line-height: 1.6; letter-spacing: 0.01em; box-shadow: 0 2px 8px #212a4033; box-sizing: border-box; overflow-x: hidden; align-self: center;}
     @media (max-width: 1100px) { .log-board { max-width: 99vw; } .driver-card { min-width: 0; max-width: 99vw; } }
     @media (max-width: 900px) { .log-board { grid-template-columns: 1fr; padding: 0 8px; gap: 16px; } .driver-card { min-width: 98vw; max-width: 98vw; font-size: 0.97em; } }
-    @media (max-width: 600px) {
-      html, body { font-size: 15px; }
-      .log-board { grid-template-columns: 1fr; padding: 0 2px; gap:16px;}
-      .driver-card { min-width: 99vw; max-width: 99vw; font-size: 0.96em;}
-      .driver-card-header .driver-date { width: 130px; min-width: 120px; max-width: 140px; font-size: 1.05em; }
+    @media (max-width: 650px) {
+      .driver-fields-grid {grid-template-columns: 1fr 1fr;}
     }
     @media (max-width: 450px) {
       html, body { font-size: 14px; }
-      .driver-card-header, .driver-fields-row, .driver-btns, .driver-km-result, .driver-time-row {padding-left:4px;padding-right:4px;}
+      .driver-card-header, .driver-fields-grid, .driver-btns, .driver-km-result {padding-left:4px;padding-right:4px;}
       .driver-card { font-size: 0.93em;}
     }
     .modal-bg { display: none; position: fixed; z-index: 500; top: 0; left: 0; right: 0; bottom: 0; width: 100vw; height: 100vh; background: rgba(13, 32, 70, 0.82); align-items: center; justify-content: center;}
@@ -350,8 +334,8 @@
     <div class="log-board" id="driverBoard"></div>
     <div class="how-to-use" id="howToUse">
       <b>How to use:</b><br>
-      1. Enter your shift's starting kilometers and press <b>Start</b>.<br>
-      2. Enter your ending kilometers and press <b>Stop</b>.<br>
+      1. Enter your shift's starting kilometers and time in, press <b>Start</b>.<br>
+      2. Enter your ending kilometers and time out, press <b>Stop</b>.<br>
       3. See your shift summary and review reports.<br>
       <hr>
       <b>Note:</b> Only the logged-in driver can view and log their own shift.
@@ -466,16 +450,6 @@
     }
 
     function pad2(n){return String(n).padStart(2,'0');}
-    function formatTime(sec) {
-      const h = String(Math.floor(sec/3600)).padStart(2,'0');
-      const m = String(Math.floor((sec%3600)/60)).padStart(2,'0');
-      const s = String(sec%60).padStart(2,'0');
-      return `${h}:${m}:${s}`;
-    }
-    function nowTimeStr() {
-      const d = new Date();
-      return pad2(d.getHours()) + ":" + pad2(d.getMinutes()) + ":" + pad2(d.getSeconds());
-    }
     function toDisplayDate(isoStr) {
       if (!isoStr) return '';
       const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
@@ -488,7 +462,6 @@
       const driverBoard = document.getElementById('driverBoard');
       driverBoard.innerHTML = "";
       Object.entries(allUsers).forEach(([userId, userObj]) => {
-        // REMOVED: if (!isAdmin && userObj.name !== currentUser) return;
         if (!driverState[userId]) driverState[userId] = {
           kmIn: "",
           kmOut: "",
@@ -566,11 +539,15 @@
         }
         card.appendChild(headerRow);
 
-        // KM FIELDS
-        const fieldsRow = document.createElement('div');
-        fieldsRow.className = 'driver-fields-row';
+        // --- GRID FIELDS ---
+        const fieldsGrid = document.createElement('div');
+        fieldsGrid.className = 'driver-fields-grid';
+
+        // KM IN
+        const cellKmIn = document.createElement('div');
+        cellKmIn.className = 'grid-cell';
         const kmInLbl = document.createElement('label');
-        kmInLbl.textContent = "In";
+        kmInLbl.textContent = "KM In";
         const kmInWrap = document.createElement('span');
         kmInWrap.className = 'input-km-wrap';
         const kmIn = document.createElement('input');
@@ -588,24 +565,24 @@
           updateDriverState(userId);
           renderKmResult();
         };
-        kmIn.onkeypress = e => {
-          if (e.key === "Enter" && e.target.value.length >= 1 && e.target.value.length <= 9) {
-            s.kmIn = e.target.value;
-            updateDriverState(userId);
-            renderKmResult();
-            kmIn.blur();
-          }
+        kmIn.oninput = function(e) {
+          s.kmIn = e.target.value;
+          updateDriverState(userId);
+          renderKmResult();
         };
         const kmInUnit = document.createElement('span');
         kmInUnit.className = 'km-unit';
         kmInUnit.textContent = "Km";
         kmInWrap.appendChild(kmIn);
         kmInWrap.appendChild(kmInUnit);
-        fieldsRow.appendChild(kmInLbl);
-        fieldsRow.appendChild(kmInWrap);
+        cellKmIn.appendChild(kmInLbl);
+        cellKmIn.appendChild(kmInWrap);
 
+        // KM OUT
+        const cellKmOut = document.createElement('div');
+        cellKmOut.className = 'grid-cell';
         const kmOutLbl = document.createElement('label');
-        kmOutLbl.textContent = "Out";
+        kmOutLbl.textContent = "KM Out";
         const kmOutWrap = document.createElement('span');
         kmOutWrap.className = 'input-km-wrap';
         const kmOut = document.createElement('input');
@@ -623,43 +600,63 @@
           updateDriverState(userId);
           renderKmResult();
         };
-        kmOut.onkeypress = e => {
-          if (e.key === "Enter" && e.target.value.length >= 1 && e.target.value.length <= 9) {
-            s.kmOut = e.target.value;
-            updateDriverState(userId);
-            renderKmResult();
-            kmOut.blur();
-          }
+        kmOut.oninput = function(e) {
+          s.kmOut = e.target.value;
+          updateDriverState(userId);
+          renderKmResult();
         };
         const kmOutUnit = document.createElement('span');
         kmOutUnit.className = 'km-unit';
         kmOutUnit.textContent = "Km";
         kmOutWrap.appendChild(kmOut);
         kmOutWrap.appendChild(kmOutUnit);
-        fieldsRow.appendChild(kmOutLbl);
-        fieldsRow.appendChild(kmOutWrap);
-        card.appendChild(fieldsRow);
+        cellKmOut.appendChild(kmOutLbl);
+        cellKmOut.appendChild(kmOutWrap);
 
-        // Time In/Out Row
-        const timeRow = document.createElement('div');
-        timeRow.className = 'driver-time-row';
+        // TIME IN
+        const cellTimeIn = document.createElement('div');
+        cellTimeIn.className = 'grid-cell';
         const timeInLbl = document.createElement('label');
         timeInLbl.textContent = "Time In";
-        const timeInVal = document.createElement('span');
-        timeInVal.className = 'driver-time-in';
-        timeInVal.textContent = s.timeIn || "-";
-        timeRow.appendChild(timeInLbl);
-        timeRow.appendChild(timeInVal);
+        const timeInWrap = document.createElement('span');
+        timeInWrap.className = 'grid-time-wrap';
+        const timeIn = document.createElement('input');
+        timeIn.type = 'time';
+        timeIn.value = s.timeIn;
+        timeIn.disabled = s.running;
+        timeIn.oninput = function(e) {
+          s.timeIn = e.target.value;
+          updateDriverState(userId);
+        };
+        timeInWrap.appendChild(timeIn);
+        cellTimeIn.appendChild(timeInLbl);
+        cellTimeIn.appendChild(timeInWrap);
 
+        // TIME OUT
+        const cellTimeOut = document.createElement('div');
+        cellTimeOut.className = 'grid-cell';
         const timeOutLbl = document.createElement('label');
         timeOutLbl.textContent = "Time Out";
-        const timeOutVal = document.createElement('span');
-        timeOutVal.className = 'driver-time-out';
-        timeOutVal.textContent = s.timeOut || "-";
-        timeRow.appendChild(timeOutLbl);
-        timeRow.appendChild(timeOutVal);
+        const timeOutWrap = document.createElement('span');
+        timeOutWrap.className = 'grid-time-wrap';
+        const timeOut = document.createElement('input');
+        timeOut.type = 'time';
+        timeOut.value = s.timeOut;
+        timeOut.disabled = !s.running;
+        timeOut.oninput = function(e) {
+          s.timeOut = e.target.value;
+          updateDriverState(userId);
+        };
+        timeOutWrap.appendChild(timeOut);
+        cellTimeOut.appendChild(timeOutLbl);
+        cellTimeOut.appendChild(timeOutWrap);
 
-        card.appendChild(timeRow);
+        fieldsGrid.appendChild(cellKmIn);
+        fieldsGrid.appendChild(cellKmOut);
+        fieldsGrid.appendChild(cellTimeIn);
+        fieldsGrid.appendChild(cellTimeOut);
+
+        card.appendChild(fieldsGrid);
 
         // KM Result
         const kmResult = document.createElement('div');
@@ -682,40 +679,43 @@
         btns.className = 'driver-btns';
         const startBtn = document.createElement('button');
         startBtn.innerHTML = `<i class="fas fa-play"></i> Start`;
-        startBtn.disabled = s.running || !s.kmIn || !s.date || s.kmIn.length < 1 || s.kmIn.length > 9;
+        startBtn.disabled = s.running || !s.kmIn || !s.date || s.kmIn.length < 1 || s.kmIn.length > 9 || !s.timeIn;
         startBtn.onclick = () => {
           s.running = true;
           s.stopped = false;
-          s.timeIn = nowTimeStr();
-          s.timeOut = "";
-          updateDriverState(userId);
-          timeInVal.textContent = s.timeIn;
           startBtn.disabled = true;
           stopBtn.disabled = false;
           kmIn.disabled = true;
           kmOut.disabled = false;
+          timeIn.disabled = true;
+          timeOut.disabled = false;
           card.classList.add('active');
           greenDot.style.display = "inline-block";
+          updateDriverState(userId);
         };
         btns.appendChild(startBtn);
 
         const stopBtn = document.createElement('button');
         stopBtn.innerHTML = `<i class="fas fa-stop"></i> Stop`;
         stopBtn.className = "stop-btn";
-        stopBtn.disabled = !s.running || !s.kmOut || s.kmOut.length < 1 || s.kmOut.length > 9;
+        stopBtn.disabled = !s.running || !s.kmOut || s.kmOut.length < 1 || s.kmOut.length > 9 || !s.timeOut;
         stopBtn.onclick = () => {
           if (!s.kmOut || Number(s.kmOut) < Number(s.kmIn)) {
             alert("Enter valid ending km (greater than or equal to start)");
             return;
           }
-          s.timeOut = nowTimeStr();
           s.stopped = true;
           s.running = false;
-          updateDriverState(userId);
-          renderKmResult();
+          stopBtn.disabled = true;
+          startBtn.disabled = false;
+          kmIn.disabled = false;
+          kmOut.disabled = true;
+          timeIn.disabled = false;
+          timeOut.disabled = true;
           card.classList.remove('active');
           greenDot.style.display = "none";
-          timeOutVal.textContent = s.timeOut;
+          updateDriverState(userId);
+          renderKmResult();
           showModal(
             `<b><i class="fas fa-user"></i> ${userObj.name}</b><br>
             <span style="color:#fff;">${toDisplayDate(s.date)}</span><br>
@@ -750,20 +750,20 @@
         const s = driverState[userId];
         if (!s) return;
         const btns = card.querySelectorAll('.driver-btns button');
-        const kmIn = card.querySelector('.driver-fields-row .input-km-wrap input[type="number"]:nth-child(1)');
-        const kmOut = card.querySelectorAll('.driver-fields-row .input-km-wrap input[type="number"]')[1];
+        const kmIn = card.querySelector('.driver-fields-grid .grid-cell:nth-child(1) input[type="number"]');
+        const kmOut = card.querySelector('.driver-fields-grid .grid-cell:nth-child(2) input[type="number"]');
+        const timeIn = card.querySelector('.driver-fields-grid .grid-cell:nth-child(3) input[type="time"]');
+        const timeOut = card.querySelector('.driver-fields-grid .grid-cell:nth-child(4) input[type="time"]');
         const greenDot = card.querySelector('.green-dot');
-        const timeInVal = card.querySelector('.driver-time-in');
-        const timeOutVal = card.querySelector('.driver-time-out');
         if (btns.length === 2) {
-          btns[0].disabled = s.running || !s.kmIn || !s.date || s.kmIn.length < 1 || s.kmIn.length > 9;
-          btns[1].disabled = !s.running || !s.kmOut || s.kmOut.length < 1 || s.kmOut.length > 9;
+          btns[0].disabled = s.running || !s.kmIn || !s.date || s.kmIn.length < 1 || s.kmIn.length > 9 || !s.timeIn;
+          btns[1].disabled = !s.running || !s.kmOut || s.kmOut.length < 1 || s.kmOut.length > 9 || !s.timeOut;
         }
         if (kmIn) kmIn.disabled = s.running;
         if (kmOut) kmOut.disabled = !s.running;
+        if (timeIn) timeIn.disabled = s.running;
+        if (timeOut) timeOut.disabled = !s.running;
         if (greenDot) greenDot.style.display = s.running ? "inline-block" : "none";
-        if (timeInVal) timeInVal.textContent = s.timeIn || "-";
-        if (timeOutVal) timeOutVal.textContent = s.timeOut || "-";
         const kmResult = card.querySelector('.driver-km-result');
         if(kmResult) {
           if(s.kmIn && s.kmOut && !isNaN(+s.kmIn) && !isNaN(+s.kmOut) && +s.kmOut >= +s.kmIn && s.kmIn.length >= 1 && s.kmIn.length <= 9 && s.kmOut.length >= 1 && s.kmOut.length <= 9) {
