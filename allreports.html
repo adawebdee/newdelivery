@@ -125,6 +125,51 @@
       box-shadow: 0 2px 8px #ff3b3033;
     }
     .header-btnbar button:hover { background: #c11;}
+    .download-btn {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 9px;
+      padding: 8px 20px;
+      cursor: pointer;
+      font-size: 1em;
+      font-weight: 700;
+      margin-right: 12px;
+      transition: background 0.16s;
+      box-shadow: 0 2px 8px #42a5f533;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .download-btn:hover { background: var(--primary-hover);}
+    .download-menu {
+      position: absolute;
+      top: 45px;
+      left: 0;
+      background: var(--card-bg);
+      border: 2px solid var(--primary);
+      border-radius: 11px;
+      box-shadow: 0 4px 16px #009de044;
+      z-index: 20;
+      min-width: 130px;
+      display: none;
+      flex-direction: column;
+    }
+    .download-menu.active { display: flex; }
+    .download-menu button {
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 1em;
+      font-family: inherit;
+      font-weight: 600;
+      padding: 13px 18px;
+      cursor: pointer;
+      text-align: left;
+      border-radius: 11px;
+      transition: background 0.14s;
+    }
+    .download-menu button:hover { background: var(--primary-hover);}
     .reports-bar {
       display: flex;
       flex-direction: column;
@@ -210,6 +255,7 @@
       margin: 0 auto 19px auto;
       padding: 12px 0 18px 0;
       overflow-x: auto;
+      position: relative;
     }
     .driver-report-table-title {
       font-size: 1.16em;
@@ -219,6 +265,7 @@
       display: flex;
       align-items: center;
       gap: 1.4em;
+      position: relative;
     }
     .driver-report-table-title .total-km {
       font-size: 0.98em;
@@ -230,6 +277,38 @@
       margin-left: 10px;
       letter-spacing: 0.03em;
     }
+    .pagination-bar {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 24px 0 0;
+      margin-bottom: 8px;
+    }
+    .pagination-bar .page-numbers {
+      display: flex;
+      gap: 3px;
+    }
+    .pagination-bar button {
+      font-size: 0.99em;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 7px;
+      padding: 5px 13px;
+      cursor: pointer;
+      transition: background 0.13s;
+      font-family: inherit;
+      font-weight: 600;
+    }
+    .pagination-bar button.active-page {
+      background: #fff;
+      color: var(--primary);
+      font-weight: 700;
+      border: 2px solid var(--primary);
+    }
+    .pagination-bar button:hover { background: var(--primary-hover);}
+    .pagination-bar .disabled, .pagination-bar button:disabled { opacity: 0.5; pointer-events: none;}
     .driver-report-table {
       border-collapse: separate;
       border-spacing: 0;
@@ -271,28 +350,6 @@
       transition: background 0.11s;
     }
     .driver-report-table td .delete-row-btn:active { background: #212a40;}
-    .pagination-bar {
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 24px 0 0;
-      margin-bottom: 8px;
-    }
-    .pagination-bar button {
-      font-size: 0.99em;
-      background: var(--primary);
-      color: #fff;
-      border: none;
-      border-radius: 7px;
-      padding: 5px 13px;
-      cursor: pointer;
-      transition: background 0.13s;
-      font-family: inherit;
-      font-weight: 600;
-    }
-    .pagination-bar button:hover { background: var(--primary-hover);}
-    .pagination-bar .disabled, .pagination-bar button:disabled { opacity: 0.5; pointer-events: none;}
     @media (max-width: 900px) {
       .driver-report-table-wrap { max-width: 100vw; }
       .driver-report-table { min-width: 730px; font-size: 0.96em;}
@@ -407,9 +464,23 @@
       </div>
     </div>
   </div>
+  <!-- Download Menu Modal -->
+  <div class="modal-bg" id="downloadModalBg">
+    <div class="modal-content" style="padding:15px 18px 20px 18px;min-width:210px;">
+      <button class="modal-close" id="downloadModalClose" title="Close">&times;</button>
+      <div class="modal-title">Download Report As</div>
+      <div style="display:flex; flex-direction:column; gap: 13px; margin-top: 18px;">
+        <button id="downloadCSVBtn" style="background:var(--primary);">CSV</button>
+        <button id="downloadPDFBtn" style="background:var(--primary);">PDF</button>
+      </div>
+    </div>
+  </div>
 </div>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<!-- jsPDF for PDF download -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <script>
   // Auth and Firebase
   const userData = JSON.parse(localStorage.getItem("user") || "null");
@@ -475,7 +546,7 @@
   let selectedDriver = "";
   let currentMode = "daily";
   let currentPage = 1;
-  let rowsPerPage = {daily:15, weekly:15, monthly:9999, custom:15};
+  let rowsPerPage = {daily:20, weekly:20, monthly:9999, custom:20}; // 20 max per page except monthly
   let totalPages = 1;
   let currentMonth = "";
   let filteredLogs = [];
@@ -620,6 +691,7 @@
     let months = Array.from(new Set(logs.map(l=>l.date.slice(0,7)))).sort((a,b)=>b.localeCompare(a));
     return months.length ? months[0] : "";
   }
+
   function showReportsTable() {
     tablesArea.innerHTML = "";
     if(!selectedDriver) {
@@ -627,7 +699,7 @@
       return;
     }
     filteredLogs = getRows(allLogs, currentMode);
-    let perPage = rowsPerPage[currentMode]||15;
+    let perPage = rowsPerPage[currentMode]||20;
     let totalRows = filteredLogs.length;
     totalPages = Math.max(Math.ceil(totalRows/perPage),1);
     let pageRows = currentMode==="monthly" ? filteredLogs : filteredLogs.slice((currentPage-1)*perPage, currentPage*perPage);
@@ -646,11 +718,30 @@
     }
     if(currentMode==="custom") titleText += `<span class="total-km">Custom: <b>${totalKm} km</b></span>`;
 
-    let tableHTML = `<div class="driver-report-table-wrap"><div class="driver-report-table-title">${titleText}</div>`;
-    tableHTML += `<div class="pagination-bar">`;
+    // Download button
+    let driverUser = Object.values(allUsers).find(u=>u.name===selectedDriver) || {};
+    let downloadBtnHTML = `
+      <div style="position:relative;display:inline-block;">
+        <button class="download-btn" id="downloadBtn"><i class="fas fa-download"></i> Download</button>
+      </div>
+    `;
+
+    let tableHTML = `<div class="driver-report-table-wrap">
+      <div class="driver-report-table-title">
+        ${downloadBtnHTML}${titleText}
+      </div>
+      <div class="pagination-bar">`;
     if(currentMode!=="monthly" && totalPages>1) {
       tableHTML += `<button ${currentPage===1?'disabled':''} onclick="prevPage()">Previous</button>`;
-      tableHTML += `<span>${currentPage}/${totalPages}</span>`;
+      tableHTML += `<span class="page-numbers">`;
+      // Show up to 5 page numbers, with current page in center if possible
+      let firstPage = Math.max(1, currentPage-2);
+      let lastPage = Math.min(totalPages, firstPage+4);
+      if (lastPage-firstPage < 4) firstPage = Math.max(1, lastPage-4);
+      for(let i=firstPage;i<=lastPage;i++){
+        tableHTML += `<button onclick="gotoPage(${i})" class="${i===currentPage?'active-page':''}">${i}</button>`;
+      }
+      tableHTML += `</span>`;
       tableHTML += `<button ${currentPage===totalPages?'disabled':''} onclick="nextPage()">Next</button>`;
     }
     tableHTML += `</div>`;
@@ -684,6 +775,37 @@
     }
     tableHTML += `</tbody></table></div>`;
     tablesArea.innerHTML = tableHTML;
+
+    // Download button logic
+    setTimeout(()=>{ // ensure DOM is updated
+      let btn = document.getElementById("downloadBtn");
+      if(btn){
+        btn.onclick = function(e){
+          document.getElementById('downloadModalBg').classList.add('active');
+        };
+      }
+    }, 10);
+
+    // Close download modal
+    document.getElementById('downloadModalClose').onclick = ()=>{
+      document.getElementById('downloadModalBg').classList.remove('active');
+    };
+    document.getElementById('downloadModalBg').onclick = function(e){
+      if(e.target === document.getElementById('downloadModalBg')){
+        document.getElementById('downloadModalBg').classList.remove('active');
+      }
+    };
+
+    // Download logic
+    document.getElementById('downloadCSVBtn').onclick = function(){
+      downloadAsCSV();
+      document.getElementById('downloadModalBg').classList.remove('active');
+    };
+    document.getElementById('downloadPDFBtn').onclick = function(){
+      downloadAsPDF();
+      document.getElementById('downloadModalBg').classList.remove('active');
+    };
+
     const wrap = document.querySelector('.driver-report-table-wrap');
     if(wrap) wrap.scrollLeft = 0;
   }
@@ -692,6 +814,9 @@
   };
   window.prevPage = function(){
     if(currentPage > 1) { currentPage--; showReportsTable(); }
+  };
+  window.gotoPage = function(num){
+    if(num >= 1 && num <= totalPages) { currentPage = num; showReportsTable(); }
   };
   window.deleteReportRow = function(logId){
     showConfirmModal("Delete Report", "Are you sure you want to delete this report entry? This cannot be undone.", function(){
@@ -767,6 +892,80 @@
   });
 
   showReportsTable();
+
+  // --- Download helpers ---
+  function downloadAsCSV(){
+    if(!selectedDriver) return;
+    let driverUser = Object.values(allUsers).find(u=>u.name===selectedDriver) || {};
+    let logs = getRows(allLogs, currentMode).flatMap(x=>x.logs).sort((a,b)=>b.date.localeCompare(a.date));
+    let header = ["Date","Km In","Km Out","Total KM","Time In","Time Out"];
+    let csvRows = [];
+    csvRows.push([
+      "Driver Name:", selectedDriver,
+      "Car Reg:", driverUser.carReg || "",
+      "Address:", driverUser.address || ""
+    ].join(","));
+    csvRows.push(header.join(","));
+    logs.forEach(row=>{
+      csvRows.push([
+        toDisplayDate(row.date),
+        row.kmIn ?? "",
+        row.kmOut ?? "",
+        row.totalKm ?? "",
+        row.timeIn ?? "",
+        row.timeOut ?? ""
+      ].join(","));
+    });
+    let csvContent = csvRows.join("\r\n");
+    let blob = new Blob([csvContent],{type:"text/csv"});
+    let url = URL.createObjectURL(blob);
+    let a = document.createElement("a");
+    a.style.display='none';
+    a.href = url;
+    a.download = `${selectedDriver.replace(/\s+/g,"_")}_km_report.csv`;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url);},800);
+  }
+
+  function downloadAsPDF(){
+    if(!selectedDriver) return;
+    let driverUser = Object.values(allUsers).find(u=>u.name===selectedDriver) || {};
+    let logs = getRows(allLogs, currentMode).flatMap(x=>x.logs).sort((a,b)=>b.date.localeCompare(a.date));
+    const { jsPDF } = window.jspdf;
+    let doc = new jsPDF();
+    doc.setFont("helvetica","bold");
+    doc.setFontSize(18);
+    doc.text("Driver KM Report", 105, 18, {align:"center"});
+    doc.setFontSize(12);
+    doc.setFont("helvetica","normal");
+    let currY = 28;
+    doc.text(`Name: ${selectedDriver}`, 10, currY);
+    currY += 7;
+    doc.text(`Car Reg: ${driverUser.carReg||""}`, 10, currY);
+    currY += 7;
+    doc.text(`Address: ${driverUser.address||""}`, 10, currY);
+    currY += 12;
+    let headers = [["Date","Km In","Km Out","Total KM","Time In","Time Out"]];
+    let data = logs.map(row=>[
+      toDisplayDate(row.date),
+      row.kmIn ?? "",
+      row.kmOut ?? "",
+      row.totalKm ?? "",
+      row.timeIn ?? "",
+      row.timeOut ?? ""
+    ]);
+    doc.autoTable({
+      startY: currY,
+      head: headers,
+      body: data,
+      styles: {fontSize:10,cellPadding:2,halign:'center'},
+      headStyles: {fillColor:[33,52,80],textColor:255},
+      alternateRowStyles: {fillColor:[235,245,255]},
+      margin: {left:10,right:10}
+    });
+    doc.save(`${selectedDriver.replace(/\s+/g,"_")}_km_report.pdf`);
+  }
 </script>
 </body>
 </html>
