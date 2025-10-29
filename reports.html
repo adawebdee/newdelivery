@@ -632,12 +632,11 @@
         <th>Km In</th>
         <th>Km Out</th>
         <th>Total KM</th>
-        <th>Time</th>
         <th>Delete</th>
       </tr>
     </thead><tbody>`;
     if(pageRows.length===0){
-      tableHTML += `<tr><td colspan="6" style="text-align:center;color:#93c7e6;font-size:1.1em;font-weight:700;">No report data.</td></tr>`;
+      tableHTML += `<tr><td colspan="5" style="text-align:center;color:#93c7e6;font-size:1.1em;font-weight:700;">No report data.</td></tr>`;
     } else {
       pageRows.forEach(day=>{
         day.logs.forEach((row)=>{
@@ -646,7 +645,6 @@
             <td>${row.kmIn}</td>
             <td>${row.kmOut}</td>
             <td>${row.totalKm}</td>
-            <td>${row.totalTime || formatTime(row.timer)}</td>
             <td><button class="delete-row-btn" title="Delete this report" onclick="deleteReportRow('${row.id}')"><i class="fas fa-trash"></i></button></td>
           </tr>`;
         });
