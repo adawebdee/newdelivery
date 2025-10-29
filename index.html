@@ -6,7 +6,8 @@
   <title>Delivery Drivers Log – Ravintola Tandoori Villa</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
-  <style> :root {
+  <style>
+    :root {
       --main-bg: linear-gradient(135deg, #0d47a1 0%, #000 100%);
       --card-bg: #181c24;
       --primary: #42a5f5;
@@ -328,6 +329,23 @@
       box-shadow: none;
       min-width: 0;
     }
+    .grid-time-wrap .time-icon {
+      color: #bbdefb;
+      font-size: 1.17em;
+      margin-left: 7px;
+      cursor: pointer;
+      transition: color 0.13s;
+      z-index: 3;
+      background: none;
+      border: none;
+      outline: none;
+      padding: 2px;
+      border-radius: 5px;
+    }
+    .grid-time-wrap .time-icon:hover {
+      color: var(--primary);
+      background: #26315977;
+    }
     .driver-km-result { margin: 0 0 2px 0; font-size: 1.08em; font-weight: 700; color: var(--primary); font-family: inherit; letter-spacing: 0.04em; text-align: left; padding: 0 15px; min-height: 21px; display: flex; align-items: center; gap: 0.4em;}
     .driver-btns { display: flex; gap: 0.7em; margin-top: 8px; padding: 0 15px 15px 15px;}
     .driver-btns button { flex: 1 1 0; font-size: 1.03em; font-weight: 700; border: none; border-radius: 9px; padding: 0.65em 0; background: linear-gradient(90deg,var(--primary),var(--primary-hover)); color: #fff; box-shadow: 0 1px 4px rgba(66,165,245,0.09); cursor: pointer; letter-spacing: 0.04em; transition: background 0.13s; min-width: 0; font-family: inherit;}
@@ -370,7 +388,6 @@
     .modal-confirm-btn { background: var(--red); color: #fff; border: none; border-radius: 10px; font-size: 1.01em; font-weight: 700; padding: 7px 22px; cursor: pointer; transition: background 0.18s; font-family: inherit; box-shadow: 0 2px 8px #ff3b3033; letter-spacing: 0.03em;}
     .modal-confirm-btn:hover { background: #c11;}
     .modal-cancel-btn { background: var(--border); color: #bbdefb; border: none; border-radius: 10px; font-size: 1.01em; font-weight: 700; padding: 7px 22px; cursor: pointer; transition: background 0.18s; font-family: inherit; box-shadow: 0 2px 8px #212a4033; letter-spacing: 0.03em;}
- 
   </style>
 </head>
 <body>
@@ -517,7 +534,6 @@
       return `${pad2(d)}/${months[mIndex]}/${y}`;
     }
 
-    // MODIFIED renderDrivers FUNCTION (only this function changed)
     function renderDrivers() {
       const driverBoard = document.getElementById('driverBoard');
       driverBoard.innerHTML = "";
@@ -619,8 +635,10 @@
         kmIn.value = s.kmIn;
         kmIn.disabled = s.running;
         kmIn.maxLength = 9;
-        kmIn.onfocus = function() {
-          kmIn.disabled = false;
+        kmIn.oninput = function(e) {
+          s.kmIn = e.target.value;
+          updateDriverState(userId);
+          renderKmResult();
         };
         kmIn.onblur = function(e) {
           kmIn.disabled = s.running;
@@ -629,8 +647,8 @@
           updateDriverState(userId);
           renderKmResult();
         };
-        kmIn.oninput = function(e) {
-          s.kmIn = e.target.value;
+        kmIn.onfocus = function() {
+          kmIn.disabled = false;
         };
         const kmInUnit = document.createElement('span');
         kmInUnit.className = 'km-unit';
@@ -653,8 +671,10 @@
         kmOut.value = s.kmOut;
         kmOut.disabled = !s.running;
         kmOut.maxLength = 9;
-        kmOut.onfocus = function() {
-          kmOut.disabled = false;
+        kmOut.oninput = function(e) {
+          s.kmOut = e.target.value;
+          updateDriverState(userId);
+          renderKmResult();
         };
         kmOut.onblur = function(e) {
           kmOut.disabled = !s.running;
@@ -663,8 +683,8 @@
           updateDriverState(userId);
           renderKmResult();
         };
-        kmOut.oninput = function(e) {
-          s.kmOut = e.target.value;
+        kmOut.onfocus = function() {
+          kmOut.disabled = !s.running;
         };
         const kmOutUnit = document.createElement('span');
         kmOutUnit.className = 'km-unit';
@@ -688,8 +708,20 @@
         timeIn.oninput = function(e) {
           s.timeIn = e.target.value;
           updateDriverState(userId);
+          renderBtnStates();
+        };
+        // Add clock icon
+        const timeInIcon = document.createElement('button');
+        timeInIcon.type = "button";
+        timeInIcon.className = 'time-icon';
+        timeInIcon.innerHTML = '<i class="fas fa-clock"></i>';
+        timeInIcon.onclick = function(e) {
+          e.preventDefault();
+          timeIn.showPicker && timeIn.showPicker();
+          timeIn.focus();
         };
         timeInWrap.appendChild(timeIn);
+        timeInWrap.appendChild(timeInIcon);
         cellTimeIn.appendChild(timeInLbl);
         cellTimeIn.appendChild(timeInWrap);
 
@@ -707,8 +739,20 @@
         timeOut.oninput = function(e) {
           s.timeOut = e.target.value;
           updateDriverState(userId);
+          renderBtnStates();
+        };
+        // Add clock icon
+        const timeOutIcon = document.createElement('button');
+        timeOutIcon.type = "button";
+        timeOutIcon.className = 'time-icon';
+        timeOutIcon.innerHTML = '<i class="fas fa-clock"></i>';
+        timeOutIcon.onclick = function(e) {
+          e.preventDefault();
+          timeOut.showPicker && timeOut.showPicker();
+          timeOut.focus();
         };
         timeOutWrap.appendChild(timeOut);
+        timeOutWrap.appendChild(timeOutIcon);
         cellTimeOut.appendChild(timeOutLbl);
         cellTimeOut.appendChild(timeOutWrap);
 
@@ -741,27 +785,35 @@
         btns.className = 'driver-btns';
         const startBtn = document.createElement('button');
         startBtn.innerHTML = `<i class="fas fa-play"></i> Start`;
-        startBtn.disabled = s.running || !s.kmIn || !s.date || s.kmIn.length < 1 || s.kmIn.length > 9 || !s.timeIn;
+        const stopBtn = document.createElement('button');
+        stopBtn.innerHTML = `<i class="fas fa-stop"></i> Stop`;
+        stopBtn.className = "stop-btn";
+        btns.appendChild(startBtn);
+        btns.appendChild(stopBtn);
+        card.appendChild(btns);
+
+        function renderBtnStates() {
+          startBtn.disabled = s.running || !s.kmIn || !s.date || s.kmIn.length < 1 || s.kmIn.length > 9 || !s.timeIn;
+          stopBtn.disabled = !s.running || !s.kmOut || s.kmOut.length < 1 || s.kmOut.length > 9 || !s.timeOut;
+          kmIn.disabled = s.running;
+          kmOut.disabled = !s.running;
+          timeIn.disabled = s.running;
+          timeOut.disabled = !s.running;
+        }
+        renderBtnStates();
+
         startBtn.onclick = () => {
+          if (startBtn.disabled) return;
           s.running = true;
           s.stopped = false;
-          startBtn.disabled = true;
-          stopBtn.disabled = false;
-          kmIn.disabled = true;
-          kmOut.disabled = false;
-          timeIn.disabled = true;
-          timeOut.disabled = false;
+          renderBtnStates();
           card.classList.add('active');
           greenDot.style.display = "inline-block";
           updateDriverState(userId);
         };
-        btns.appendChild(startBtn);
 
-        const stopBtn = document.createElement('button');
-        stopBtn.innerHTML = `<i class="fas fa-stop"></i> Stop`;
-        stopBtn.className = "stop-btn";
-        stopBtn.disabled = !s.running || !s.kmOut || s.kmOut.length < 1 || s.kmOut.length > 9 || !s.timeOut;
         stopBtn.onclick = () => {
+          if (stopBtn.disabled) return;
           if (!s.kmOut || Number(s.kmOut) < Number(s.kmIn)) {
             alert("Enter valid ending km (greater than or equal to start)");
             return;
@@ -779,12 +831,7 @@
 
           s.stopped = true;
           s.running = false;
-          stopBtn.disabled = true;
-          startBtn.disabled = false;
-          kmIn.disabled = false;
-          kmOut.disabled = true;
-          timeIn.disabled = false;
-          timeOut.disabled = true;
+          renderBtnStates();
           card.classList.remove('active');
           greenDot.style.display = "none";
           updateDriverState(userId);
@@ -815,8 +862,6 @@
           updateDriverState(userId);
           renderDrivers();
         };
-        btns.appendChild(stopBtn);
-        card.appendChild(btns);
 
         driverBoard.appendChild(card);
       });
