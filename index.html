@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalalable=no"/>
   <title>Delivery Drivers Log – Ravintola Tandoori Villa</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
@@ -191,16 +191,17 @@
       vertical-align: middle;
       box-shadow: 0 0 6px 2px #33ff588a;
     }
-    /* --- GRID LAYOUT FOR CARD FIELDS --- */
-    .driver-fields-grid {
+    /* --- 2x2 GRID LAYOUT FOR FIELDS --- */
+    .driver-fields-grid2x2 {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1em;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 1em 1em;
       padding: 16px 15px 0 15px;
       align-items: center;
       justify-items: stretch;
     }
-    .driver-fields-grid label {
+    .driver-fields-grid2x2 label {
       font-size: 1em;
       font-weight: 600;
       color: #bbdefb;
@@ -208,7 +209,7 @@
       white-space: nowrap;
       margin-bottom: 4px;
     }
-    .driver-fields-grid .grid-cell {
+    .driver-fields-grid2x2 .grid-cell {
       display: flex;
       flex-direction: column;
       align-items: stretch;
@@ -289,11 +290,11 @@
     @media (max-width: 1100px) { .log-board { max-width: 99vw; } .driver-card { min-width: 0; max-width: 99vw; } }
     @media (max-width: 900px) { .log-board { grid-template-columns: 1fr; padding: 0 8px; gap: 16px; } .driver-card { min-width: 98vw; max-width: 98vw; font-size: 0.97em; } }
     @media (max-width: 650px) {
-      .driver-fields-grid {grid-template-columns: 1fr 1fr;}
+      .driver-fields-grid2x2 {grid-template-columns: 1fr; grid-template-rows: 1fr 1fr 1fr 1fr;}
     }
     @media (max-width: 450px) {
       html, body { font-size: 14px; }
-      .driver-card-header, .driver-fields-grid, .driver-btns, .driver-km-result {padding-left:4px;padding-right:4px;}
+      .driver-card-header, .driver-fields-grid2x2, .driver-btns, .driver-km-result {padding-left:4px;padding-right:4px;}
       .driver-card { font-size: 0.93em;}
     }
     .modal-bg { display: none; position: fixed; z-index: 500; top: 0; left: 0; right: 0; bottom: 0; width: 100vw; height: 100vh; background: rgba(13, 32, 70, 0.82); align-items: center; justify-content: center;}
@@ -539,11 +540,11 @@
         }
         card.appendChild(headerRow);
 
-        // --- GRID FIELDS ---
+        // --- 2x2 GRID FIELDS ---
         const fieldsGrid = document.createElement('div');
-        fieldsGrid.className = 'driver-fields-grid';
+        fieldsGrid.className = 'driver-fields-grid2x2';
 
-        // KM IN
+        // KM IN (Top Left)
         const cellKmIn = document.createElement('div');
         cellKmIn.className = 'grid-cell';
         const kmInLbl = document.createElement('label');
@@ -578,7 +579,7 @@
         cellKmIn.appendChild(kmInLbl);
         cellKmIn.appendChild(kmInWrap);
 
-        // KM OUT
+        // KM OUT (Top Right)
         const cellKmOut = document.createElement('div');
         cellKmOut.className = 'grid-cell';
         const kmOutLbl = document.createElement('label');
@@ -613,7 +614,7 @@
         cellKmOut.appendChild(kmOutLbl);
         cellKmOut.appendChild(kmOutWrap);
 
-        // TIME IN
+        // TIME IN (Bottom Left)
         const cellTimeIn = document.createElement('div');
         cellTimeIn.className = 'grid-cell';
         const timeInLbl = document.createElement('label');
@@ -632,7 +633,7 @@
         cellTimeIn.appendChild(timeInLbl);
         cellTimeIn.appendChild(timeInWrap);
 
-        // TIME OUT
+        // TIME OUT (Bottom Right)
         const cellTimeOut = document.createElement('div');
         cellTimeOut.className = 'grid-cell';
         const timeOutLbl = document.createElement('label');
@@ -651,10 +652,11 @@
         cellTimeOut.appendChild(timeOutLbl);
         cellTimeOut.appendChild(timeOutWrap);
 
-        fieldsGrid.appendChild(cellKmIn);
-        fieldsGrid.appendChild(cellKmOut);
-        fieldsGrid.appendChild(cellTimeIn);
-        fieldsGrid.appendChild(cellTimeOut);
+        // Add to grid, order: top left, top right, bottom left, bottom right
+        fieldsGrid.appendChild(cellKmIn);    // grid-row: 1, grid-column: 1
+        fieldsGrid.appendChild(cellKmOut);   // grid-row: 1, grid-column: 2
+        fieldsGrid.appendChild(cellTimeIn);  // grid-row: 2, grid-column: 1
+        fieldsGrid.appendChild(cellTimeOut); // grid-row: 2, grid-column: 2
 
         card.appendChild(fieldsGrid);
 
@@ -750,10 +752,10 @@
         const s = driverState[userId];
         if (!s) return;
         const btns = card.querySelectorAll('.driver-btns button');
-        const kmIn = card.querySelector('.driver-fields-grid .grid-cell:nth-child(1) input[type="number"]');
-        const kmOut = card.querySelector('.driver-fields-grid .grid-cell:nth-child(2) input[type="number"]');
-        const timeIn = card.querySelector('.driver-fields-grid .grid-cell:nth-child(3) input[type="time"]');
-        const timeOut = card.querySelector('.driver-fields-grid .grid-cell:nth-child(4) input[type="time"]');
+        const kmIn = card.querySelector('.driver-fields-grid2x2 .grid-cell:nth-child(1) input[type="number"]');
+        const kmOut = card.querySelector('.driver-fields-grid2x2 .grid-cell:nth-child(2) input[type="number"]');
+        const timeIn = card.querySelector('.driver-fields-grid2x2 .grid-cell:nth-child(3) input[type="time"]');
+        const timeOut = card.querySelector('.driver-fields-grid2x2 .grid-cell:nth-child(4) input[type="time"]');
         const greenDot = card.querySelector('.green-dot');
         if (btns.length === 2) {
           btns[0].disabled = s.running || !s.kmIn || !s.date || s.kmIn.length < 1 || s.kmIn.length > 9 || !s.timeIn;
