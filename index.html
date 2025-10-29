@@ -337,6 +337,40 @@
     .driver-btns .stop-btn:active { background: #ff3b30;}
     .driver-btns .disabled, .driver-btns button:disabled { opacity: 0.5; pointer-events: none;}
     .how-to-use { width: 100vw; max-width: 1050px; margin: 18px auto 0 auto; padding: 13px 14px 11px 14px; background: #161a23cc; border-radius: 10px; color: #bbdefb; font-size: 0.97em; font-family: 'Poppins', Arial, sans-serif; text-align: left; line-height: 1.6; letter-spacing: 0.01em; box-shadow: 0 2px 8px #212a4033; box-sizing: border-box; overflow-x: hidden; align-self: center;}
+    /* Modal overlay: always above everything */
+    .modal-bg {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      top: 0; left: 0; right: 0; bottom: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(13, 32, 70, 0.82);
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-bg.active { display: flex;}
+    .modal-content {
+      background: var(--card-bg); color: var(--accent); border-radius: 18px;
+      border: 2px solid var(--primary); box-shadow: 0 7px 32px #42a5f547;
+      padding: 28px 30px 22px 30px; display: flex; flex-direction: column;
+      align-items: center; min-width: 270px; max-width: 95vw; min-height: 135px;
+      font-family: 'Poppins', Arial, sans-serif;
+      animation: pop .18s cubic-bezier(.45,1.4,.68,1.02); position: relative;
+    }
+    .modal-title { font-size: 1.12em; font-weight: 700; color: #fff; margin-bottom: 9px; text-align: center; letter-spacing: 0.02em;}
+    .modal-details { margin-bottom: 16px; color: var(--accent); font-size: 1em; font-weight: 500; text-align: center; word-break: break-word;}
+    .modal-done-btn { background: var(--primary); color: #fff; border: none; border-radius: 10px; font-size: 1.01em; font-weight: 700; padding: 10px 34px; cursor: pointer; transition: background 0.18s; margin-top: 2px; font-family: inherit; box-shadow: 0 2px 8px #42a5f533; letter-spacing: 0.03em;}
+    .modal-done-btn:hover { background: var(--primary-hover);}
+    .modal-close { position: absolute; top: 11px; right: 16px; background: none; border: none; color: #bbdefb; font-size: 1.22em; cursor: pointer; padding: 0; border-radius: 50%; transition: background 0.12s;}
+    .modal-close:active { background: #212a40;}
+    @keyframes pop { from { transform: scale(0.91); opacity: 0.3;} to   { transform: scale(1);    opacity: 1;} }
+    .modal-confirm { background: var(--card-bg); color: var(--accent); border-radius: 18px; border: 2px solid var(--red); box-shadow: 0 7px 32px #ff3b3047; padding: 22px 24px 18px 24px; display: flex; flex-direction: column; align-items: center; min-width: 230px; max-width: 95vw; min-height: 80px; font-family: 'Poppins', Arial, sans-serif; position: relative; animation: pop .18s cubic-bezier(.45,1.4,.68,1.02);}
+    .modal-confirm-title { font-size: 1.09em; font-weight: 700; color: #fff; margin-bottom: 9px; text-align: center; letter-spacing: 0.02em;}
+    .modal-confirm-details { margin-bottom: 16px; color: var(--accent); font-size: 1em; font-weight: 500; text-align: center; word-break: break-word;}
+    .modal-confirm-btns { display: flex; gap: 18px; margin-top: 5px;}
+    .modal-confirm-btn { background: var(--red); color: #fff; border: none; border-radius: 10px; font-size: 1.01em; font-weight: 700; padding: 7px 22px; cursor: pointer; transition: background 0.18s; font-family: inherit; box-shadow: 0 2px 8px #ff3b3033; letter-spacing: 0.03em;}
+    .modal-confirm-btn:hover { background: #c11;}
+    .modal-cancel-btn { background: var(--border); color: #bbdefb; border: none; border-radius: 10px; font-size: 1.01em; font-weight: 700; padding: 7px 22px; cursor: pointer; transition: background 0.18s; font-family: inherit; box-shadow: 0 2px 8px #212a4033; letter-spacing: 0.03em;}
   </style>
 </head>
 <body>
@@ -420,9 +454,9 @@
     let allUsers = {};
     let driverState = {};
 
-    // Modal logic (unchanged)
-    function showModal(details) {
-      document.getElementById('modalDetails').innerHTML = details;
+    // Modal logic
+    function showModal(detailsHtml) {
+      document.getElementById('modalDetails').innerHTML = detailsHtml;
       document.getElementById('modalBg').classList.add('active');
       setTimeout(() => { document.getElementById('modalDone').focus(); }, 100);
     }
@@ -431,6 +465,7 @@
     document.getElementById('modalDone').onclick = hideModal;
     document.getElementById('modalBg').onclick = function(e) { if (e.target === document.getElementById('modalBg')) hideModal(); };
 
+    // Confirm modal logic (unchanged)
     function showConfirmModal(userId, userName) {
       document.getElementById('confirmModalDetails').innerHTML = `Are you sure you want to delete <b>${userName}</b>? This cannot be undone.`;
       document.getElementById('confirmModalBg').classList.add('active');
@@ -737,6 +772,7 @@
             timeIn: s.timeIn,
             timeOut: s.timeOut
           };
+
           s.stopped = true;
           s.running = false;
           stopBtn.disabled = true;
@@ -749,6 +785,8 @@
           greenDot.style.display = "none";
           updateDriverState(userId);
           renderKmResult();
+
+          // Show modal BEFORE clearing fields
           showModal(
             `<b><i class="fas fa-user"></i> ${summary.name}</b><br>
             <span style="color:#fff;">${toDisplayDate(summary.date)}</span><br>
@@ -756,6 +794,7 @@
             <span>Time In: ${summary.timeIn || '-'}</span><br>
             <span>Time Out: ${summary.timeOut || '-'}</span>`
           );
+
           db.ref("logs").push({
             date: summary.date,
             name: summary.name,
@@ -766,6 +805,8 @@
             timeOut: summary.timeOut || "",
             timestamp: new Date().toISOString()
           });
+
+          // Clear after modal shown!
           s.kmIn = ""; s.kmOut = ""; s.timeIn = ""; s.timeOut = ""; s.stopped = false;
           updateDriverState(userId);
           renderDrivers();
@@ -807,6 +848,7 @@
         else card.classList.remove('active');
       });
     }, 350);
+
   </script>
 </body>
 </html>
