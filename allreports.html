@@ -143,7 +143,7 @@
       flex-wrap: wrap;
       justify-content: center;
       align-items: center;
-      gap: 1em;
+      gap: 0.5em;
       width: 100%;
     }
     .reports-bar .row2 {
@@ -215,13 +215,14 @@
     }
     .driver-report-table-top {
       width: calc(100% - 28px);
-      margin: 0 14px;
+      margin: 0 14px 10px 14px;
       display: flex;
       gap: 12px;
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
     }
+    /* highlighted driver heading */
     .driver-details {
       display: flex;
       gap: 14px;
@@ -229,6 +230,10 @@
       color: #bbdefb;
       font-weight: 700;
       font-size: 1.03em;
+      padding: 10px 14px;
+      border-radius: 10px;
+      background: linear-gradient(90deg, rgba(66,165,245,0.07), rgba(66,165,245,0.03));
+      box-shadow: inset 0 0 0 1px rgba(66,165,245,0.04);
     }
     .driver-details .meta {
       display: flex;
@@ -339,16 +344,15 @@
     .pagination-bar button:hover { background: var(--primary-hover);}
     .pagination-bar .disabled, .pagination-bar button:disabled { opacity: 0.5; pointer-events: none;}
 
-    /* download modal (CSV preview / PDF preview via print window) */
-    .download-preview-iframe {
-      width: 90vw;
-      max-width: 980px;
-      height: 60vh;
-      border: 1px solid #384164;
-      border-radius: 8px;
-      background: #fff;
+    /* download modal (CSV preview / PDF generation) */
+    .download-modal-content {
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      align-items:center;
+      width:100%;
     }
-
+    .download-modal-actions { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; }
     @media (max-width: 900px) {
       .driver-report-table-wrap { max-width: 100vw; }
       .driver-report-table { min-width: 730px; font-size: 0.96em;}
@@ -420,10 +424,13 @@
   </div>
 
   <div class="reports-bar">
-    <div class="row1" id="driverSelectRow" style="display: flex;">
+    <div class="row1" id="driverSelectRow" style="display: flex; align-items:center;">
       <label for="driverSelect">Select Driver:</label>
       <select id="driverSelect"></select>
+      <!-- Download button moved next to driver select as requested -->
+      <button id="downloadBtn" title="Download report for selected driver"><i class="fas fa-download"></i> Download</button>
     </div>
+
     <div class="row2" id="customRangeArea" style="display: flex;">
       <label>From</label>
       <input type="date" id="fromDate"/>
@@ -465,27 +472,27 @@
     </div>
   </div>
 
-  <!-- Download / Preview modal -->
+  <!-- Download modal with only two actions (PDF / CSV) -->
   <div class="modal-bg" id="downloadModalBg" aria-hidden="true">
-    <div class="modal-content" id="downloadModalContent" style="align-items:stretch;">
+    <div class="modal-content" id="downloadModalContent" style="align-items:center;">
       <button class="modal-close" id="downloadModalClose" title="Close">&times;</button>
-      <div class="modal-title" id="downloadModalTitle">Download / Preview Report</div>
-      <div class="modal-details" id="downloadModalDetails">Choose CSV download or open printable preview (you can save as PDF from print dialog).</div>
+      <div class="modal-title">Download Report</div>
+      <div class="modal-details" id="downloadModalInfo">Choose format to download the current report for the selected driver.</div>
 
-      <div style="display:flex;gap:10px;justify-content:center;margin-bottom:10px;">
-        <button id="downloadCsvBtn" class="modal-done-btn">Download CSV</button>
-        <button id="openPdfPreviewBtn" class="modal-done-btn">Open Print Preview</button>
-        <button id="closeDownloadModalBtn" class="modal-cancel-btn">Close</button>
-      </div>
-
-      <div style="display:flex;justify-content:center;">
-        <iframe id="downloadPreviewIframe" class="download-preview-iframe" sandbox></iframe>
+      <div class="download-modal-content">
+        <div class="download-modal-actions">
+          <button id="downloadPdfBtn" class="modal-done-btn"><i class="fas fa-file-pdf"></i> PDF</button>
+          <button id="downloadCsvBtn" class="modal-done-btn"><i class="fas fa-file-csv"></i> CSV</button>
+        </div>
+        <div style="font-size:0.95em;color:#bbdefb;">PDF will generate a printable report with driver details, date range and total KM at top.</div>
       </div>
     </div>
   </div>
 
 </div>
 
+<!-- html2pdf (bundle includes jspdf & html2canvas) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 <script>
@@ -536,13 +543,11 @@
   // Download modal handlers
   const downloadModalBg = document.getElementById('downloadModalBg');
   const downloadModalClose = document.getElementById('downloadModalClose');
+  const downloadPdfBtn = document.getElementById('downloadPdfBtn');
   const downloadCsvBtn = document.getElementById('downloadCsvBtn');
-  const openPdfPreviewBtn = document.getElementById('openPdfPreviewBtn');
-  const downloadPreviewIframe = document.getElementById('downloadPreviewIframe');
-  const closeDownloadModalBtn = document.getElementById('closeDownloadModalBtn');
+  const downloadBtn = document.getElementById('downloadBtn');
 
   downloadModalClose.onclick = () => { downloadModalBg.classList.remove('active'); };
-  closeDownloadModalBtn.onclick = () => { downloadModalBg.classList.remove('active'); };
   downloadModalBg.onclick = function(e){ if(e.target === downloadModalBg) downloadModalBg.classList.remove('active'); };
 
   // Data and helpers
@@ -568,13 +573,6 @@
   const driverSelect = document.getElementById('driverSelect');
 
   function pad2(n){return String(n).padStart(2,'0');}
-  function formatTime(sec) {
-    if (!sec) sec = 0;
-    const h = String(Math.floor(sec/3600)).padStart(2,'0');
-    const m = String(Math.floor((sec%3600)/60)).padStart(2,'0');
-    const s = String(sec%60).padStart(2,'0');
-    return `${h}:${m}:${s}`;
-  }
   function toDisplayDate(isoStr) {
     if (!isoStr) return '';
     const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
@@ -597,92 +595,45 @@
   function sumKm(logs) {
     return logs.reduce((sum,l)=>sum+parseInt(l.totalKm||0),0);
   }
+
   function getRows(logsObj, mode) {
-    let rows = [];
     if(!selectedDriver) return [];
     let today = todayISO();
     let all = getDriverLogs(selectedDriver);
     if(!all.length) return [];
     if(mode==="daily") {
       let daysMap = {};
-      all.forEach(l => {
-        if(!daysMap[l.date]) daysMap[l.date] = [];
-        daysMap[l.date].push(l);
-      });
+      all.forEach(l => { if(!daysMap[l.date]) daysMap[l.date]=[]; daysMap[l.date].push(l); });
       let allDays = Object.keys(daysMap).sort((a,b)=>b.localeCompare(a));
-      let rowsArr = [];
-      allDays.forEach(dateStr => {
-        rowsArr.push({
-          date: dateStr,
-          logs: daysMap[dateStr]
-        });
-      });
-      return rowsArr;
+      return allDays.map(date=>({date, logs: daysMap[date]}));
     } else if(mode==="weekly") {
-      let last7 = [];
-      for(let i=0;i<7;i++) last7.push(addDays(today,-i));
+      let last7 = []; for(let i=0;i<7;i++) last7.push(addDays(today,-i));
       let daysMap = {};
-      all.filter(l=>last7.includes(l.date)).forEach(l => {
-        if(!daysMap[l.date]) daysMap[l.date] = [];
-        daysMap[l.date].push(l);
-      });
-      let allDays = Object.keys(daysMap).sort((a,b)=>b.localeCompare(a));
-      let rowsArr = [];
-      allDays.forEach(dateStr => {
-        rowsArr.push({
-          date: dateStr,
-          logs: daysMap[dateStr]
-        });
-      });
-      return rowsArr;
+      all.filter(l=>last7.includes(l.date)).forEach(l => { if(!daysMap[l.date]) daysMap[l.date]=[]; daysMap[l.date].push(l); });
+      let days = Object.keys(daysMap).sort((a,b)=>b.localeCompare(a));
+      return days.map(date=>({date, logs: daysMap[date]}));
     } else if(mode==="monthly") {
       let monthToShow = currentMonth || getLatestMonthForDriver(selectedDriver);
       let daysMap = {};
-      all.filter(l=>l.date.slice(0,7)===monthToShow).forEach(l => {
-        if(!daysMap[l.date]) daysMap[l.date] = [];
-        daysMap[l.date].push(l);
-      });
-      let allDays = Object.keys(daysMap).sort((a,b)=>b.localeCompare(a));
-      let rowsArr = [];
-      allDays.forEach(dateStr => {
-        rowsArr.push({
-          date: dateStr,
-          logs: daysMap[dateStr]
-        });
-      });
-      return rowsArr;
+      all.filter(l=>l.date.slice(0,7)===monthToShow).forEach(l => { if(!daysMap[l.date]) daysMap[l.date]=[]; daysMap[l.date].push(l); });
+      let days = Object.keys(daysMap).sort((a,b)=>b.localeCompare(a));
+      return days.map(date=>({date, logs: daysMap[date]}));
     } else if(mode==="custom") {
       let f=fromDate.value, t=toDate.value;
       if(!f||!t) return [];
       let daysMap = {};
-      all.filter(l=>l.date>=f && l.date<=t).forEach(l => {
-        if(!daysMap[l.date]) daysMap[l.date] = [];
-        daysMap[l.date].push(l);
-      });
-      let allDays = Object.keys(daysMap).sort((a,b)=>b.localeCompare(a));
-      let rowsArr = [];
-      allDays.forEach(dateStr => {
-        rowsArr.push({
-          date: dateStr,
-          logs: daysMap[dateStr]
-        });
-      });
-      return rowsArr;
+      all.filter(l=>l.date>=f && l.date<=t).forEach(l => { if(!daysMap[l.date]) daysMap[l.date]=[]; daysMap[l.date].push(l); });
+      let days = Object.keys(daysMap).sort((a,b)=>b.localeCompare(a));
+      return days.map(date=>({date, logs: daysMap[date]}));
     }
     return [];
   }
+
   function updateMonthSelect() {
-    if(!selectedDriver) {
-      monthSelect.innerHTML = `<option value="">-- Select Month --</option>`;
-      return;
-    }
+    if(!selectedDriver) { monthSelect.innerHTML = `<option value="">-- Select Month --</option>`; return; }
     let logs = getDriverLogs(selectedDriver);
     let months = Array.from(new Set(logs.map(l=>l.date.slice(0,7)))).sort((a,b)=>b.localeCompare(a));
-    if(months.length === 0) {
-      monthSelect.innerHTML = `<option value="" selected>-- No data --</option>`;
-      currentMonth = "";
-      return;
-    }
+    if(months.length === 0) { monthSelect.innerHTML = `<option value="" selected>-- No data --</option>`; currentMonth = ""; return; }
     monthSelect.innerHTML = months.map((m, i)=>{
       let dateObj = new Date(m+"-01");
       let monthName = dateObj.toLocaleString('default', { month: 'long', year: 'numeric' });
@@ -696,7 +647,169 @@
     return months.length ? months[0] : "";
   }
 
-  // Build and show the reports table, plus driver details and download button
+  // Build CSV string from currently displayed grouped rows for the selected driver
+  function buildCsvForDriver() {
+    const headers = ["Date","Km In","Km Out","Total KM","Time In","Time Out","Notes"];
+    const rows = [];
+    const grouped = getRows(allLogs, currentMode);
+    grouped.forEach(day => {
+      day.logs.forEach(l => {
+        rows.push([
+          l.date || '',
+          l.kmIn ?? '',
+          l.kmOut ?? '',
+          l.totalKm ?? '',
+          l.timeIn ?? '',
+          l.timeOut ?? '',
+          l.notes ? String(l.notes).replace(/\r?\n/g,' ') : ''
+        ]);
+      });
+    });
+    const csvLines = [];
+    csvLines.push(headers.join(','));
+    rows.forEach(r => {
+      const escaped = r.map(cell => {
+        if (cell === null || cell === undefined) return '';
+        const c = String(cell);
+        if (c.includes('"') || c.includes(',') || c.includes('\n')) {
+          return '"' + c.replace(/"/g,'""') + '"';
+        }
+        return c;
+      });
+      csvLines.push(escaped.join(','));
+    });
+    return csvLines.join('\n');
+  }
+
+  // Build simple printable HTML including driver details, date range and total KM
+  function buildPrintableHtmlForDriver() {
+    const driverObj = Object.values(allUsers).find(u => u.name === selectedDriver) || {};
+    const grouped = getRows(allLogs, currentMode);
+
+    // Determine date range (start / end) from grouped rows
+    let dates = grouped.map(g => g.date).sort();
+    let startDate = '', endDate = '';
+    if (dates.length) {
+      startDate = dates[dates.length-1]; // earliest (since grouped was sorted desc in getRows)
+      endDate = dates[0];
+    } else {
+      // fallback depending on mode
+      if (currentMode === 'custom') { startDate = fromDate.value || ''; endDate = toDate.value || ''; }
+      else if (currentMode === 'weekly') { endDate = todayISO(); startDate = addDays(endDate, -6); }
+      else if (currentMode === 'monthly') {
+        let m = currentMonth || getLatestMonthForDriver(selectedDriver);
+        if (m) {
+          startDate = m + '-01';
+          // compute last day of month
+          const dt = new Date(m + '-01');
+          dt.setMonth(dt.getMonth()+1);
+          dt.setDate(0);
+          endDate = dt.toISOString().slice(0,10);
+        }
+      } else {
+        startDate = dates[dates.length-1] || '';
+        endDate = dates[0] || '';
+      }
+    }
+
+    const totalKm = sumKm(grouped.flatMap(x=>x.logs));
+
+    // build table rows
+    const rowsHtml = grouped.flatMap(day => day.logs.map(l => {
+      return `<tr>
+        <td style="border:1px solid #ddd;padding:6px;text-align:center;">${escapeHtml(l.date)}</td>
+        <td style="border:1px solid #ddd;padding:6px;text-align:center;">${escapeHtml(l.kmIn ?? '')}</td>
+        <td style="border:1px solid #ddd;padding:6px;text-align:center;">${escapeHtml(l.kmOut ?? '')}</td>
+        <td style="border:1px solid #ddd;padding:6px;text-align:center;">${escapeHtml(l.totalKm ?? '')}</td>
+        <td style="border:1px solid #ddd;padding:6px;text-align:center;">${escapeHtml(l.timeIn ?? '')}</td>
+        <td style="border:1px solid #ddd;padding:6px;text-align:center;">${escapeHtml(l.timeOut ?? '')}</td>
+      </tr>`;
+    })).join('\n');
+
+    const dateRangeText = (startDate && endDate) ? `${toDisplayDate(startDate)} — ${toDisplayDate(endDate)}` : '—';
+
+    const html = `
+      <!doctype html>
+      <html>
+        <head>
+          <meta charset="utf-8" />
+          <title>Report - ${escapeHtml(selectedDriver)}</title>
+          <style>
+            body { font-family: Arial, Helvetica, sans-serif; color:#111; padding:18px; }
+            h1 { margin:0 0 6px 0; font-size:20px; }
+            .meta { margin:6px 0 12px 0; color:#333; font-size:14px; }
+            .meta b { color:#000; }
+            table { border-collapse: collapse; width:100%; margin-top:10px; }
+            th, td { border:1px solid #ddd; padding:8px; font-size:13px; text-align:center; }
+            th { background:#f2f2f2; font-weight:700; }
+            .summary { margin-top:10px; font-weight:700; }
+          </style>
+        </head>
+        <body>
+          <h1>${escapeHtml(selectedDriver)}</h1>
+          <div class="meta">Car: <b>${escapeHtml(driverObj.car || '-')}</b> &nbsp;|&nbsp; Address: <b>${escapeHtml(driverObj.address || '-')}</b></div>
+          <div class="meta">Date range: <b>${dateRangeText}</b> &nbsp;|&nbsp; Total KM: <b>${totalKm} km</b></div>
+          <table>
+            <thead><tr><th>Date</th><th>Km In</th><th>Km Out</th><th>Total KM</th><th>Time In</th><th>Time Out</th></tr></thead>
+            <tbody>
+              ${rowsHtml || `<tr><td colspan="6" style="text-align:center;padding:12px;">No data</td></tr>`}
+            </tbody>
+          </table>
+        </body>
+      </html>
+    `;
+    return { html, startDate, endDate, totalKm };
+  }
+
+  // Trigger PDF generation (auto-download) using html2pdf
+  function downloadPdfForDriver() {
+    const printable = buildPrintableHtmlForDriver();
+    // Create a temporary container element
+    const container = document.createElement('div');
+    container.style.background = '#fff';
+    container.style.color = '#000';
+    container.style.padding = '10px';
+    container.style.width = '100%';
+    container.style.boxSizing = 'border-box';
+    container.innerHTML = printable.html;
+
+    // html2pdf options
+    const filenameBase = `${selectedDriver.replace(/\s+/g,'_')}_report_${printable.startDate || ''}_${printable.endDate || ''}`.replace(/_$/,'');
+    const opt = {
+      margin:       10,
+      filename:     (filenameBase || 'report') + '.pdf',
+      image:        { type: 'jpeg', quality: 0.98 },
+      html2canvas:  { scale: 2 },
+      jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+
+    // generate and save
+    // using from(element) works with the DOM element
+    document.body.appendChild(container);
+    html2pdf().set(opt).from(container).save().finally(() => {
+      try { document.body.removeChild(container); } catch(e){/*ignore*/ }
+    });
+  }
+
+  // CSV download (uses current grouped data)
+  function downloadCsvForDriver() {
+    const csv = buildCsvForDriver();
+    const grouped = getRows(allLogs, currentMode);
+    let dates = grouped.map(g => g.date).sort();
+    let startDate = dates.length ? dates[dates.length-1] : (fromDate.value || '');
+    let endDate = dates.length ? dates[0] : (toDate.value || todayISO());
+    const filename = `${selectedDriver.replace(/\s+/g,'_')}_report_${startDate || ''}_${endDate || ''}.csv`.replace(/__+/g,'_');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(()=>{ document.body.removeChild(a); URL.revokeObjectURL(url); }, 250);
+  }
+
+  // Build and show the reports table and driver details
   function showReportsTable() {
     tablesArea.innerHTML = "";
     if(!selectedDriver) {
@@ -710,13 +823,10 @@
     totalPages = Math.max(Math.ceil(totalRows/perPage),1);
     let pageRows = currentMode==="monthly" ? filteredLogs : filteredLogs.slice((currentPage-1)*perPage, currentPage*perPage);
 
-    // Total KM for displayed range
     let totalKm = sumKm(filteredLogs.flatMap(x=>x.logs));
 
-    // Get driver details from allUsers (object keyed by id)
-    let driverObj = null;
-    Object.values(allUsers).forEach(u => { if(u.name === selectedDriver) driverObj = u; });
-
+    // driver details
+    let driverObj = Object.values(allUsers).find(u => u.name === selectedDriver) || {};
     let titleText = `${selectedDriver}`;
     if(currentMode==="weekly") titleText += `<span class="total-km">Last 7 Days: <b>${totalKm} km</b></span>`;
     if(currentMode==="monthly") {
@@ -730,34 +840,29 @@
     }
     if(currentMode==="custom") titleText += `<span class="total-km">Custom: <b>${totalKm} km</b></span>`;
 
-    // Driver details and download button area (top of table)
-    let driverDetailsHTML = `<div class="driver-report-table-wrap">`;
-    driverDetailsHTML += `<div class="driver-report-table-top">`;
-    driverDetailsHTML += `<div class="driver-details">`;
-    driverDetailsHTML += `<div class="meta"><span style="font-size:1.06em;color:#fff;">${escapeHtml(selectedDriver)}</span>`;
-    if (driverObj) {
-      driverDetailsHTML += `<span class="field">Car: ${escapeHtml(driverObj.car || '-')}</span>`;
-      driverDetailsHTML += `<span class="field">Address: ${escapeHtml(driverObj.address || '-')}</span>`;
-    } else {
-      driverDetailsHTML += `<span class="field">Car: -</span><span class="field">Address: -</span>`;
-    }
-    driverDetailsHTML += `</div></div>`; // .driver-details
+    let html = `<div class="driver-report-table-wrap">`;
+    html += `<div class="driver-report-table-top">`;
+    html += `<div class="driver-details">`;
+    html += `<div class="meta"><span style="font-size:1.06em;color:#fff;">${escapeHtml(selectedDriver)}</span>`;
+    html += `<span class="field">Car: ${escapeHtml(driverObj.car || '-')}</span>`;
+    html += `<span class="field">Address: ${escapeHtml(driverObj.address || '-')}</span>`;
+    html += `</div></div>`; // .driver-details
 
-    driverDetailsHTML += `<div class="download-area">`;
-    driverDetailsHTML += `<button id="downloadReportBtn" title="Download report (CSV or PDF)"> <i class="fas fa-download"></i> Download</button>`;
-    driverDetailsHTML += `</div></div>`; // .driver-report-table-top
+    html += `<div class="download-area">`;
+    html += `<button id="downloadReportBtn" title="Download report (PDF or CSV)"><i class="fas fa-download"></i> Download</button>`;
+    html += `</div></div>`; // .driver-report-table-top
 
-    // Pagination bar
-    driverDetailsHTML += `<div class="pagination-bar">`;
+    // pagination bar
+    html += `<div class="pagination-bar">`;
     if(currentMode!=="monthly" && totalPages>1) {
-      driverDetailsHTML += `<button ${currentPage===1?'disabled':''} onclick="prevPage()">Previous</button>`;
-      driverDetailsHTML += `<span style="align-self:center;color:#bbdefb;font-weight:700;">${currentPage}/${totalPages}</span>`;
-      driverDetailsHTML += `<button ${currentPage===totalPages?'disabled':''} onclick="nextPage()">Next</button>`;
+      html += `<button ${currentPage===1?'disabled':''} onclick="prevPage()">Previous</button>`;
+      html += `<span style="align-self:center;color:#bbdefb;font-weight:700;">${currentPage}/${totalPages}</span>`;
+      html += `<button ${currentPage===totalPages?'disabled':''} onclick="nextPage()">Next</button>`;
     }
-    driverDetailsHTML += `</div>`;
+    html += `</div>`;
 
-    // Table header + rows
-    driverDetailsHTML += `<table class="driver-report-table"><thead>
+    // table
+    html += `<table class="driver-report-table"><thead>
       <tr>
         <th>Date</th>
         <th>Km In</th>
@@ -770,11 +875,11 @@
     </thead><tbody>`;
 
     if(pageRows.length===0){
-      driverDetailsHTML += `<tr><td colspan="7" style="text-align:center;color:#93c7e6;font-size:1.1em;font-weight:700;">No report data.</td></tr>`;
+      html += `<tr><td colspan="7" style="text-align:center;color:#93c7e6;font-size:1.1em;font-weight:700;">No report data.</td></tr>`;
     } else {
       pageRows.forEach(day=>{
         day.logs.forEach((row)=>{
-          driverDetailsHTML += `<tr>
+          html += `<tr>
             <td>${toDisplayDate(row.date)}</td>
             <td>${row.kmIn ?? ''}</td>
             <td>${row.kmOut ?? ''}</td>
@@ -787,16 +892,26 @@
       });
     }
 
-    driverDetailsHTML += `</tbody></table></div>`;
-    tablesArea.innerHTML = driverDetailsHTML;
+    html += `</tbody></table></div>`;
+    tablesArea.innerHTML = html;
 
-    // Hook up download button now that it's in DOM
+    // hook download button(s)
     const downloadReportBtn = document.getElementById('downloadReportBtn');
-    if(downloadReportBtn) {
-      downloadReportBtn.onclick = function(){
-        openDownloadModal();
-      };
-    }
+    if(downloadReportBtn) downloadReportBtn.onclick = () => downloadModalBg.classList.add('active');
+
+    // also hook the global download button (next to select) as requested
+    downloadBtn.onclick = () => downloadModalBg.classList.add('active');
+
+    // hook modal actions
+    downloadPdfBtn.onclick = function(){
+      downloadModalBg.classList.remove('active');
+      // generate and auto-download PDF
+      downloadPdfForDriver();
+    };
+    downloadCsvBtn.onclick = function(){
+      downloadModalBg.classList.remove('active');
+      downloadCsvForDriver();
+    };
 
     // reset scroll
     const wrap = document.querySelector('.driver-report-table-wrap');
@@ -887,156 +1002,18 @@
     updateMonthSelect();
   });
 
-  // Logout Modal Logic (as before)
+  // Logout Modal Logic (reused confirm modal)
   document.getElementById('logoutBtn').onclick = function(){
     document.getElementById('confirmModalTitle').innerHTML = '<i class="fas fa-sign-out-alt" style="color:var(--primary);"></i> Confirm Logout';
     document.getElementById('confirmModalDetails').innerText = 'Are you sure you want to logout?';
     document.getElementById('confirmModalBg').classList.add('active');
-    pendingDelete = function(){ 
+    pendingDelete = function(){
       localStorage.removeItem('user');
       window.location.href = 'login.html';
     };
     setTimeout(()=>{ document.getElementById('confirmDeleteBtn').focus(); }, 100);
   };
 
-  // --- Download / Preview logic ---
-
-  // Build CSV string from current filteredLogs (flattened) for selectedDriver
-  function buildCsvForDriver() {
-    // header
-    const headers = ["Date","Km In","Km Out","Total KM","Time In","Time Out","Notes"];
-    const rows = [];
-    // use getRows for the selected mode to respect filters
-    const grouped = getRows(allLogs, currentMode);
-    grouped.forEach(day => {
-      day.logs.forEach(l => {
-        rows.push([
-          l.date || '',
-          l.kmIn ?? '',
-          l.kmOut ?? '',
-          l.totalKm ?? '',
-          l.timeIn ?? '',
-          l.timeOut ?? '',
-          l.notes ? String(l.notes).replace(/\r?\n/g,' ') : ''
-        ]);
-      });
-    });
-    // produce CSV content
-    const csvLines = [];
-    csvLines.push(headers.join(','));
-    rows.forEach(r => {
-      // escape quotes and commas
-      const escaped = r.map(cell => {
-        if (cell === null || cell === undefined) return '';
-        const c = String(cell);
-        if (c.includes('"') || c.includes(',') || c.includes('\n')) {
-          return '"' + c.replace(/"/g,'""') + '"';
-        }
-        return c;
-      });
-      csvLines.push(escaped.join(','));
-    });
-    return csvLines.join('\n');
-  }
-
-  // Build printable HTML for preview/print (simple styling)
-  function buildPrintableHtml() {
-    // get driver details
-    let driverObj = null;
-    Object.values(allUsers).forEach(u => { if(u.name === selectedDriver) driverObj = u; });
-    const grouped = getRows(allLogs, currentMode);
-    let totalKm = sumKm(grouped.flatMap(x=>x.logs));
-    let title = `<h2 style="margin:0;padding:0;">${escapeHtml(selectedDriver)} - KM Report</h2>`;
-    let meta = `<div style="margin:8px 0;color:#666;">Car: ${escapeHtml(driverObj?.car || '-')} &nbsp;|&nbsp; Address: ${escapeHtml(driverObj?.address || '-')} &nbsp;|&nbsp; Total KM: ${totalKm}</div>`;
-    let tableRows = grouped.flatMap(day => day.logs.map(l => {
-      return `<tr>
-        <td style="border:1px solid #ddd;padding:6px;text-align:center;">${escapeHtml(l.date)}</td>
-        <td style="border:1px solid #ddd;padding:6px;text-align:center;">${escapeHtml(l.kmIn ?? '')}</td>
-        <td style="border:1px solid #ddd;padding:6px;text-align:center;">${escapeHtml(l.kmOut ?? '')}</td>
-        <td style="border:1px solid #ddd;padding:6px;text-align:center;">${escapeHtml(l.totalKm ?? '')}</td>
-        <td style="border:1px solid #ddd;padding:6px;text-align:center;">${escapeHtml(l.timeIn ?? '')}</td>
-        <td style="border:1px solid #ddd;padding:6px;text-align:center;">${escapeHtml(l.timeOut ?? '')}</td>
-      </tr>`;
-    })).join('\n');
-
-    const html = `
-      <!doctype html>
-      <html>
-      <head>
-        <meta charset="utf-8" />
-        <title>Report - ${selectedDriver}</title>
-        <style>
-          body { font-family: Arial, Helvetica, sans-serif; color:#111; padding:18px; }
-          h2 { color:#222; }
-          table { border-collapse: collapse; width:100%; margin-top:10px; }
-          th, td { border:1px solid #ddd; padding:8px; font-size:14px; text-align:center; }
-          th { background:#f2f2f2; font-weight:700; }
-        </style>
-      </head>
-      <body>
-        ${title}
-        ${meta}
-        <table>
-          <thead>
-            <tr><th>Date</th><th>Km In</th><th>Km Out</th><th>Total KM</th><th>Time In</th><th>Time Out</th></tr>
-          </thead>
-          <tbody>
-            ${tableRows || `<tr><td colspan="6" style="text-align:center;padding:12px;">No data</td></tr>`}
-          </tbody>
-        </table>
-      </body>
-      </html>
-    `;
-    return html;
-  }
-
-  // Open the download modal and populate preview iframe
-  function openDownloadModal() {
-    // populate iframe with printable HTML (so user sees preview)
-    const html = buildPrintableHtml();
-    const iframe = downloadPreviewIframe;
-    // use srcdoc if supported
-    try {
-      iframe.srcdoc = html;
-    } catch(e) {
-      // fallback using data URL
-      iframe.src = 'data:text/html;charset=utf-8,' + encodeURIComponent(html);
-    }
-    document.getElementById('downloadModalTitle').innerText = `Download / Preview: ${selectedDriver}`;
-    downloadModalBg.classList.add('active');
-    downloadModalBg.setAttribute('aria-hidden','false');
-  }
-
-  // Trigger CSV download
-  downloadCsvBtn.onclick = function() {
-    const csv = buildCsvForDriver();
-    const filename = `${selectedDriver.replace(/\s+/g,'_')}_report_${(new Date()).toISOString().slice(0,10)}.csv`;
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    setTimeout(()=>{ document.body.removeChild(a); URL.revokeObjectURL(url); }, 250);
-  };
-
-  // Open print preview (new window with printable HTML)
-  openPdfPreviewBtn.onclick = function() {
-    const html = buildPrintableHtml();
-    const w = window.open('', '_blank');
-    if (!w) {
-      alert('Popup blocked. Please allow popups to open print preview.');
-      return;
-    }
-    w.document.open();
-    w.document.write(html);
-    w.document.close();
-    // Give the window a moment, then focus - the user can print/save as PDF manually
-    setTimeout(()=>{ w.focus(); }, 300);
-  };
-
-  // Utilities
   function escapeHtml(s) {
     if (s === null || s === undefined) return '';
     return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -1044,7 +1021,6 @@
 
   // Initialize UI state
   showReportsTable();
-
 </script>
 </body>
 </html>
