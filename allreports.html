@@ -17,7 +17,6 @@
       --red: #ff3b30;
       --gap: 24px;
       --card-radius: 15px;
-      --shadow: 0 2px 9px rgba(66, 165, 245, 0.08);
     }
     html, body {
       min-height: 100vh;
@@ -65,7 +64,7 @@
       margin: 0 0 var(--gap) 0;
       margin-top: 24px;
       border-radius: var(--card-radius);
-      box-shadow: var(--shadow);
+      box-shadow: 0 2px 9px rgba(66, 165, 245, 0.08);
       min-height: 43px;
       letter-spacing: 0.03em;
       max-width: 1100px;
@@ -106,22 +105,22 @@
       white-space: normal;
       max-width: 68vw;
     }
-    .header-btnbar { 
-      display: flex; 
-      gap: 16px; 
-      margin-top: 12px; 
+    .header-btnbar {
+      display: flex;
+      gap: 16px;
+      margin-top: 12px;
       margin-bottom: 0;
     }
-    .header-btnbar button { 
-      font-size: 1em; 
-      font-family: 'Poppins', Arial, sans-serif; 
-      font-weight: 700; 
-      background: var(--red); 
-      color: #fff; 
-      border: none; 
-      border-radius: 9px; 
-      padding: 8px 20px; 
-      cursor: pointer; 
+    .header-btnbar button {
+      font-size: 1em;
+      font-family: 'Poppins', Arial, sans-serif;
+      font-weight: 700;
+      background: var(--red);
+      color: #fff;
+      border: none;
+      border-radius: 9px;
+      padding: 8px 20px;
+      cursor: pointer;
       transition: background 0.16s;
       box-shadow: 0 2px 8px #ff3b3033;
     }
@@ -176,14 +175,14 @@
     }
     .reports-bar button {
       font-size: 1em;
-      font-family: 'Poppins', Arial, sans-serif; 
-      font-weight: 700; 
-      background: var(--primary); 
-      color: #fff; 
-      border: none; 
-      border-radius: 8px; 
-      padding: 7px 17px; 
-      cursor: pointer; 
+      font-family: 'Poppins', Arial, sans-serif;
+      font-weight: 700;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 7px 17px;
+      cursor: pointer;
       transition: background 0.16s;
       margin-left: 8px;
     }
@@ -202,116 +201,61 @@
       box-shadow: 0 1px 7px #009de015;
       margin-left: 10px;
     }
-    .top-area-relative {
-      position: relative;
-      width: 100vw;
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-    .driver-details-box {
-      position: absolute;
-      top: -6px;
-      right: 0;
-      z-index: 12;
-      width: 170px;
-      min-width: 120px;
-      max-width: 230px;
-      background: var(--card-bg);
-      border-radius: 12px;
-      box-shadow: 0 2px 8px #009de022;
-      padding: 13px 15px 13px 15px;
-      display: flex;
-      flex-direction: column;
-      gap: 7px;
-      align-items: flex-start;
-      transition: box-shadow .12s;
-    }
-    .driver-details-title-row {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      margin-bottom: 1px;
-    }
-    .edit-driver-btn {
-      background: none;
-      border: none;
-      color: var(--primary);
-      font-size: 1.1em;
-      cursor: pointer;
-      margin-left: auto;
-      border-radius: 7px;
-      padding: 1px 7px 1px 7px;
-      transition: background 0.13s;
-    }
-    .edit-driver-btn:hover { background: #203060;}
-    .driver-details-label {
-      color: var(--accent);
-      font-size: 0.91em;
-      font-weight: 700;
-      margin-right: 5px;
-      letter-spacing: 0.01em;
-      opacity: 0.85;
-    }
-    .driver-details-value {
-      color: #fff;
-      font-size: 0.97em;
-      font-weight: 600;
-      margin-bottom: 7px;
-      word-break: break-all;
-    }
-    .driver-details-row {
-      margin-bottom: 2px;
-      width: 100%;
-      display: flex;
-      align-items: center;
-    }
-    .download-btn-inside {
-      font-size: 0.97em;
-      font-family: 'Poppins', Arial, sans-serif;
-      font-weight: 700;
-      background: var(--primary);
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      padding: 7px 0px;
-      cursor: pointer;
-      transition: background 0.16s;
-      box-shadow: 0 2px 8px #42a5f533;
-      margin-top: 5px;
-      width: 100%;
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      justify-content: center;
-    }
-    .download-btn-inside:hover { background: var(--primary-hover);}
-    .driver-details-label-car {
-      font-weight: 700; color: var(--primary); font-size: 0.98em; margin-right: 5px;
-    }
-    .driver-details-value-car {
-      color: #fff; font-weight: 700; font-size: 1em;
-    }
-    .main-content-flex {
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      width: 100vw;
-      max-width: 1100px;
-      margin: 0 auto 19px auto;
-      gap: 0;
-      position: relative;
-    }
+
+    /* Driver details header (new): left shows details, right shows download button */
     .driver-report-table-wrap {
-      flex: 1;
+      width: 100vw;
+      max-width: 1100px;
       background: var(--card-bg);
       border-radius: 12px;
       box-shadow: 0 2px 8px #009de018;
+      margin: 0 auto 19px auto;
       padding: 12px 0 18px 0;
       overflow-x: auto;
-      min-width: 0;
-      margin-top: 32px;
     }
+    .driver-report-table-top {
+      width: calc(100% - 28px);
+      margin: 0 14px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+    .driver-details {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      color: #bbdefb;
+      font-weight: 700;
+      font-size: 1.03em;
+    }
+    .driver-details .meta {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-weight: 600;
+      color: #d6eaff;
+      font-size: 0.98em;
+    }
+    .driver-details .meta .field { color:#bbdefb; font-weight:600; font-size:0.92em; }
+    .download-area {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .download-area button {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 8px 12px;
+      font-weight:700;
+      cursor: pointer;
+      box-shadow: 0 2px 8px #42a5f533;
+    }
+    .download-area button:hover { background: var(--primary-hover); }
+
     .driver-report-table-title {
       font-size: 1.16em;
       font-weight: 700;
@@ -320,7 +264,6 @@
       display: flex;
       align-items: center;
       gap: 1.4em;
-      position: relative;
     }
     .driver-report-table-title .total-km {
       font-size: 0.98em;
@@ -332,38 +275,6 @@
       margin-left: 10px;
       letter-spacing: 0.03em;
     }
-    .pagination-bar {
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 24px 0 0;
-      margin-bottom: 8px;
-    }
-    .pagination-bar .page-numbers {
-      display: flex;
-      gap: 3px;
-    }
-    .pagination-bar button {
-      font-size: 0.99em;
-      background: var(--primary);
-      color: #fff;
-      border: none;
-      border-radius: 7px;
-      padding: 5px 13px;
-      cursor: pointer;
-      transition: background 0.13s;
-      font-family: inherit;
-      font-weight: 600;
-    }
-    .pagination-bar button.active-page {
-      background: #fff;
-      color: var(--primary);
-      font-weight: 700;
-      border: 2px solid var(--primary);
-    }
-    .pagination-bar button:hover { background: var(--primary-hover);}
-    .pagination-bar .disabled, .pagination-bar button:disabled { opacity: 0.5; pointer-events: none;}
     .driver-report-table {
       border-collapse: separate;
       border-spacing: 0;
@@ -405,35 +316,48 @@
       transition: background 0.11s;
     }
     .driver-report-table td .delete-row-btn:active { background: #212a40;}
-    /* Download Modal theme buttons */
-    .download-modal-btn {
-      font-size: 1em;
-      font-weight: 700;
-      padding: 13px 0;
-      border-radius: 7px;
-      border: none;
-      color: #fff;
-      margin-bottom: 6px;
-      background: var(--primary);
-      transition: background 0.18s, color 0.13s;
-      box-shadow: 0 2px 8px #42a5f533;
+    .pagination-bar {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 24px 0 0;
+      margin-bottom: 8px;
     }
-    .download-modal-btn:last-child {margin-bottom:0;}
-    .download-modal-btn.pdf { background: #0d47a1;}
-    .download-modal-btn.pdf:hover { background: #1976d2;}
-    .download-modal-btn.csv { background: var(--primary);}
-    .download-modal-btn.csv:hover { background: #1976d2;}
+    .pagination-bar button {
+      font-size: 0.99em;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 7px;
+      padding: 5px 13px;
+      cursor: pointer;
+      transition: background 0.13s;
+      font-family: inherit;
+      font-weight: 600;
+    }
+    .pagination-bar button:hover { background: var(--primary-hover);}
+    .pagination-bar .disabled, .pagination-bar button:disabled { opacity: 0.5; pointer-events: none;}
+
+    /* download modal (CSV preview / PDF preview via print window) */
+    .download-preview-iframe {
+      width: 90vw;
+      max-width: 980px;
+      height: 60vh;
+      border: 1px solid #384164;
+      border-radius: 8px;
+      background: #fff;
+    }
+
     @media (max-width: 900px) {
-      .main-content-flex { flex-direction: column; gap: 0; }
-      .top-area-relative { max-width: 100vw;}
-      .driver-details-box { position: static; width: 99vw; min-width: 0; margin: 0 auto 9px auto; top:0; right: auto;}
       .driver-report-table-wrap { max-width: 100vw; }
       .driver-report-table { min-width: 730px; font-size: 0.96em;}
       .driver-report-table th, .driver-report-table td { padding: 8px 8px;}
+      .driver-report-table-top { width: calc(100% - 16px); margin: 0 8px; }
+      .driver-details { font-size: 1em; gap: 10px; }
     }
     @media (max-width: 600px) {
       html, body { font-size: 15px; }
-      .driver-details-box { max-width: 100vw; }
       .driver-report-table-wrap { min-width: 99vw; }
       .driver-report-table { min-width: 630px; font-size: 0.95em;}
       .driver-report-table th, .driver-report-table td { padding: 8px 8px;}
@@ -447,48 +371,35 @@
       .reports-bar .row2 button {
         margin-right: 0;
       }
+      .driver-report-table-top { flex-direction: column; align-items: stretch; gap: 10px; }
+      .download-area { justify-content: flex-end; width: 100%; }
+      .driver-details { justify-content: flex-start; width: 100%; }
     }
     @media (max-width: 450px) {
       html, body { font-size: 14px; }
-      .driver-details-box { max-width: 100vw;}
       .driver-report-table-wrap { min-width: 99vw;}
       .driver-report-table { min-width: 570px;}
+      .driver-details .meta { font-size: 0.9em; }
+      .download-area button { padding: 8px 10px; }
     }
-    .modal-bg { display: none; position: fixed; z-index: 500; top: 0; left: 0; right: 0; bottom: 0; width: 100vw; height: 100vh; background: rgba(13, 32, 70, 0.82); align-items: center; justify-content: center;}
+    .modal-bg { display: none; position: fixed; z-index: 700; top: 0; left: 0; right: 0; bottom: 0; width: 100vw; height: 100vh; background: rgba(13, 32, 70, 0.82); align-items: center; justify-content: center;}
     .modal-bg.active { display: flex;}
     .modal-content, .modal-confirm {
       background: var(--card-bg); color: var(--accent); border-radius: 18px; border: 2px solid var(--primary);
-      box-shadow: 0 7px 32px #42a5f547; padding: 28px 30px 22px 30px; display: flex; flex-direction: column; align-items: center;
-      min-width: 270px; max-width: 95vw; min-height: 135px; font-family: 'Poppins', Arial, sans-serif; animation: pop .18s cubic-bezier(.45,1.4,.68,1.02); position: relative;
+      box-shadow: 0 7px 32px #42a5f547; padding: 18px 20px 16px 20px; display: flex; flex-direction: column; align-items: center;
+      min-width: 300px; max-width: 95vw; min-height: 120px; font-family: 'Poppins', Arial, sans-serif; animation: pop .18s cubic-bezier(.45,1.4,.68,1.02); position: relative;
     }
     .modal-title { font-size: 1.12em; font-weight: 700; color: #fff; margin-bottom: 9px; text-align: center; letter-spacing: 0.02em;}
-    .modal-details, .modal-confirm-details { margin-bottom: 16px; color: var(--accent); font-size: 1em; font-weight: 500; text-align: center; word-break: break-word;}
+    .modal-details, .modal-confirm-details { margin-bottom: 12px; color: var(--accent); font-size: 1em; font-weight: 500; text-align: center; word-break: break-word;}
     .modal-done-btn, .modal-confirm-btn, .modal-cancel-btn {
-      background: var(--primary); color: #fff; border: none; border-radius: 10px; font-size: 1.01em; font-weight: 700; padding: 10px 34px; cursor: pointer; transition: background 0.18s; margin-top: 2px; font-family: inherit; box-shadow: 0 2px 8px #42a5f533; letter-spacing: 0.03em;
+      background: var(--primary); color: #fff; border: none; border-radius: 10px; font-size: 1.01em; font-weight: 700; padding: 8px 20px; cursor: pointer; transition: background 0.18s; margin-top: 8px; font-family: inherit; box-shadow: 0 2px 8px #42a5f533; letter-spacing: 0.03em;
     }
     .modal-done-btn:hover, .modal-confirm-btn:hover { background: var(--primary-hover);}
-    .modal-close { position: absolute; top: 11px; right: 16px; background: none; border: none; color: #bbdefb; font-size: 1.22em; cursor: pointer; padding: 0; border-radius: 50%; transition: background 0.12s;}
+    .modal-close { position: absolute; top: 10px; right: 12px; background: none; border: none; color: #bbdefb; font-size: 1.22em; cursor: pointer; padding: 0; border-radius: 50%; transition: background 0.12s;}
     .modal-close:active { background: #212a40;}
     .modal-confirm-btn { background: var(--red); }
     .modal-cancel-btn { background: var(--border); color: #bbdefb; }
-    .modal-confirm-btns { display: flex; gap: 18px; margin-top: 5px;}
-    .modal-confirm-title { font-size: 1.09em; font-weight: 700; color: #fff; margin-bottom: 9px; text-align: center; letter-spacing: 0.02em;}
-    .modal-edit-form { width: 100%; display: flex; flex-direction: column; gap: 12px; margin-top: 8px; }
-    .modal-edit-form label { color: var(--accent); font-weight: 600; margin-bottom: 2px; font-size: 1em;}
-    .modal-edit-form input, .modal-edit-form textarea {
-      font-family: inherit; font-size: 1em; border-radius: 8px; border: 1.5px solid var(--primary);
-      background: #181c24; color: #fff; padding: 7px 10px;
-      outline: none; font-weight: 600;
-      margin-bottom: 3px;
-      transition: border 0.14s;
-    }
-    .modal-edit-form input:focus, .modal-edit-form textarea:focus { border: 1.5px solid var(--primary-hover);}
-    .modal-edit-btnbar { display: flex; gap: 12px; justify-content: flex-end; margin-top: 8px;}
-    .modal-edit-btn {
-      background: var(--primary); color: #fff; border: none; border-radius: 9px; padding: 8px 25px;
-      font-size: 1.05em; font-weight: 700; cursor: pointer; transition: background 0.13s; font-family: inherit;
-    }
-    .modal-edit-btn:hover { background: var(--primary-hover);}
+    .modal-confirm-btns { display: flex; gap: 12px; margin-top: 8px;}
     @keyframes pop { from { transform: scale(0.91); opacity: 0.3;} to   { transform: scale(1);    opacity: 1;} }
   </style>
 </head>
@@ -507,6 +418,7 @@
       <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
     </div>
   </div>
+
   <div class="reports-bar">
     <div class="row1" id="driverSelectRow" style="display: flex;">
       <label for="driverSelect">Select Driver:</label>
@@ -529,25 +441,10 @@
       <button id="monthlyBtn">Monthly</button>
     </div>
   </div>
-  <div class="top-area-relative">
-    <div class="driver-details-box" id="driverDetailsBox" style="display:none;">
-      <div class="driver-details-title-row">
-        <button class="edit-driver-btn" id="editDriverBtn" title="Edit Driver Details"><i class="fas fa-pen"></i></button>
-      </div>
-      <div class="driver-details-row">
-        <span class="driver-details-label-car">Car Reg#:</span>
-        <span class="driver-details-value-car" id="driverCarRegValue"></span>
-      </div>
-      <button class="download-btn-inside" id="sideDownloadBtn"><i class="fas fa-download"></i> Download</button>
-    </div>
-    <div class="main-content-flex">
-      <div class="driver-report-table-wrap">
-        <div class="driver-report-table-title" id="tableTitle"></div>
-        <div class="pagination-bar" id="paginationBar"></div>
-        <div id="tableWrapInner"></div>
-      </div>
-    </div>
-  </div>
+
+  <div id="tablesArea"></div>
+
+  <!-- Generic small modal -->
   <div class="modal-bg" id="modalBg">
     <div class="modal-content" id="modalContent">
       <button class="modal-close" id="modalClose" title="Close">&times;</button>
@@ -556,6 +453,7 @@
       <button class="modal-done-btn" id="modalDone">Done</button>
     </div>
   </div>
+
   <div class="modal-bg" id="confirmModalBg">
     <div class="modal-confirm" id="confirmModalContent">
       <div class="modal-confirm-title" id="confirmModalTitle"></div>
@@ -566,56 +464,30 @@
       </div>
     </div>
   </div>
-  <div class="modal-bg" id="logoutModalBg">
-    <div class="modal-confirm" id="logoutModalContent">
-      <div class="modal-confirm-title"><i class="fas fa-sign-out-alt" style="color:var(--primary);"></i> Confirm Logout</div>
-      <div class="modal-confirm-details" id="logoutModalDetails">Are you sure you want to logout?</div>
-      <div class="modal-confirm-btns">
-        <button class="modal-confirm-btn" id="confirmLogoutBtn">Logout</button>
-        <button class="modal-cancel-btn" id="cancelLogoutBtn">Cancel</button>
-      </div>
-    </div>
-  </div>
-  <!-- Download Menu Modal -->
-  <div class="modal-bg" id="downloadModalBg">
-    <div class="modal-content" style="padding:15px 18px 20px 18px;min-width:210px;">
+
+  <!-- Download / Preview modal -->
+  <div class="modal-bg" id="downloadModalBg" aria-hidden="true">
+    <div class="modal-content" id="downloadModalContent" style="align-items:stretch;">
       <button class="modal-close" id="downloadModalClose" title="Close">&times;</button>
-      <div class="modal-title">Download Report As</div>
-      <div style="display:flex; flex-direction:column; gap: 13px; margin-top: 18px;">
-        <button id="downloadCSVBtn" class="download-modal-btn csv">CSV</button>
-        <button id="downloadPDFBtn" class="download-modal-btn pdf">PDF</button>
+      <div class="modal-title" id="downloadModalTitle">Download / Preview Report</div>
+      <div class="modal-details" id="downloadModalDetails">Choose CSV download or open printable preview (you can save as PDF from print dialog).</div>
+
+      <div style="display:flex;gap:10px;justify-content:center;margin-bottom:10px;">
+        <button id="downloadCsvBtn" class="modal-done-btn">Download CSV</button>
+        <button id="openPdfPreviewBtn" class="modal-done-btn">Open Print Preview</button>
+        <button id="closeDownloadModalBtn" class="modal-cancel-btn">Close</button>
+      </div>
+
+      <div style="display:flex;justify-content:center;">
+        <iframe id="downloadPreviewIframe" class="download-preview-iframe" sandbox></iframe>
       </div>
     </div>
   </div>
-  <!-- Edit Driver Modal -->
-  <div class="modal-bg" id="editDriverModalBg">
-    <div class="modal-content" id="editDriverModalContent" style="padding:24px 24px 20px 24px;min-width:240px;">
-      <button class="modal-close" id="editDriverModalClose" title="Close">&times;</button>
-      <div class="modal-title">Edit Driver Details</div>
-      <form class="modal-edit-form" id="editDriverForm" autocomplete="off">
-        <div>
-          <label for="editName">Name</label>
-          <input type="text" id="editName" name="editName" required />
-        </div>
-        <div>
-          <label for="editCarReg">Car Registration Number</label>
-          <input type="text" id="editCarReg" name="editCarReg" />
-        </div>
-        <div>
-          <label for="editAddress">Address</label>
-          <textarea id="editAddress" name="editAddress" rows="2" style="width:96%;"></textarea>
-        </div>
-        <div class="modal-edit-btnbar">
-          <button type="submit" class="modal-edit-btn">Save</button>
-        </div>
-      </form>
-    </div>
-  </div>
+
 </div>
+
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <script>
   // Auth and Firebase
   const userData = JSON.parse(localStorage.getItem("user") || "null");
@@ -633,7 +505,7 @@
   firebase.initializeApp(firebaseConfig);
   const db = firebase.database();
 
-  // Modal logic
+  // Modal logic (generic)
   function showModal(title, details) {
     document.getElementById('modalTitle').innerHTML = title;
     document.getElementById('modalDetails').innerHTML = details;
@@ -644,6 +516,8 @@
   document.getElementById('modalClose').onclick = hideModal;
   document.getElementById('modalDone').onclick = hideModal;
   document.getElementById('modalBg').onclick = function(e){ if(e.target===document.getElementById('modalBg')) hideModal(); };
+
+  // Confirm modal
   let pendingDelete = null;
   function showConfirmModal(title, details, onConfirm) {
     document.getElementById('confirmModalTitle').innerHTML = title;
@@ -658,23 +532,18 @@
   document.getElementById('confirmDeleteBtn').onclick = function(){
     if(pendingDelete){ pendingDelete(); hideConfirmModal(); }
   };
-  // Logout Modal Logic
-  document.getElementById('logoutBtn').onclick = function(){
-    document.getElementById('logoutModalBg').classList.add('active');
-    setTimeout(() => { document.getElementById('confirmLogoutBtn').focus(); }, 100);
-  };
-  document.getElementById('cancelLogoutBtn').onclick = function(){
-    document.getElementById('logoutModalBg').classList.remove('active');
-  };
-  document.getElementById('logoutModalBg').onclick = function(e){
-    if(e.target === document.getElementById('logoutModalBg')){
-      document.getElementById('logoutModalBg').classList.remove('active');
-    }
-  };
-  document.getElementById('confirmLogoutBtn').onclick = function(){
-    localStorage.removeItem('user');
-    window.location.href = 'login.html';
-  };
+
+  // Download modal handlers
+  const downloadModalBg = document.getElementById('downloadModalBg');
+  const downloadModalClose = document.getElementById('downloadModalClose');
+  const downloadCsvBtn = document.getElementById('downloadCsvBtn');
+  const openPdfPreviewBtn = document.getElementById('openPdfPreviewBtn');
+  const downloadPreviewIframe = document.getElementById('downloadPreviewIframe');
+  const closeDownloadModalBtn = document.getElementById('closeDownloadModalBtn');
+
+  downloadModalClose.onclick = () => { downloadModalBg.classList.remove('active'); };
+  closeDownloadModalBtn.onclick = () => { downloadModalBg.classList.remove('active'); };
+  downloadModalBg.onclick = function(e){ if(e.target === downloadModalBg) downloadModalBg.classList.remove('active'); };
 
   // Data and helpers
   let allLogs = {};
@@ -682,13 +551,11 @@
   let selectedDriver = "";
   let currentMode = "daily";
   let currentPage = 1;
-  let rowsPerPage = {daily:20, weekly:20, monthly:9999, custom:20};
+  let rowsPerPage = {daily:15, weekly:15, monthly:9999, custom:15};
   let totalPages = 1;
   let currentMonth = "";
   let filteredLogs = [];
-  const tableTitle = document.getElementById('tableTitle');
-  const tableWrapInner = document.getElementById('tableWrapInner');
-  const paginationBar = document.getElementById('paginationBar');
+  const tablesArea = document.getElementById('tablesArea');
   const dailyBtn = document.getElementById('dailyBtn');
   const weeklyBtn = document.getElementById('weeklyBtn');
   const monthlyBtn = document.getElementById('monthlyBtn');
@@ -699,13 +566,15 @@
   const monthSelectArea = document.getElementById('monthSelectArea');
   const monthSelect = document.getElementById('monthSelect');
   const driverSelect = document.getElementById('driverSelect');
-  const driverDetailsBox = document.getElementById('driverDetailsBox');
-  const driverCarRegValue = document.getElementById('driverCarRegValue');
-  const editDriverBtn = document.getElementById('editDriverBtn');
-  const sideDownloadBtn = document.getElementById('sideDownloadBtn');
 
-  // Helper functions
   function pad2(n){return String(n).padStart(2,'0');}
+  function formatTime(sec) {
+    if (!sec) sec = 0;
+    const h = String(Math.floor(sec/3600)).padStart(2,'0');
+    const m = String(Math.floor((sec%3600)/60)).padStart(2,'0');
+    const s = String(sec%60).padStart(2,'0');
+    return `${h}:${m}:${s}`;
+  }
   function toDisplayDate(isoStr) {
     if (!isoStr) return '';
     const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
@@ -728,7 +597,7 @@
   function sumKm(logs) {
     return logs.reduce((sum,l)=>sum+parseInt(l.totalKm||0),0);
   }
-  function getRows(logs, mode) {
+  function getRows(logsObj, mode) {
     let rows = [];
     if(!selectedDriver) return [];
     let today = todayISO();
@@ -826,17 +695,29 @@
     let months = Array.from(new Set(logs.map(l=>l.date.slice(0,7)))).sort((a,b)=>b.localeCompare(a));
     return months.length ? months[0] : "";
   }
-  function getDateRangeDisplay() {
-    let arr = filteredLogs.flatMap(x=>x.logs);
-    if(arr.length===0) return "-";
-    let dates = arr.map(l=>l.date).sort();
-    return `${toDisplayDate(dates[0])} to ${toDisplayDate(dates[dates.length-1])}`;
-  }
 
+  // Build and show the reports table, plus driver details and download button
   function showReportsTable() {
-    // Table Title (nothing now, but could show total km)
+    tablesArea.innerHTML = "";
+    if(!selectedDriver) {
+      tablesArea.innerHTML = `<div style="color:#93c7e6; text-align:center;margin:1.5em 0 2em 0;font-family:'Poppins',sans-serif;font-weight:600;">Select a driver to view report data.</div>`;
+      return;
+    }
+
+    filteredLogs = getRows(allLogs, currentMode);
+    let perPage = rowsPerPage[currentMode]||15;
+    let totalRows = filteredLogs.length;
+    totalPages = Math.max(Math.ceil(totalRows/perPage),1);
+    let pageRows = currentMode==="monthly" ? filteredLogs : filteredLogs.slice((currentPage-1)*perPage, currentPage*perPage);
+
+    // Total KM for displayed range
     let totalKm = sumKm(filteredLogs.flatMap(x=>x.logs));
-    let titleText = "";
+
+    // Get driver details from allUsers (object keyed by id)
+    let driverObj = null;
+    Object.values(allUsers).forEach(u => { if(u.name === selectedDriver) driverObj = u; });
+
+    let titleText = `${selectedDriver}`;
     if(currentMode==="weekly") titleText += `<span class="total-km">Last 7 Days: <b>${totalKm} km</b></span>`;
     if(currentMode==="monthly") {
       let monthText = "";
@@ -848,33 +729,35 @@
       titleText += `<span class="total-km">${monthText}: <b>${totalKm} km</b></span>`;
     }
     if(currentMode==="custom") titleText += `<span class="total-km">Custom: <b>${totalKm} km</b></span>`;
-    tableTitle.innerHTML = titleText;
 
-    // Table and pagination
-    let perPage = rowsPerPage[currentMode]||20;
-    let totalRows = filteredLogs.length;
-    totalPages = Math.max(Math.ceil(totalRows/perPage),1);
-    let pageRows = currentMode==="monthly" ? filteredLogs : filteredLogs.slice((currentPage-1)*perPage, currentPage*perPage);
+    // Driver details and download button area (top of table)
+    let driverDetailsHTML = `<div class="driver-report-table-wrap">`;
+    driverDetailsHTML += `<div class="driver-report-table-top">`;
+    driverDetailsHTML += `<div class="driver-details">`;
+    driverDetailsHTML += `<div class="meta"><span style="font-size:1.06em;color:#fff;">${escapeHtml(selectedDriver)}</span>`;
+    if (driverObj) {
+      driverDetailsHTML += `<span class="field">Car: ${escapeHtml(driverObj.car || '-')}</span>`;
+      driverDetailsHTML += `<span class="field">Address: ${escapeHtml(driverObj.address || '-')}</span>`;
+    } else {
+      driverDetailsHTML += `<span class="field">Car: -</span><span class="field">Address: -</span>`;
+    }
+    driverDetailsHTML += `</div></div>`; // .driver-details
+
+    driverDetailsHTML += `<div class="download-area">`;
+    driverDetailsHTML += `<button id="downloadReportBtn" title="Download report (CSV or PDF)"> <i class="fas fa-download"></i> Download</button>`;
+    driverDetailsHTML += `</div></div>`; // .driver-report-table-top
 
     // Pagination bar
-    let pagHTML = "";
+    driverDetailsHTML += `<div class="pagination-bar">`;
     if(currentMode!=="monthly" && totalPages>1) {
-      pagHTML += `<button ${currentPage===1?'disabled':''} onclick="prevPage()">Previous</button>`;
-      pagHTML += `<span class="page-numbers">`;
-      // Show up to 5 page numbers, with current page in center if possible
-      let firstPage = Math.max(1, currentPage-2);
-      let lastPage = Math.min(totalPages, firstPage+4);
-      if (lastPage-firstPage < 4) firstPage = Math.max(1, lastPage-4);
-      for(let i=firstPage;i<=lastPage;i++){
-        pagHTML += `<button onclick="gotoPage(${i})" class="${i===currentPage?'active-page':''}">${i}</button>`;
-      }
-      pagHTML += `</span>`;
-      pagHTML += `<button ${currentPage===totalPages?'disabled':''} onclick="nextPage()">Next</button>`;
+      driverDetailsHTML += `<button ${currentPage===1?'disabled':''} onclick="prevPage()">Previous</button>`;
+      driverDetailsHTML += `<span style="align-self:center;color:#bbdefb;font-weight:700;">${currentPage}/${totalPages}</span>`;
+      driverDetailsHTML += `<button ${currentPage===totalPages?'disabled':''} onclick="nextPage()">Next</button>`;
     }
-    paginationBar.innerHTML = pagHTML;
+    driverDetailsHTML += `</div>`;
 
-    // Table
-    let tableHTML = `<table class="driver-report-table"><thead>
+    // Table header + rows
+    driverDetailsHTML += `<table class="driver-report-table"><thead>
       <tr>
         <th>Date</th>
         <th>Km In</th>
@@ -885,12 +768,13 @@
         <th>Delete</th>
       </tr>
     </thead><tbody>`;
+
     if(pageRows.length===0){
-      tableHTML += `<tr><td colspan="7" style="text-align:center;color:#93c7e6;font-size:1.1em;font-weight:700;">No report data.</td></tr>`;
+      driverDetailsHTML += `<tr><td colspan="7" style="text-align:center;color:#93c7e6;font-size:1.1em;font-weight:700;">No report data.</td></tr>`;
     } else {
       pageRows.forEach(day=>{
         day.logs.forEach((row)=>{
-          tableHTML += `<tr>
+          driverDetailsHTML += `<tr>
             <td>${toDisplayDate(row.date)}</td>
             <td>${row.kmIn ?? ''}</td>
             <td>${row.kmOut ?? ''}</td>
@@ -902,23 +786,32 @@
         });
       });
     }
-    tableHTML += `</tbody></table>`;
-    tableWrapInner.innerHTML = tableHTML;
+
+    driverDetailsHTML += `</tbody></table></div>`;
+    tablesArea.innerHTML = driverDetailsHTML;
+
+    // Hook up download button now that it's in DOM
+    const downloadReportBtn = document.getElementById('downloadReportBtn');
+    if(downloadReportBtn) {
+      downloadReportBtn.onclick = function(){
+        openDownloadModal();
+      };
+    }
+
+    // reset scroll
     const wrap = document.querySelector('.driver-report-table-wrap');
     if(wrap) wrap.scrollLeft = 0;
-
-    // Driver details box
-    updateDriverDetailsBox();
   }
+
+  // Pagination helpers
   window.nextPage = function(){
     if(currentPage < totalPages) { currentPage++; showReportsTable(); }
   };
   window.prevPage = function(){
     if(currentPage > 1) { currentPage--; showReportsTable(); }
   };
-  window.gotoPage = function(num){
-    if(num >= 1 && num <= totalPages) { currentPage = num; showReportsTable(); }
-  };
+
+  // Delete row
   window.deleteReportRow = function(logId){
     showConfirmModal("Delete Report", "Are you sure you want to delete this report entry? This cannot be undone.", function(){
       db.ref("logs/"+logId).remove();
@@ -928,6 +821,7 @@
     });
   };
 
+  // Interaction mode buttons
   dailyBtn.onclick = function(){
     currentMode="daily";
     currentPage=1;
@@ -962,16 +856,15 @@
     currentMonth = monthSelect.value;
     showReportsTable();
   };
-
   driverSelect.onchange = function() {
     selectedDriver = driverSelect.value;
     currentPage = 1;
     currentMonth = "";
     updateMonthSelect();
-    filteredLogs = getRows(allLogs, currentMode);
     showReportsTable();
   };
 
+  // Populate driver dropdown
   db.ref("users").on("value", snap => {
     allUsers = snap.val() || {};
     let options = `<option value="">-- Select Driver --</option>`;
@@ -983,159 +876,175 @@
       selectedDriver = Object.values(allUsers)[0].name;
       driverSelect.value = selectedDriver;
       updateMonthSelect();
-      filteredLogs = getRows(allLogs, currentMode);
       showReportsTable();
     }
   });
 
+  // Listen for logs
   db.ref("logs").on("value", snap => {
     allLogs = snap.val() || {};
-    filteredLogs = getRows(allLogs, currentMode);
     showReportsTable();
     updateMonthSelect();
   });
 
-  // -- Driver Details Box --
-  function updateDriverDetailsBox(){
-    if(!selectedDriver) { driverDetailsBox.style.display='none'; return; }
-    let user = Object.values(allUsers).find(u=>u.name===selectedDriver) || {};
-    driverCarRegValue.textContent = user.carReg||'';
-    driverDetailsBox.style.display = 'flex';
+  // Logout Modal Logic (as before)
+  document.getElementById('logoutBtn').onclick = function(){
+    document.getElementById('confirmModalTitle').innerHTML = '<i class="fas fa-sign-out-alt" style="color:var(--primary);"></i> Confirm Logout';
+    document.getElementById('confirmModalDetails').innerText = 'Are you sure you want to logout?';
+    document.getElementById('confirmModalBg').classList.add('active');
+    pendingDelete = function(){ 
+      localStorage.removeItem('user');
+      window.location.href = 'login.html';
+    };
+    setTimeout(()=>{ document.getElementById('confirmDeleteBtn').focus(); }, 100);
+  };
+
+  // --- Download / Preview logic ---
+
+  // Build CSV string from current filteredLogs (flattened) for selectedDriver
+  function buildCsvForDriver() {
+    // header
+    const headers = ["Date","Km In","Km Out","Total KM","Time In","Time Out","Notes"];
+    const rows = [];
+    // use getRows for the selected mode to respect filters
+    const grouped = getRows(allLogs, currentMode);
+    grouped.forEach(day => {
+      day.logs.forEach(l => {
+        rows.push([
+          l.date || '',
+          l.kmIn ?? '',
+          l.kmOut ?? '',
+          l.totalKm ?? '',
+          l.timeIn ?? '',
+          l.timeOut ?? '',
+          l.notes ? String(l.notes).replace(/\r?\n/g,' ') : ''
+        ]);
+      });
+    });
+    // produce CSV content
+    const csvLines = [];
+    csvLines.push(headers.join(','));
+    rows.forEach(r => {
+      // escape quotes and commas
+      const escaped = r.map(cell => {
+        if (cell === null || cell === undefined) return '';
+        const c = String(cell);
+        if (c.includes('"') || c.includes(',') || c.includes('\n')) {
+          return '"' + c.replace(/"/g,'""') + '"';
+        }
+        return c;
+      });
+      csvLines.push(escaped.join(','));
+    });
+    return csvLines.join('\n');
   }
 
-  // -- Download Modal Logic --
-  sideDownloadBtn.onclick = function(){
-    document.getElementById('downloadModalBg').classList.add('active');
-  };
-  document.getElementById('downloadModalClose').onclick = ()=>{
-    document.getElementById('downloadModalBg').classList.remove('active');
-  };
-  document.getElementById('downloadModalBg').onclick = function(e){
-    if(e.target === document.getElementById('downloadModalBg')){
-      document.getElementById('downloadModalBg').classList.remove('active');
-    }
-  };
-  document.getElementById('downloadCSVBtn').onclick = function(){
-    downloadAsCSV();
-    document.getElementById('downloadModalBg').classList.remove('active');
-  };
-  document.getElementById('downloadPDFBtn').onclick = function(){
-    downloadAsPDF();
-    document.getElementById('downloadModalBg').classList.remove('active');
-  };
+  // Build printable HTML for preview/print (simple styling)
+  function buildPrintableHtml() {
+    // get driver details
+    let driverObj = null;
+    Object.values(allUsers).forEach(u => { if(u.name === selectedDriver) driverObj = u; });
+    const grouped = getRows(allLogs, currentMode);
+    let totalKm = sumKm(grouped.flatMap(x=>x.logs));
+    let title = `<h2 style="margin:0;padding:0;">${escapeHtml(selectedDriver)} - KM Report</h2>`;
+    let meta = `<div style="margin:8px 0;color:#666;">Car: ${escapeHtml(driverObj?.car || '-')} &nbsp;|&nbsp; Address: ${escapeHtml(driverObj?.address || '-')} &nbsp;|&nbsp; Total KM: ${totalKm}</div>`;
+    let tableRows = grouped.flatMap(day => day.logs.map(l => {
+      return `<tr>
+        <td style="border:1px solid #ddd;padding:6px;text-align:center;">${escapeHtml(l.date)}</td>
+        <td style="border:1px solid #ddd;padding:6px;text-align:center;">${escapeHtml(l.kmIn ?? '')}</td>
+        <td style="border:1px solid #ddd;padding:6px;text-align:center;">${escapeHtml(l.kmOut ?? '')}</td>
+        <td style="border:1px solid #ddd;padding:6px;text-align:center;">${escapeHtml(l.totalKm ?? '')}</td>
+        <td style="border:1px solid #ddd;padding:6px;text-align:center;">${escapeHtml(l.timeIn ?? '')}</td>
+        <td style="border:1px solid #ddd;padding:6px;text-align:center;">${escapeHtml(l.timeOut ?? '')}</td>
+      </tr>`;
+    })).join('\n');
 
-  // -- Edit Modal Logic --
-  editDriverBtn.onclick = function(){
-    let user = Object.values(allUsers).find(u=>u.name===selectedDriver) || {};
-    document.getElementById('editName').value = user.name||'';
-    document.getElementById('editCarReg').value = user.carReg||'';
-    document.getElementById('editAddress').value = user.address||'';
-    document.getElementById('editDriverModalBg').classList.add('active');
-    setTimeout(()=>{document.getElementById('editName').focus();},120);
-  };
-  document.getElementById('editDriverModalClose').onclick = function(){
-    document.getElementById('editDriverModalBg').classList.remove('active');
-  };
-  document.getElementById('editDriverModalBg').onclick = function(e){
-    if(e.target === document.getElementById('editDriverModalBg')){
-      document.getElementById('editDriverModalBg').classList.remove('active');
-    }
-  };
-  document.getElementById('editDriverForm').onsubmit = function(e){
-    e.preventDefault();
-    let user = Object.values(allUsers).find(u=>u.name===selectedDriver) || {};
-    if(!user || !user.id) { showModal("Error","Could not update driver details."); return; }
-    let newName = document.getElementById('editName').value.trim();
-    let newCarReg = document.getElementById('editCarReg').value.trim();
-    let newAddress = document.getElementById('editAddress').value.trim();
-    if(!newName) { showModal("Validation Error","Name is required."); return; }
-    db.ref("users/"+user.id).update({name:newName, carReg:newCarReg, address:newAddress}).then(()=>{
-      selectedDriver = newName;
-      driverSelect.value = newName;
-      document.getElementById('editDriverModalBg').classList.remove('active');
-      showModal("Updated","Driver details updated.");
-    });
-  };
+    const html = `
+      <!doctype html>
+      <html>
+      <head>
+        <meta charset="utf-8" />
+        <title>Report - ${selectedDriver}</title>
+        <style>
+          body { font-family: Arial, Helvetica, sans-serif; color:#111; padding:18px; }
+          h2 { color:#222; }
+          table { border-collapse: collapse; width:100%; margin-top:10px; }
+          th, td { border:1px solid #ddd; padding:8px; font-size:14px; text-align:center; }
+          th { background:#f2f2f2; font-weight:700; }
+        </style>
+      </head>
+      <body>
+        ${title}
+        ${meta}
+        <table>
+          <thead>
+            <tr><th>Date</th><th>Km In</th><th>Km Out</th><th>Total KM</th><th>Time In</th><th>Time Out</th></tr>
+          </thead>
+          <tbody>
+            ${tableRows || `<tr><td colspan="6" style="text-align:center;padding:12px;">No data</td></tr>`}
+          </tbody>
+        </table>
+      </body>
+      </html>
+    `;
+    return html;
+  }
 
-  // --- Download helpers ---
-  function downloadAsCSV(){
-    if(!selectedDriver) return;
-    let user = Object.values(allUsers).find(u=>u.name===selectedDriver) || {};
-    let logs = getRows(allLogs, currentMode).flatMap(x=>x.logs).sort((a,b)=>b.date.localeCompare(a.date));
-    let header = ["Date","Km In","Km Out","Total KM","Time In","Time Out"];
-    let csvRows = [];
-    csvRows.push([
-      "Driver Name:", user.name||'',
-      "Car Reg:", user.carReg || "",
-      "Address:", (user.address||"").replace(/(\r\n|\n|\r)/gm," "),
-    ].join(","));
-    csvRows.push(["Date range:", getDateRangeDisplay()].join(","));
-    csvRows.push(header.join(","));
-    logs.forEach(row=>{
-      csvRows.push([
-        toDisplayDate(row.date),
-        row.kmIn ?? "",
-        row.kmOut ?? "",
-        row.totalKm ?? "",
-        row.timeIn ?? "",
-        row.timeOut ?? ""
-      ].join(","));
-    });
-    let csvContent = csvRows.join("\r\n");
-    let blob = new Blob([csvContent],{type:"text/csv"});
-    let url = URL.createObjectURL(blob);
-    let a = document.createElement("a");
-    a.style.display='none';
+  // Open the download modal and populate preview iframe
+  function openDownloadModal() {
+    // populate iframe with printable HTML (so user sees preview)
+    const html = buildPrintableHtml();
+    const iframe = downloadPreviewIframe;
+    // use srcdoc if supported
+    try {
+      iframe.srcdoc = html;
+    } catch(e) {
+      // fallback using data URL
+      iframe.src = 'data:text/html;charset=utf-8,' + encodeURIComponent(html);
+    }
+    document.getElementById('downloadModalTitle').innerText = `Download / Preview: ${selectedDriver}`;
+    downloadModalBg.classList.add('active');
+    downloadModalBg.setAttribute('aria-hidden','false');
+  }
+
+  // Trigger CSV download
+  downloadCsvBtn.onclick = function() {
+    const csv = buildCsvForDriver();
+    const filename = `${selectedDriver.replace(/\s+/g,'_')}_report_${(new Date()).toISOString().slice(0,10)}.csv`;
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
     a.href = url;
-    a.download = `${(user.name||"driver").replace(/\s+/g,"_")}_km_report.csv`;
+    a.download = filename;
     document.body.appendChild(a);
     a.click();
-    setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url);},800);
+    setTimeout(()=>{ document.body.removeChild(a); URL.revokeObjectURL(url); }, 250);
+  };
+
+  // Open print preview (new window with printable HTML)
+  openPdfPreviewBtn.onclick = function() {
+    const html = buildPrintableHtml();
+    const w = window.open('', '_blank');
+    if (!w) {
+      alert('Popup blocked. Please allow popups to open print preview.');
+      return;
+    }
+    w.document.open();
+    w.document.write(html);
+    w.document.close();
+    // Give the window a moment, then focus - the user can print/save as PDF manually
+    setTimeout(()=>{ w.focus(); }, 300);
+  };
+
+  // Utilities
+  function escapeHtml(s) {
+    if (s === null || s === undefined) return '';
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
-  function downloadAsPDF(){
-    if(!selectedDriver) return;
-    let user = Object.values(allUsers).find(u=>u.name===selectedDriver) || {};
-    let logs = getRows(allLogs, currentMode).flatMap(x=>x.logs).sort((a,b)=>b.date.localeCompare(a.date));
-    const { jsPDF } = window.jspdf;
-    let doc = new jsPDF();
-    doc.setFont("helvetica","bold");
-    doc.setFontSize(18);
-    doc.text("Kilometer Report", 105, 18, {align:"center"});
-    doc.setFontSize(12);
-    doc.setFont("helvetica","normal");
-    let currY = 28;
-    doc.text(`Name: ${user.name||""}`, 10, currY);
-    currY += 7;
-    doc.text(`Car Reg: ${user.carReg||""}`, 10, currY);
-    currY += 7;
-    doc.text(`Address: ${user.address||""}`, 10, currY);
-    currY += 7;
-    doc.text(`Date range: ${getDateRangeDisplay()}`, 10, currY);
-    currY += 12;
-    let headers = [["Date","Km In","Km Out","Total KM","Time In","Time Out"]];
-    let data = logs.map(row=>[
-      toDisplayDate(row.date),
-      row.kmIn ?? "",
-      row.kmOut ?? "",
-      row.totalKm ?? "",
-      row.timeIn ?? "",
-      row.timeOut ?? ""
-    ]);
-    doc.autoTable({
-      startY: currY,
-      head: headers,
-      body: data,
-      styles: {fontSize:10,cellPadding:2,halign:'center'},
-      headStyles: {fillColor:[33,52,80],textColor:255},
-      alternateRowStyles: {fillColor:[235,245,255]},
-      margin: {left:10,right:10}
-    });
-    doc.save(`${(user.name||"driver").replace(/\s+/g,"_")}_km_report.pdf`);
-  }
-
-  // Initial table update
+  // Initialize UI state
   showReportsTable();
+
 </script>
 </body>
 </html>
