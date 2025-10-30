@@ -202,6 +202,96 @@
       box-shadow: 0 1px 7px #009de015;
       margin-left: 10px;
     }
+    .top-area-relative {
+      position: relative;
+      width: 100vw;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .driver-details-box {
+      position: absolute;
+      top: -6px;
+      right: 0;
+      z-index: 12;
+      width: 170px;
+      min-width: 120px;
+      max-width: 230px;
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 2px 8px #009de022;
+      padding: 13px 15px 13px 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      align-items: flex-start;
+      transition: box-shadow .12s;
+    }
+    .driver-details-title-row {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      margin-bottom: 1px;
+    }
+    .edit-driver-btn {
+      background: none;
+      border: none;
+      color: var(--primary);
+      font-size: 1.1em;
+      cursor: pointer;
+      margin-left: auto;
+      border-radius: 7px;
+      padding: 1px 7px 1px 7px;
+      transition: background 0.13s;
+    }
+    .edit-driver-btn:hover { background: #203060;}
+    .driver-details-label {
+      color: var(--accent);
+      font-size: 0.91em;
+      font-weight: 700;
+      margin-right: 5px;
+      letter-spacing: 0.01em;
+      opacity: 0.85;
+    }
+    .driver-details-value {
+      color: #fff;
+      font-size: 0.97em;
+      font-weight: 600;
+      margin-bottom: 7px;
+      word-break: break-all;
+    }
+    .driver-details-row {
+      margin-bottom: 2px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+    }
+    .download-btn-inside {
+      font-size: 0.97em;
+      font-family: 'Poppins', Arial, sans-serif;
+      font-weight: 700;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 7px 0px;
+      cursor: pointer;
+      transition: background 0.16s;
+      box-shadow: 0 2px 8px #42a5f533;
+      margin-top: 5px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      justify-content: center;
+    }
+    .download-btn-inside:hover { background: var(--primary-hover);}
+    .driver-details-label-car {
+      font-weight: 700; color: var(--primary); font-size: 0.98em; margin-right: 5px;
+    }
+    .driver-details-value-car {
+      color: #fff; font-weight: 700; font-size: 1em;
+    }
     .main-content-flex {
       display: flex;
       justify-content: center;
@@ -209,7 +299,7 @@
       width: 100vw;
       max-width: 1100px;
       margin: 0 auto 19px auto;
-      gap: 28px;
+      gap: 0;
       position: relative;
     }
     .driver-report-table-wrap {
@@ -220,6 +310,7 @@
       padding: 12px 0 18px 0;
       overflow-x: auto;
       min-width: 0;
+      margin-top: 32px;
     }
     .driver-report-table-title {
       font-size: 1.16em;
@@ -314,86 +405,28 @@
       transition: background 0.11s;
     }
     .driver-report-table td .delete-row-btn:active { background: #212a40;}
-    .driver-details-box {
-      width: 270px;
-      min-width: 210px;
-      max-width: 320px;
-      background: var(--card-bg);
-      border-radius: 14px;
-      box-shadow: 0 2px 8px #009de022;
-      padding: 21px 19px 19px 19px;
-      margin-top: 19px;
-      margin-right: 8px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      align-items: flex-start;
-      position: sticky;
-      top: 46px;
-      z-index: 3;
-    }
-    .driver-details-title-row {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      margin-bottom: -3px;
-    }
-    .edit-driver-btn {
-      background: none;
-      border: none;
-      color: var(--primary);
-      font-size: 1.33em;
-      cursor: pointer;
-      margin-left: auto;
-      margin-right: 2px;
-      border-radius: 7px;
-      padding: 2px 7px 2px 7px;
-      transition: background 0.13s;
-    }
-    .edit-driver-btn:hover { background: #203060;}
-    .driver-details-label {
-      color: var(--accent);
-      font-size: 0.99em;
-      font-weight: 700;
-      margin-right: 7px;
-      letter-spacing: 0.01em;
-      opacity: 0.85;
-    }
-    .driver-details-value {
-      color: #fff;
-      font-size: 1.03em;
-      font-weight: 600;
-      margin-bottom: 7px;
-      word-break: break-all;
-    }
-    .driver-details-row {
-      margin-bottom: 4px;
-      width: 100%;
-    }
-    .download-btn-inside {
+    /* Download Modal theme buttons */
+    .download-modal-btn {
       font-size: 1em;
-      font-family: 'Poppins', Arial, sans-serif;
       font-weight: 700;
-      background: var(--primary);
-      color: #fff;
+      padding: 13px 0;
+      border-radius: 7px;
       border: none;
-      border-radius: 9px;
-      padding: 8px 20px;
-      cursor: pointer;
-      transition: background 0.16s;
+      color: #fff;
+      margin-bottom: 6px;
+      background: var(--primary);
+      transition: background 0.18s, color 0.13s;
       box-shadow: 0 2px 8px #42a5f533;
-      margin-top: 7px;
-      width: 100%;
-      display: flex;
-      align-items: center;
-      gap: 9px;
-      justify-content: center;
     }
-    .download-btn-inside:hover { background: var(--primary-hover);}
+    .download-modal-btn:last-child {margin-bottom:0;}
+    .download-modal-btn.pdf { background: #0d47a1;}
+    .download-modal-btn.pdf:hover { background: #1976d2;}
+    .download-modal-btn.csv { background: var(--primary);}
+    .download-modal-btn.csv:hover { background: #1976d2;}
     @media (max-width: 900px) {
-      .main-content-flex { flex-direction: column-reverse; gap: 0; }
-      .driver-details-box { width: 97vw; max-width: 98vw; min-width: 0; margin: 0 auto 9px auto; position: relative; top: 0; }
+      .main-content-flex { flex-direction: column; gap: 0; }
+      .top-area-relative { max-width: 100vw;}
+      .driver-details-box { position: static; width: 99vw; min-width: 0; margin: 0 auto 9px auto; top:0; right: auto;}
       .driver-report-table-wrap { max-width: 100vw; }
       .driver-report-table { min-width: 730px; font-size: 0.96em;}
       .driver-report-table th, .driver-report-table td { padding: 8px 8px;}
@@ -496,20 +529,23 @@
       <button id="monthlyBtn">Monthly</button>
     </div>
   </div>
-  <div class="main-content-flex">
-    <div class="driver-report-table-wrap">
-      <div class="driver-report-table-title" id="tableTitle"></div>
-      <div class="pagination-bar" id="paginationBar"></div>
-      <div id="tableWrapInner"></div>
-    </div>
+  <div class="top-area-relative">
     <div class="driver-details-box" id="driverDetailsBox" style="display:none;">
       <div class="driver-details-title-row">
         <button class="edit-driver-btn" id="editDriverBtn" title="Edit Driver Details"><i class="fas fa-pen"></i></button>
       </div>
-      <div class="driver-details-row"><span class="driver-details-label">Name:</span> <span class="driver-details-value" id="driverNameValue"></span></div>
-      <div class="driver-details-row"><span class="driver-details-label">Car Reg:</span> <span class="driver-details-value" id="driverCarRegValue"></span></div>
-      <div class="driver-details-row"><span class="driver-details-label">Address:</span> <span class="driver-details-value" id="driverAddressValue"></span></div>
+      <div class="driver-details-row">
+        <span class="driver-details-label-car">Car Reg#:</span>
+        <span class="driver-details-value-car" id="driverCarRegValue"></span>
+      </div>
       <button class="download-btn-inside" id="sideDownloadBtn"><i class="fas fa-download"></i> Download</button>
+    </div>
+    <div class="main-content-flex">
+      <div class="driver-report-table-wrap">
+        <div class="driver-report-table-title" id="tableTitle"></div>
+        <div class="pagination-bar" id="paginationBar"></div>
+        <div id="tableWrapInner"></div>
+      </div>
     </div>
   </div>
   <div class="modal-bg" id="modalBg">
@@ -546,8 +582,8 @@
       <button class="modal-close" id="downloadModalClose" title="Close">&times;</button>
       <div class="modal-title">Download Report As</div>
       <div style="display:flex; flex-direction:column; gap: 13px; margin-top: 18px;">
-        <button id="downloadCSVBtn" style="background:var(--primary);">CSV</button>
-        <button id="downloadPDFBtn" style="background:var(--primary);">PDF</button>
+        <button id="downloadCSVBtn" class="download-modal-btn csv">CSV</button>
+        <button id="downloadPDFBtn" class="download-modal-btn pdf">PDF</button>
       </div>
     </div>
   </div>
@@ -664,21 +700,12 @@
   const monthSelect = document.getElementById('monthSelect');
   const driverSelect = document.getElementById('driverSelect');
   const driverDetailsBox = document.getElementById('driverDetailsBox');
-  const driverNameValue = document.getElementById('driverNameValue');
   const driverCarRegValue = document.getElementById('driverCarRegValue');
-  const driverAddressValue = document.getElementById('driverAddressValue');
   const editDriverBtn = document.getElementById('editDriverBtn');
   const sideDownloadBtn = document.getElementById('sideDownloadBtn');
 
-  // Helpers
+  // Helper functions
   function pad2(n){return String(n).padStart(2,'0');}
-  function formatTime(sec) {
-    if (!sec) sec = 0;
-    const h = String(Math.floor(sec/3600)).padStart(2,'0');
-    const m = String(Math.floor((sec%3600)/60)).padStart(2,'0');
-    const s = String(sec%60).padStart(2,'0');
-    return `${h}:${m}:${s}`;
-  }
   function toDisplayDate(isoStr) {
     if (!isoStr) return '';
     const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
@@ -799,7 +826,6 @@
     let months = Array.from(new Set(logs.map(l=>l.date.slice(0,7)))).sort((a,b)=>b.localeCompare(a));
     return months.length ? months[0] : "";
   }
-
   function getDateRangeDisplay() {
     let arr = filteredLogs.flatMap(x=>x.logs);
     if(arr.length===0) return "-";
@@ -942,6 +968,7 @@
     currentPage = 1;
     currentMonth = "";
     updateMonthSelect();
+    filteredLogs = getRows(allLogs, currentMode);
     showReportsTable();
   };
 
@@ -956,12 +983,14 @@
       selectedDriver = Object.values(allUsers)[0].name;
       driverSelect.value = selectedDriver;
       updateMonthSelect();
+      filteredLogs = getRows(allLogs, currentMode);
       showReportsTable();
     }
   });
 
   db.ref("logs").on("value", snap => {
     allLogs = snap.val() || {};
+    filteredLogs = getRows(allLogs, currentMode);
     showReportsTable();
     updateMonthSelect();
   });
@@ -970,9 +999,7 @@
   function updateDriverDetailsBox(){
     if(!selectedDriver) { driverDetailsBox.style.display='none'; return; }
     let user = Object.values(allUsers).find(u=>u.name===selectedDriver) || {};
-    driverNameValue.textContent = user.name||'';
     driverCarRegValue.textContent = user.carReg||'';
-    driverAddressValue.textContent = user.address||'';
     driverDetailsBox.style.display = 'flex';
   }
 
