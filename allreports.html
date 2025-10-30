@@ -52,6 +52,8 @@
       padding: 0;
       box-sizing: border-box;
     }
+
+    /* Header */
     .header {
       width: 100%;
       background: var(--card-bg);
@@ -60,382 +62,211 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 19px 16px 12px 16px;
-      margin: 0 0 var(--gap) 0;
-      margin-top: 24px;
+      padding: 18px 16px;
+      margin: 18px auto;
       border-radius: var(--card-radius);
       box-shadow: 0 2px 9px rgba(66, 165, 245, 0.08);
-      min-height: 43px;
-      letter-spacing: 0.03em;
       max-width: 1100px;
-      align-self: center;
     }
-    .header-row {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    .header-title {
-      font-size: 1.17rem;
-      font-weight: 800;
-      color: #fff;
-      font-family: 'Poppins', Arial, sans-serif;
-      letter-spacing: 0.03em;
-      text-shadow: 0 2px 12px #009de044;
-      white-space: nowrap;
-      flex: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.6em;
-    }
-    .header-desc {
-      font-size: 0.99em;
-      font-weight: 500;
-      color: #bbdefb;
-      opacity: 0.88;
-      margin-left: 18px;
-      font-family: 'Poppins', Arial, sans-serif;
-      letter-spacing: 0.01em;
-      text-align: center;
-      flex: none;
-      display: inline-block;
-      white-space: normal;
-      max-width: 68vw;
-    }
-    .header-btnbar { 
-      display: flex; 
-      gap: 16px; 
-      margin-top: 12px; 
-      margin-bottom: 0;
-    }
-    .header-btnbar button { 
-      font-size: 1em; 
-      font-family: 'Poppins', Arial, sans-serif; 
-      font-weight: 700; 
-      background: var(--red); 
-      color: #fff; 
-      border: none; 
-      border-radius: 9px; 
-      padding: 8px 20px; 
-      cursor: pointer; 
-      transition: background 0.16s;
-      box-shadow: 0 2px 8px #ff3b3033;
-    }
-    .header-btnbar button:hover { background: #c11;}
+    .header-row { display:flex; gap:12px; align-items:center; justify-content:center; flex-wrap:wrap; }
+    .header-title { font-size:1.18rem; font-weight:800; color:#fff; display:flex; align-items:center; gap:10px; }
+    .header-desc { color:#bbdefb; opacity:0.9; font-weight:600; }
+
+    /* Reports bar (select + buttons + date inputs + download) */
     .reports-bar {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: stretch;
-      gap: 10px;
-      margin: 12px 0 18px 0;
+      width: 100%;
+      max-width: 1100px;
+      margin: 0 auto 14px auto;
       background: #212a40;
       border-radius: 10px;
-      padding: 12px 12px;
-      max-width: 98vw;
-      align-self: center;
+      padding: 10px 12px;
+      box-sizing: border-box;
+    }
+    .reports-top {
+      display:flex;
+      gap:8px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+    .reports-top label { font-weight:700; color:#bbdefb; margin-right:6px; white-space:nowrap; }
+    select#driverSelect {
+      background: #181c24; color:#fff; border:1px solid var(--border); padding:8px 12px; border-radius:8px; font-weight:700;
+      min-width:170px;
     }
 
-    /* top row: select + (download if needed previously) */
-    .reports-bar .row1 {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      justify-content: flex-start;
-      flex-wrap: nowrap;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      padding-bottom: 6px;
+    .modes {
+      display:flex; gap:8px; margin-top:10px; flex-wrap:wrap;
     }
-    .reports-bar .row1 label {
-      font-weight: 700;
-      font-size: 1.02em;
-      color: #bbdefb;
-      margin: 0 6px 0 0;
-      flex: 0 0 auto;
-      white-space: nowrap;
+    .modes button {
+      background:var(--primary); color:#fff; border:none; padding:8px 14px; border-radius:8px; font-weight:700; cursor:pointer;
     }
-    .reports-bar select {
-      font-size: 1em;
-      border: none;
-      background: #181c24;
-      color: #fff;
-      border-radius: 8px;
-      padding: 8px 12px;
-      font-weight: 700;
-      outline: none;
-      box-shadow: 0 1px 7px #009de015;
-      min-width: 160px;
-      flex: 0 0 auto;
-    }
+    .modes button.active { background:var(--primary-hover); box-shadow:0 2px 8px rgba(0,0,0,0.35); }
 
-    /* date inputs row */
-    .reports-bar .row2 {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      justify-content: center;
-      flex-wrap: wrap;
+    .date-row {
+      display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:10px;
     }
-    .date-wrapper { position: relative; display: inline-flex; align-items: center; }
+    .date-wrapper { position:relative; display:inline-flex; align-items:center; }
     .date-wrapper input[type="date"] {
-      font-size: 1em;
-      border: none;
-      background: #181c24;
-      color: #fff;
-      border-radius: 8px;
-      padding: 8px 12px;
-      font-weight: 700;
-      outline: none;
-      box-shadow: 0 1px 7px #009de015;
-      min-width: 150px;
+      background:#181c24; color:#fff; border:1px solid var(--border); padding:8px 12px; border-radius:8px; font-weight:700;
     }
     .date-wrapper .date-icon {
-      position: absolute;
-      right: 8px;
-      color: #9fbfe8;
-      cursor: pointer;
-      font-size: 0.95em;
+      position:absolute; right:8px; color:#9fbfe8; cursor:pointer;
     }
 
-    /* mode buttons row */
-    .reports-bar .modes {
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-      align-items: center;
-      flex-wrap: wrap;
+    /* Download button */
+    .actions {
+      margin-left: auto;
+      display:flex;
+      gap:8px;
+      align-items:center;
     }
-    .reports-bar .modes button {
-      font-size: 1em;
-      font-family: inherit;
-      font-weight: 700;
-      background: var(--primary);
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      padding: 8px 14px;
-      cursor: pointer;
+    .btn-download {
+      background:var(--primary); color:#fff; border:none; padding:8px 12px; border-radius:8px; cursor:pointer; font-weight:700;
     }
-    .reports-bar .modes button.active { background: var(--primary-hover); box-shadow: 0 2px 8px #42a5f533; }
 
-    /* Driver header: separated, highlighted */
+    /* Driver header (separate above table) */
     .driver-header {
       width: 100%;
       max-width: 1100px;
-      margin: 0 auto 12px auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
+      margin: 10px auto;
       padding: 10px 14px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
       background: linear-gradient(90deg, rgba(66,165,245,0.06), rgba(66,165,245,0.02));
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+      border-radius:10px;
+      box-sizing:border-box;
     }
-    .driver-header .driver-name {
-      font-size: 1.18em;
-      font-weight: 800;
-      color: #fff;
-    }
-    .driver-header .driver-meta {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      color: #d6eaff;
-      font-weight: 700;
-    }
-    .driver-header .driver-meta .period {
-      font-size: 0.95em;
-      color: #d6eaff;
-      opacity: 0.95;
-    }
-    .driver-header .driver-meta .total {
-      font-size: 0.95em;
-      color: var(--primary);
-      background: #212a40;
-      padding: 6px 10px;
-      border-radius: 8px;
-      font-weight: 800;
-    }
+    .driver-name { font-weight:800; font-size:1.18em; color:#fff; }
+    .driver-period { color:#d6eaff; font-weight:700; margin-right:12px; }
+    .driver-total { background:#212a40; color:var(--primary); font-weight:800; padding:6px 10px; border-radius:8px; }
 
+    /* Table */
     .driver-report-table-wrap {
-      width: 100vw;
+      width: 100%;
       max-width: 1100px;
+      margin: 0 auto 24px auto;
       background: var(--card-bg);
       border-radius: 12px;
-      box-shadow: 0 2px 8px #009de018;
-      margin: 0 auto 19px auto;
-      padding: 12px 0 18px 0;
-      overflow-x: auto;
+      padding: 10px;
+      box-sizing: border-box;
     }
-    .driver-report-table {
-      border-collapse: separate;
-      border-spacing: 0;
-      width: 100%;
-      min-width: 700px;
-      margin: 0 auto;
-      font-family: inherit;
-      font-size: 0.98em;
-      background: transparent;
+    table.driver-report-table {
+      width:100%; border-collapse:collapse; min-width:700px;
     }
-    .driver-report-table th, .driver-report-table td {
-      text-align: center;
-      padding: 9px 12px;
-      font-size: 1em;
-      font-weight: 600;
-      color: #bbdefb;
-      background: #212a40;
-      border-bottom: 1.5px solid #384164;
-      white-space: nowrap;
+    table.driver-report-table th, table.driver-report-table td {
+      padding:8px 12px; border-bottom:1px solid #384164; text-align:center; color:#bbdefb; font-weight:600;
     }
-    .driver-report-table th {
-      background: #183350;
-      color: #fff;
-      font-size: 1.06em;
-      font-weight: 700;
-      border-bottom: 2px solid #42a5f5;
+    table.driver-report-table th {
+      background:#183350; color:#fff; font-weight:700; border-bottom:2px solid #42a5f5;
     }
-    .driver-report-table td .delete-row-btn {
-      color: var(--red);
-      background: none;
-      border: none;
-      font-size: 1.1em;
-      cursor: pointer;
-      border-radius: 50%;
-      padding: 0.06em 0.3em;
-    }
-    .pagination-bar {
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 24px 0 0;
-      margin-bottom: 8px;
-    }
-    .pagination-bar button {
-      font-size: 0.99em;
-      background: var(--primary);
-      color: #fff;
-      border: none;
-      border-radius: 7px;
-      padding: 5px 13px;
-      cursor: pointer;
-      transition: background 0.13s;
-      font-family: inherit;
-      font-weight: 600;
-    }
-    .pagination-bar button:disabled { opacity: 0.5; pointer-events: none; }
+    .delete-row-btn { background:none;border:none;color:var(--red);cursor:pointer;font-size:1.05em; }
 
-    @media (max-width: 900px) {
-      .driver-report-table { min-width: 530px; font-size: 0.96em; }
-      .driver-report-table th, .driver-report-table td { padding: 8px 8px; }
-    }
-    @media (max-width: 600px) {
-      html, body { font-size: 15px; }
-      .driver-report-table { min-width: 430px; font-size: 0.95em; }
-      .reports-bar { padding: 10px; }
-      .driver-header { flex-direction: column; align-items: flex-start; gap: 8px; padding: 10px; }
-      .reports-bar .row2 { flex-direction: row; gap: 6px; justify-content: flex-start; flex-wrap: nowrap; overflow-x: auto; }
-    }
-    @media (max-width: 450px) {
-      .driver-report-table { min-width: 370px; }
-      .reports-bar select, .date-wrapper input { min-width: 110px; }
-    }
+    .pagination-bar { display:flex; gap:8px; justify-content:flex-end; margin-top:8px; align-items:center;}
+    .pagination-bar button { background:var(--primary); color:#fff; border:none; padding:6px 12px; border-radius:6px; }
 
-    .modal-bg { display: none; position: fixed; z-index: 500; top: 0; left: 0; right: 0; bottom: 0; width: 100vw; height: 100vh; background: rgba(13, 32, 70, 0.82); align-items: center; justify-content: center;}
-    .modal-bg.active { display: flex;}
-    .modal-content, .modal-confirm {
-      background: var(--card-bg); color: var(--accent); border-radius: 18px; border: 2px solid var(--primary);
-      box-shadow: 0 7px 32px #42a5f547; padding: 28px 30px 22px 30px; display: flex; flex-direction: column; align-items: center;
-      min-width: 270px; max-width: 95vw; min-height: 135px; font-family: 'Poppins', Arial, sans-serif; animation: pop .18s cubic-bezier(.45,1.4,.68,1.02); position: relative;
+    /* Modal basic styling */
+    .modal-bg { display:none; position:fixed; inset:0; background:rgba(13,32,70,0.82); align-items:center; justify-content:center; z-index:800; }
+    .modal-bg.active { display:flex; }
+    .modal { background:var(--card-bg); border-radius:12px; padding:16px; max-width:420px; width:92%; color:var(--accent); border:1px solid var(--primary); box-shadow:0 8px 30px rgba(0,0,0,0.6); }
+    .modal h3{ color:#fff; margin:0 0 8px 0; font-size:1.05em; }
+    .modal .row { display:flex; gap:8px; margin-top:8px; align-items:center; flex-wrap:wrap; }
+    .modal .actions { display:flex; gap:8px; margin-top:12px; justify-content:flex-end; }
+
+    /* Responsive tweaks */
+    @media (max-width:900px){
+      table.driver-report-table { min-width:530px; }
     }
-    .modal-close { position: absolute; top: 11px; right: 16px; background: none; border: none; color: #bbdefb; font-size: 1.22em; cursor: pointer; padding: 0; border-radius: 50%; transition: background 0.12s;}
-    @keyframes pop { from { transform: scale(0.91); opacity: 0.3;} to   { transform: scale(1);    opacity: 1;} }
+    @media (max-width:600px){
+      .driver-header { flex-direction:column; align-items:flex-start; gap:8px; }
+      .reports-top { gap:6px; }
+      .date-row { gap:6px; overflow-x:auto; }
+    }
   </style>
 </head>
 <body>
 <div class="page-wrapper">
   <div class="header">
     <div class="header-row">
-      <span class="header-title"><i class="fas fa-road"></i> All Drivers KM Reports</span>
-      <span class="header-desc">Ravintola Tandoori Villa &nbsp;|&nbsp; Admin: View all delivery drivers KM & Time Reports</span>
+      <div class="header-title"><i class="fas fa-road"></i> All Drivers KM Reports</div>
+      <div class="header-desc">Ravintola Tandoori Villa &nbsp;|&nbsp; Admin: View all delivery drivers KM & Time Reports</div>
     </div>
-    <div class="header-btnbar">
-      <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+    <div style="margin-top:10px;">
+      <button id="logoutBtn" style="background:var(--red);color:#fff;border:none;padding:8px 12px;border-radius:8px;font-weight:700;cursor:pointer;">Logout</button>
     </div>
   </div>
 
   <div class="reports-bar">
-    <div class="row1" id="driverSelectRow">
+    <div class="reports-top">
       <label for="driverSelect">Select Driver:</label>
       <select id="driverSelect"></select>
+
+      <div class="actions" style="margin-left:auto">
+        <button id="downloadBtn" class="btn-download"><i class="fas fa-download"></i> Download</button>
+      </div>
     </div>
 
-    <div class="row2" id="customRangeArea">
+    <div class="date-row">
       <label>From</label>
-      <span class="date-wrapper">
-        <input type="date" id="fromDate"/>
-        <i class="fa fa-calendar date-icon" title="Edit From date" role="button" tabindex="0"></i>
-      </span>
+      <span class="date-wrapper"><input type="date" id="fromDate"/><i class="fa fa-calendar date-icon" title="Open date"></i></span>
       <label>To</label>
-      <span class="date-wrapper">
-        <input type="date" id="toDate"/>
-        <i class="fa fa-calendar date-icon" title="Edit To date" role="button" tabindex="0"></i>
-      </span>
+      <span class="date-wrapper"><input type="date" id="toDate"/><i class="fa fa-calendar date-icon" title="Open date"></i></span>
     </div>
 
-    <div class="modes" style="justify-content:center;">
-      <button id="dailyBtn">Daily</button>
-      <button id="weeklyBtn">Last 7 Days</button>
-      <button id="monthlyBtn">Monthly</button>
+    <div class="modes" role="tablist" aria-label="Report modes">
+      <button id="dailyBtn" class="mode-btn">Daily</button>
+      <button id="weeklyBtn" class="mode-btn">Last 7 Days</button>
+      <button id="monthlyBtn" class="mode-btn">Monthly</button>
+      <button id="customBtn" class="mode-btn">Custom Date</button>
     </div>
   </div>
 
-  <!-- Driver header area: name | period | total -->
+  <!-- Driver header and table area -->
   <div id="tablesArea"></div>
 
+  <!-- Custom date modal -->
+  <div class="modal-bg" id="customModal">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="customTitle">
+      <h3 id="customTitle">Custom Date Range</h3>
+      <div style="font-size:0.95em;color:var(--accent);">Pick "From" and "To" dates for the report range.</div>
+      <div class="row" style="margin-top:10px;">
+        <input type="date" id="customFrom" style="padding:8px;border-radius:8px;border:1px solid var(--border);background:#181c24;color:#fff;font-weight:700;">
+        <input type="date" id="customTo" style="padding:8px;border-radius:8px;border:1px solid var(--border);background:#181c24;color:#fff;font-weight:700;">
+      </div>
+      <div class="actions">
+        <button id="customCancel" style="background:var(--border);color:#bbdefb;border:none;padding:8px 12px;border-radius:8px;">Cancel</button>
+        <button id="customShow" style="background:var(--primary);color:#fff;border:none;padding:8px 12px;border-radius:8px;">Show Table</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Download modal -->
+  <div class="modal-bg" id="downloadModal">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="downloadTitle">
+      <h3 id="downloadTitle">Download Report</h3>
+      <div style="font-size:0.95em;color:var(--accent);">Choose format to download the current report for the selected driver.</div>
+      <div class="actions">
+        <button id="dlPdf" style="background:#b71c1c;color:#fff;border:none;padding:8px 12px;border-radius:8px;">PDF</button>
+        <button id="dlCsv" style="background:#1b5e20;color:#fff;border:none;padding:8px 12px;border-radius:8px;">CSV</button>
+        <button id="dlCancel" style="background:var(--border);color:#bbdefb;border:none;padding:8px 12px;border-radius:8px;">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- confirm & generic modal placeholders handled previously -->
   <div class="modal-bg" id="modalBg">
-    <div class="modal-content" id="modalContent">
-      <button class="modal-close" id="modalClose" title="Close">&times;</button>
-      <div class="modal-title" id="modalTitle"></div>
-      <div class="modal-details" id="modalDetails"></div>
-      <button class="modal-done-btn" id="modalDone">Done</button>
-    </div>
-  </div>
-
-  <div class="modal-bg" id="confirmModalBg">
-    <div class="modal-confirm" id="confirmModalContent">
-      <div class="modal-confirm-title" id="confirmModalTitle"></div>
-      <div class="modal-confirm-details" id="confirmModalDetails"></div>
-      <div class="modal-confirm-btns">
-        <button class="modal-confirm-btn" id="confirmDeleteBtn">Delete</button>
-        <button class="modal-cancel-btn" id="cancelDeleteBtn">Cancel</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal-bg" id="logoutModalBg">
-    <div class="modal-confirm" id="logoutModalContent">
-      <div class="modal-confirm-title"><i class="fas fa-sign-out-alt" style="color:var(--primary);"></i> Confirm Logout</div>
-      <div class="modal-confirm-details" id="logoutModalDetails">Are you sure you want to logout?</div>
-      <div class="modal-confirm-btns">
-        <button class="modal-confirm-btn" id="confirmLogoutBtn">Logout</button>
-        <button class="modal-cancel-btn" id="cancelLogoutBtn">Cancel</button>
-      </div>
-    </div>
+    <div class="modal"></div>
   </div>
 </div>
 
+<!-- libraries -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 <script>
-  // Auth and Firebase
+  // Firebase + Auth check
   const userData = JSON.parse(localStorage.getItem("user") || "null");
-  if (!userData || userData.role !== "admin") { window.location.href = "login.html"; }
+  if(!userData || userData.role !== "admin") { window.location.href = "login.html"; }
 
   const firebaseConfig = {
     apiKey: "AIzaSyCirYQ_46JiSkMIwCNs1nSi89dvB1MUg_A",
@@ -450,66 +281,43 @@
   firebase.initializeApp(firebaseConfig);
   const db = firebase.database();
 
-  // Modal helpers
-  function showModal(title, details) {
-    document.getElementById('modalTitle').innerHTML = title;
-    document.getElementById('modalDetails').innerHTML = details;
-    document.getElementById('modalBg').classList.add('active');
-    setTimeout(()=>document.getElementById('modalDone').focus(), 120);
-  }
-  function hideModal(){ document.getElementById('modalBg').classList.remove('active'); }
-  document.getElementById('modalClose').onclick = hideModal;
-  document.getElementById('modalDone').onclick = hideModal;
-  document.getElementById('modalBg').onclick = (e)=>{ if(e.target===document.getElementById('modalBg')) hideModal(); };
-
-  // Confirm modal
-  let pendingDelete = null;
-  function showConfirmModal(title, details, onConfirm){
-    document.getElementById('confirmModalTitle').innerHTML = title;
-    document.getElementById('confirmModalDetails').innerHTML = details;
-    document.getElementById('confirmModalBg').classList.add('active');
-    pendingDelete = onConfirm;
-    setTimeout(()=>document.getElementById('confirmDeleteBtn').focus(),120);
-  }
-  function hideConfirmModal(){ document.getElementById('confirmModalBg').classList.remove('active'); pendingDelete=null; }
-  document.getElementById('cancelDeleteBtn').onclick = hideConfirmModal;
-  document.getElementById('confirmModalBg').onclick = (e)=>{ if(e.target===document.getElementById('confirmModalBg')) hideConfirmModal(); };
-  document.getElementById('confirmDeleteBtn').onclick = function(){ if(pendingDelete){ pendingDelete(); hideConfirmModal(); } };
-
-  // Logout modal
-  document.getElementById('logoutBtn').onclick = function(){
-    document.getElementById('logoutModalBg').classList.add('active');
-    setTimeout(()=>document.getElementById('confirmLogoutBtn').focus(),120);
-  };
-  document.getElementById('cancelLogoutBtn').onclick = ()=>document.getElementById('logoutModalBg').classList.remove('active');
-  document.getElementById('logoutModalBg').onclick = (e)=>{ if(e.target===document.getElementById('logoutModalBg')) document.getElementById('logoutModalBg').classList.remove('active'); };
-  document.getElementById('confirmLogoutBtn').onclick = function(){ localStorage.removeItem('user'); window.location.href='login.html'; };
-
-  // App state
-  let allLogs = {};
-  let allUsers = {};
-  let selectedDriver = "";
-  let currentMode = "daily"; // daily | weekly | monthly | custom
-  let currentPage = 1;
-  let rowsPerPage = { daily:15, weekly:15, monthly:9999, custom:15 };
-  let totalPages = 1;
-  let currentMonth = "";
-  let filteredLogs = [];
-
-  const tablesArea = document.getElementById('tablesArea');
+  // Elements
   const driverSelect = document.getElementById('driverSelect');
   const fromDate = document.getElementById('fromDate');
   const toDate = document.getElementById('toDate');
   const dailyBtn = document.getElementById('dailyBtn');
   const weeklyBtn = document.getElementById('weeklyBtn');
   const monthlyBtn = document.getElementById('monthlyBtn');
+  const customBtn = document.getElementById('customBtn');
+  const customModal = document.getElementById('customModal');
+  const customFrom = document.getElementById('customFrom');
+  const customTo = document.getElementById('customTo');
+  const customShow = document.getElementById('customShow');
+  const customCancel = document.getElementById('customCancel');
+  const downloadBtn = document.getElementById('downloadBtn');
+  const downloadModal = document.getElementById('downloadModal');
+  const dlPdf = document.getElementById('dlPdf');
+  const dlCsv = document.getElementById('dlCsv');
+  const dlCancel = document.getElementById('dlCancel');
+  const tablesArea = document.getElementById('tablesArea');
+  const dateIcons = document.querySelectorAll('.date-icon');
+
+  // State
+  let allUsers = {};
+  let allLogs = {};
+  let selectedDriver = "";
+  let currentMode = "daily"; // daily | weekly | monthly | custom
+  let currentMonth = "";
+  let currentPage = 1;
+  let rowsPerPage = {daily:15, weekly:15, monthly:9999, custom:15};
+  let totalPages = 1;
 
   // Helpers
   function pad2(n){ return String(n).padStart(2,'0'); }
-  function toDisplayDate(isoStr){
-    if(!isoStr) return '';
+  function toDisplayDate(iso){
+    if(!iso) return '';
+    const [y,m,d] = iso.split('-');
     const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-    const [y,m,d] = isoStr.split('-');
     return `${pad2(d)}/${months[parseInt(m,10)-1]}/${y}`;
   }
   function todayISO(){ return new Date().toISOString().slice(0,10); }
@@ -517,75 +325,72 @@
 
   function getDriverLogs(name){
     return Object.entries(allLogs)
-      .map(([id,l])=>({ ...l, id }))
+      .map(([id,l])=>({ id, ...l }))
       .filter(l=>l.name===name)
       .sort((a,b)=>b.date.localeCompare(a.date));
   }
 
-  function sumKm(rows){ return rows.reduce((s,r)=>s+parseInt(r.totalKm||0,10),0); }
+  function sumKm(rows){ return rows.reduce((s,r)=>s + (parseInt(r.totalKm||0,10)||0), 0); }
+
+  function getLatestMonthForDriver(driver){
+    const logs = getDriverLogs(driver);
+    const months = Array.from(new Set(logs.map(l=>l.date.slice(0,7)))).sort((a,b)=>b.localeCompare(a));
+    return months.length ? months[0] : "";
+  }
 
   function getRows(mode){
     if(!selectedDriver) return [];
     const today = todayISO();
     const all = getDriverLogs(selectedDriver);
     if(!all.length) return [];
-    if(mode === 'daily' || mode === 'custom' || mode === 'monthly'){
-      // group by date
-      const days = {};
-      let filterMonth = null;
-      if(mode === 'monthly') filterMonth = currentMonth || getLatestMonthForDriver(selectedDriver);
-      const f = (mode === 'custom' ? fromDate.value : null);
-      const t = (mode === 'custom' ? toDate.value : null);
+    if(mode==='daily' || mode==='custom' || mode==='monthly'){
+      const daysMap = {};
+      const filterMonth = (mode==='monthly') ? (currentMonth || getLatestMonthForDriver(selectedDriver)) : null;
+      const f = (mode==='custom') ? (customFrom.value || fromDate.value) : null;
+      const t = (mode==='custom') ? (customTo.value || toDate.value) : null;
       all.forEach(l=>{
-        if(mode === 'monthly' && filterMonth && l.date.slice(0,7) !== filterMonth) return;
-        if(mode === 'custom' && ( !f || !t )) return;
-        if(mode === 'custom' && (l.date < f || l.date > t)) return;
-        if(!days[l.date]) days[l.date] = [];
-        days[l.date].push(l);
+        if(filterMonth && l.date.slice(0,7) !== filterMonth) return;
+        if(mode==='custom' && ( !f || !t )) return;
+        if(mode==='custom' && (l.date < f || l.date > t)) return;
+        if(!daysMap[l.date]) daysMap[l.date]=[];
+        daysMap[l.date].push(l);
       });
-      const dates = Object.keys(days).sort((a,b)=>b.localeCompare(a));
-      return dates.map(d=>({ date: d, logs: days[d] }));
-    } else if(mode === 'weekly'){
-      const last7 = [];
-      for(let i=0;i<7;i++) last7.push(addDays(today, -i));
-      const days = {};
+      const dates = Object.keys(daysMap).sort((a,b)=>b.localeCompare(a));
+      return dates.map(d=>({ date:d, logs: daysMap[d] }));
+    } else if(mode==='weekly'){
+      const last7 = []; for(let i=0;i<7;i++) last7.push(addDays(today,-i));
+      const daysMap = {};
       all.filter(l=> last7.includes(l.date) ).forEach(l=>{
-        if(!days[l.date]) days[l.date] = [];
-        days[l.date].push(l);
+        if(!daysMap[l.date]) daysMap[l.date]=[];
+        daysMap[l.date].push(l);
       });
-      const dates = Object.keys(days).sort((a,b)=>b.localeCompare(a));
-      return dates.map(d=>({ date: d, logs: days[d] }));
+      const dates = Object.keys(daysMap).sort((a,b)=>b.localeCompare(a));
+      return dates.map(d=>({ date:d, logs: daysMap[d] }));
     }
     return [];
   }
 
   function updateMonthSelect(){
-    if(!selectedDriver) return;
-    const logs = getDriverLogs(selectedDriver);
-    const months = Array.from(new Set(logs.map(l=>l.date.slice(0,7)))).sort((a,b)=>b.localeCompare(a));
-    currentMonth = months.length ? months[0] : "";
+    currentMonth = getLatestMonthForDriver(selectedDriver);
   }
 
+  // Render header and table
   function renderDriverHeader(totalKm, periodText){
-    // create header with driver name (highlight), small period text and total km highlight
     const header = document.createElement('div');
     header.className = 'driver-header';
     const nameEl = document.createElement('div');
     nameEl.className = 'driver-name';
     nameEl.textContent = selectedDriver || '-';
-
     const meta = document.createElement('div');
     meta.className = 'driver-meta';
     const period = document.createElement('div');
-    period.className = 'period';
+    period.className = 'driver-period';
     period.textContent = periodText || '—';
     const total = document.createElement('div');
-    total.className = 'total';
+    total.className = 'driver-total';
     total.textContent = `${totalKm} km`;
-
     meta.appendChild(period);
     meta.appendChild(total);
-
     header.appendChild(nameEl);
     header.appendChild(meta);
     return header;
@@ -593,108 +398,86 @@
 
   function showReportsTable(){
     tablesArea.innerHTML = '';
-    if(!selectedDriver) {
+    if(!selectedDriver){
       const msg = document.createElement('div');
       msg.style.color = '#93c7e6';
       msg.style.textAlign = 'center';
-      msg.style.margin = '1.5em 0 2em 0';
-      msg.style.fontFamily = 'Poppins, sans-serif';
-      msg.style.fontWeight = '600';
+      msg.style.margin = '1.5em 0';
+      msg.style.fontWeight = '700';
       msg.textContent = 'Select a driver to view report data.';
       tablesArea.appendChild(msg);
       return;
     }
 
-    filteredLogs = getRows(currentMode);
+    const rows = getRows(currentMode);
     const perPage = rowsPerPage[currentMode] || 15;
-    const totalRows = filteredLogs.length;
+    const totalRows = rows.length;
     totalPages = Math.max(Math.ceil(totalRows / perPage), 1);
-    const pageRows = currentMode === 'monthly' ? filteredLogs : filteredLogs.slice((currentPage-1)*perPage, currentPage*perPage);
+    const pageRows = (currentMode === 'monthly') ? rows : rows.slice((currentPage-1)*perPage, currentPage*perPage);
 
-    const totalKm = sumKm(filteredLogs.flatMap(x=>x.logs));
+    const totalKm = sumKm(rows.flatMap(r=>r.logs));
 
-    // Determine period text
+    // Determine periodText
     let periodText = '';
-    if(currentMode === 'weekly') {
-      periodText = 'Last 7 days';
-    } else if(currentMode === 'monthly') {
+    if(currentMode==='weekly') periodText = 'Last 7 days';
+    else if(currentMode==='monthly') {
       const m = currentMonth || getLatestMonthForDriver(selectedDriver);
-      periodText = m ? (new Date(m+'-01')).toLocaleString('default', { month: 'long', year: 'numeric' }) : '—';
-    } else if(currentMode === 'custom' || currentMode === 'daily') {
-      // compute earliest & latest from filteredLogs
-      const dates = filteredLogs.map(g=>g.date).sort();
+      periodText = m ? (new Date(m+'-01')).toLocaleString('default',{month:'long', year:'numeric'}) : '—';
+    } else {
+      const dates = rows.map(r=>r.date).sort();
       if(dates.length) periodText = `${toDisplayDate(dates[dates.length-1])} — ${toDisplayDate(dates[0])}`;
       else periodText = '—';
     }
 
-    // render header
+    // Header
     const headerEl = renderDriverHeader(totalKm, periodText);
     tablesArea.appendChild(headerEl);
 
-    // pagination controls
+    // Pagination bar
     const pag = document.createElement('div');
     pag.className = 'pagination-bar';
-    if(currentMode !== 'monthly' && totalPages > 1){
-      const prev = document.createElement('button');
-      prev.textContent = 'Previous';
-      prev.disabled = currentPage === 1;
+    if(currentMode!=='monthly' && totalPages>1){
+      const prev = document.createElement('button'); prev.textContent='Previous'; prev.disabled = currentPage===1;
       prev.onclick = ()=>{ if(currentPage>1){ currentPage--; showReportsTable(); } };
-      const span = document.createElement('span');
-      span.style.color = '#bbdefb';
-      span.style.fontWeight = '700';
-      span.style.margin = '0 8px';
-      span.textContent = `${currentPage}/${totalPages}`;
-      const next = document.createElement('button');
-      next.textContent = 'Next';
-      next.disabled = currentPage === totalPages;
+      const info = document.createElement('span'); info.style.color='#bbdefb'; info.style.fontWeight='700'; info.style.margin='0 8px'; info.textContent = `${currentPage}/${totalPages}`;
+      const next = document.createElement('button'); next.textContent='Next'; next.disabled = currentPage===totalPages;
       next.onclick = ()=>{ if(currentPage<totalPages){ currentPage++; showReportsTable(); } };
-      pag.appendChild(prev);
-      pag.appendChild(span);
-      pag.appendChild(next);
+      pag.appendChild(prev); pag.appendChild(info); pag.appendChild(next);
     }
     tablesArea.appendChild(pag);
 
-    // table
+    // Table build
     const wrap = document.createElement('div');
     wrap.className = 'driver-report-table-wrap';
     const table = document.createElement('table');
     table.className = 'driver-report-table';
     const thead = document.createElement('thead');
-    thead.innerHTML = `
-      <tr>
-        <th>Date</th>
-        <th>Km In</th>
-        <th>Km Out</th>
-        <th>Total KM</th>
-        <th>Time</th>
-        <th>Delete</th>
-      </tr>`;
+    thead.innerHTML = `<tr>
+      <th>Date</th><th>Km In</th><th>Km Out</th><th>Total KM</th><th>Time</th><th>Delete</th>
+    </tr>`;
     table.appendChild(thead);
     const tbody = document.createElement('tbody');
 
-    if(pageRows.length === 0){
+    if(pageRows.length===0){
       const tr = document.createElement('tr');
-      tr.innerHTML = `<td colspan="6" style="text-align:center;color:#93c7e6;font-size:1.1em;font-weight:700;">No report data.</td>`;
+      tr.innerHTML = `<td colspan="6" style="text-align:center;color:#93c7e6;font-size:1.05em;font-weight:700;">No report data.</td>`;
       tbody.appendChild(tr);
     } else {
-      pageRows.forEach(day => {
-        day.logs.forEach(row => {
+      pageRows.forEach(day=>{
+        day.logs.forEach(row=>{
           const tr = document.createElement('tr');
           const timeCell = row.totalTime || (row.timer ? formatTime(row.timer) : '');
-          tr.innerHTML = `
-            <td>${toDisplayDate(row.date)}</td>
-            <td>${row.kmIn ?? ''}</td>
-            <td>${row.kmOut ?? ''}</td>
-            <td>${row.totalKm ?? ''}</td>
-            <td>${timeCell}</td>
-            <td><button class="delete-row-btn" title="Delete this report"><i class="fas fa-trash"></i></button></td>
-          `;
-          // attach delete handler
-          const delBtn = tr.querySelector('.delete-row-btn');
-          delBtn.addEventListener('click', ()=> {
+          tr.innerHTML = `<td>${toDisplayDate(row.date)}</td>
+                          <td>${row.kmIn ?? ''}</td>
+                          <td>${row.kmOut ?? ''}</td>
+                          <td>${row.totalKm ?? ''}</td>
+                          <td>${timeCell}</td>
+                          <td><button class="delete-row-btn" title="Delete this report"><i class="fas fa-trash"></i></button></td>`;
+          // attach delete
+          tr.querySelector('.delete-row-btn').addEventListener('click', ()=>{
             showConfirmModal("Delete Report", "Are you sure you want to delete this report entry? This cannot be undone.", function(){
               db.ref("logs/"+row.id).remove();
-              showModal("Deleted", "Report entry deleted.");
+              showModal("Deleted","Report entry deleted.");
               showReportsTable();
               updateMonthSelect();
             });
@@ -709,65 +492,194 @@
     tablesArea.appendChild(wrap);
   }
 
-  function prevPage(){ if(currentPage>1){ currentPage--; showReportsTable(); } }
-  function nextPage(){ if(currentPage<totalPages){ currentPage++; showReportsTable(); } }
+  // small helper to format seconds to HH:MM:SS (if present)
+  function formatTime(sec){
+    if(!sec) return '';
+    const h = String(Math.floor(sec/3600)).padStart(2,'0');
+    const m = String(Math.floor((sec%3600)/60)).padStart(2,'0');
+    const s = String(sec%60).padStart(2,'0');
+    return `${h}:${m}:${s}`;
+  }
 
-  // date icon focus handlers
-  function enableDateIcons(){
-    document.querySelectorAll('.date-icon').forEach(icon=>{
-      icon.addEventListener('click', (e)=>{
-        const wrap = e.target.closest('.date-wrapper');
-        if(!wrap) return;
-        const input = wrap.querySelector('input[type="date"]');
-        if(input){
-          input.focus();
-          try{ input.showPicker && input.showPicker(); }catch(e){}
-        }
-      });
-      icon.addEventListener('keydown', (e)=>{
-        if(e.key==='Enter' || e.key===' ') { e.preventDefault(); icon.click(); }
-      });
+  // --- Custom date modal logic ---
+  customBtn.addEventListener('click', ()=>{
+    customFrom.value = fromDate.value || '';
+    customTo.value = toDate.value || '';
+    customModal.classList.add('active');
+  });
+  customCancel.addEventListener('click', ()=> customModal.classList.remove('active'));
+  customShow.addEventListener('click', ()=>{
+    if(!customFrom.value || !customTo.value){ alert('Please select both From and To dates'); return; }
+    // set date inputs (main) and switch to custom mode
+    fromDate.value = customFrom.value;
+    toDate.value = customTo.value;
+    currentMode = 'custom'; currentPage = 1;
+    customModal.classList.remove('active');
+    showReportsTable();
+  });
+
+  // Download modal logic
+  downloadBtn.addEventListener('click', ()=> downloadModal.classList.add('active'));
+  dlCancel.addEventListener('click', ()=> downloadModal.classList.remove('active'));
+
+  // CSV download
+  dlCsv.addEventListener('click', ()=>{
+    downloadModal.classList.remove('active');
+    const rows = getRows(currentMode).flatMap(r=>r.logs);
+    const header = ['Date','Km In','Km Out','Total KM','Time'];
+    const lines = [header.join(',')];
+    rows.forEach(r=>{
+      const line = [
+        r.date||'',
+        r.kmIn||'',
+        r.kmOut||'',
+        r.totalKm||'',
+        r.totalTime || (r.timer ? formatTime(r.timer) : '')
+      ].map(cell=>{
+        if(cell==null) return '';
+        const s = String(cell);
+        return s.includes(',')||s.includes('"') ? `"${s.replace(/"/g,'""')}"` : s;
+      }).join(',');
+      lines.push(line);
     });
-  }
+    const blob = new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    const periodText = computeDownloadPeriodText();
+    a.download = `${(selectedDriver||'driver').replace(/\s+/g,'_')}_report_${periodText.replace(/\s+/g,'_')}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  });
 
-  // when date inputs change, auto-show report (custom)
-  function attachDateAuto(){
-    function onChange(){
-      if(fromDate.value && toDate.value){
-        currentMode = 'custom';
-        currentPage = 1;
-        showReportsTable();
-      }
+  // PDF download using html2pdf + adding page numbers
+  dlPdf.addEventListener('click', async ()=>{
+    downloadModal.classList.remove('active');
+    // Build printable HTML container
+    const grouped = getRows(currentMode);
+    const rows = grouped.flatMap(g=>g.logs);
+    const totalKm = sumKm(grouped.flatMap(g=>g.logs));
+    const periodText = computeDownloadPeriodText();
+
+    const driverObj = Object.values(allUsers).find(u=>u.name===selectedDriver) || {};
+
+    // printable HTML: header + styled table that resembles Google Sheets (clean borders)
+    const printable = document.createElement('div');
+    printable.style.padding = '12px';
+    printable.style.background = '#fff';
+    printable.style.color = '#111';
+    printable.style.fontFamily = 'Arial, Helvetica, sans-serif';
+    printable.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
+        <div>
+          <h2 style="margin:0 0 6px 0">${escapeHtml(selectedDriver)}</h2>
+          <div style="font-size:12px;color:#444;">Car: ${escapeHtml(driverObj.car||'-')} ${driverObj.address?('&nbsp;|&nbsp;'+escapeHtml(driverObj.address)) : ''}</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:12px;color:#444;margin-bottom:6px;">${escapeHtml(periodText)}</div>
+          <div style="background:#f0f4f8;padding:6px 10px;border-radius:6px;font-weight:700;color:#0a66c2;">Total: ${totalKm} km</div>
+        </div>
+      </div>
+      <table id="printTable" style="width:100%;border-collapse:collapse;font-size:12px;">
+        <thead>
+          <tr>
+            <th style="border:1px solid #ccc;padding:6px;background:#f1f3f5">Date</th>
+            <th style="border:1px solid #ccc;padding:6px;background:#f1f3f5">Km In</th>
+            <th style="border:1px solid #ccc;padding:6px;background:#f1f3f5">Km Out</th>
+            <th style="border:1px solid #ccc;padding:6px;background:#f1f3f5">Total KM</th>
+            <th style="border:1px solid #ccc;padding:6px;background:#f1f3f5">Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rows.map(r=>`<tr>
+            <td style="border:1px solid #ddd;padding:6px">${escapeHtml(toDisplayDate(r.date))}</td>
+            <td style="border:1px solid #ddd;padding:6px">${escapeHtml(r.kmIn||'')}</td>
+            <td style="border:1px solid #ddd;padding:6px">${escapeHtml(r.kmOut||'')}</td>
+            <td style="border:1px solid #ddd;padding:6px">${escapeHtml(r.totalKm||'')}</td>
+            <td style="border:1px solid #ddd;padding:6px">${escapeHtml(r.totalTime || (r.timer?formatTime(r.timer):''))}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    `;
+
+    // configure html2pdf
+    const opt = {
+      margin: [10, 10, 20, 10], // top, left, bottom, right (mm roughly)
+      filename: `${(selectedDriver||'driver').replace(/\s+/g,'_')}_report_${(new Date()).toISOString().slice(0,10)}.pdf`,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2, useCORS: true },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+
+    // html2pdf supports getting the jsPDF instance for post-processing
+    try {
+      document.body.appendChild(printable);
+      await html2pdf().set(opt).from(printable).toPdf().get('pdf').then(function (pdf) {
+        const totalPages = pdf.internal.getNumberOfPages();
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        const pageHeight = pdf.internal.pageSize.getHeight();
+        pdf.setFontSize(10);
+        for (let i = 1; i <= totalPages; i++) {
+          pdf.setPage(i);
+          const footer = `Page ${i} of ${totalPages}`;
+          pdf.text(footer, pageWidth / 2, pageHeight - 8, { align: 'center' });
+        }
+        pdf.save(opt.filename);
+      });
+    } catch (err) {
+      console.error('PDF generation failed', err);
+      alert('PDF generation failed. See console for details.');
+    } finally {
+      try{ document.body.removeChild(printable); }catch(e){}
     }
-    fromDate.addEventListener('change', onChange);
-    toDate.addEventListener('change', onChange);
+  });
+
+  // compute period text for downloads
+  function computeDownloadPeriodText(){
+    const grouped = getRows(currentMode);
+    const dates = grouped.map(g=>g.date).sort();
+    if(currentMode==='weekly') return 'Last_7_days';
+    if(currentMode==='monthly'){
+      const m = currentMonth || getLatestMonthForDriver(selectedDriver);
+      if(m) return m;
+      return 'monthly';
+    }
+    if(dates.length){
+      return `${dates[dates.length-1]}_to_${dates[0]}`;
+    }
+    return todayISO();
   }
 
-  // mode buttons
-  dailyBtn.addEventListener('click', ()=>{
-    currentMode='daily';
-    currentPage=1;
-    showReportsTable();
-  });
-  weeklyBtn.addEventListener('click', ()=>{
-    currentMode='weekly';
-    currentPage=1;
-    showReportsTable();
-  });
-  monthlyBtn.addEventListener('click', ()=>{
-    currentMode='monthly';
-    currentPage=1;
-    updateMonthSelect();
-    showReportsTable();
+  // date icon focus
+  document.querySelectorAll('.date-icon').forEach(icon=>{
+    icon.addEventListener('click', e=>{
+      const parent = e.target.closest('.date-wrapper');
+      if(!parent) return;
+      const input = parent.querySelector('input[type="date"]');
+      if(input){ input.focus(); try{ input.showPicker && input.showPicker(); }catch(e){} }
+    });
   });
 
-  // Populate driver dropdown
-  db.ref("users").on("value", snap => {
+  // date change auto custom mode
+  fromDate.addEventListener('change', ()=>{
+    if(fromDate.value && toDate.value){ currentMode='custom'; showReportsTable(); }
+  });
+  toDate.addEventListener('change', ()=>{
+    if(fromDate.value && toDate.value){ currentMode='custom'; showReportsTable(); }
+  });
+
+  // modes click handlers
+  dailyBtn.addEventListener('click', ()=>{ currentMode='daily'; currentPage=1; showReportsTable(); });
+  weeklyBtn.addEventListener('click', ()=>{ currentMode='weekly'; currentPage=1; showReportsTable(); });
+  monthlyBtn.addEventListener('click', ()=>{ currentMode='monthly'; currentPage=1; updateMonthSelect(); showReportsTable(); });
+
+  // populate drivers
+  db.ref("users").on('value', snap=>{
     allUsers = snap.val() || {};
     let html = '<option value="">-- Select Driver --</option>';
-    Object.values(allUsers).forEach(u=>{
-      html += `<option value="${u.name}">${u.name}</option>`;
-    });
+    Object.values(allUsers).forEach(u=> html += `<option value="${u.name}">${u.name}</option>`);
     driverSelect.innerHTML = html;
     if(!selectedDriver && Object.values(allUsers).length){
       selectedDriver = Object.values(allUsers)[0].name;
@@ -779,26 +691,29 @@
 
   driverSelect.addEventListener('change', ()=>{
     selectedDriver = driverSelect.value;
-    currentPage = 1;
-    currentMonth = "";
     updateMonthSelect();
     showReportsTable();
   });
 
   // logs listener
-  db.ref("logs").on("value", snap => {
+  db.ref("logs").on('value', snap=>{
     allLogs = snap.val() || {};
     showReportsTable();
     updateMonthSelect();
   });
 
-  // initialize
-  enableDateIcons();
-  attachDateAuto();
-  showReportsTable();
+  // Logout modal actions (reuse confirm)
+  document.getElementById('logoutBtn').addEventListener('click', ()=>{
+    const yes = confirm('Logout?');
+    if(yes){ localStorage.removeItem('user'); window.location.href = 'login.html'; }
+  });
 
-  // Utility escape (used in some earlier builds if needed)
+  // small escape helper for printing
   function escapeHtml(s){ if(s==null) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+  // initialize
+  updateMonthSelect();
+  showReportsTable();
 </script>
 </body>
 </html>
