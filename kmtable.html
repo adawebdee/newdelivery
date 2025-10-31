@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Random Odometer Reports Generator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --main-bg: linear-gradient(135deg, #0a101c 0%, #11131a 100%);
+      --card-bg: #191c25;
+      --primary: #3c8dde;
+      --primary-hover: #2463a9;
+      --accent: #e0eefa;
+      --border: #222d45;
+      --red: #ff3b30;
+      --gap: 16px;
+      --card-radius: 14px;
+      --table-radius: 13px;
+      --table-head-bg: #12213d;
+      --table-even-bg: #181d2a;
+      --table-odd-bg: #20253a;
+    }
+    html, body {
+      background: var(--main-bg);
+      font-family: 'Poppins', Arial, sans-serif;
+      color: #fff;
+      margin: 0; padding: 0; min-height: 100vh;
+      font-size: 15px;
+    }
+    .container {
+      width: 100vw;
+      max-width: 860px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border-radius: var(--card-radius);
+      box-shadow: 0 2px 14px #000a;
+      padding: 0 0 40px 0;
+      position: relative;
+      min-height: 100vh;
+    }
+    h2 {
+      margin: 0; padding: 28px 0 16px 0;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: .01em;
+      text-align: center;
+      font-size: 1.55em;
+      background: transparent;
+    }
+    .section-title {
+      font-size: 1.09em;
+      font-weight: 700;
+      color: var(--primary);
+      margin: 0 0 10px 0;
+      letter-spacing: .01em;
+      padding-top: 8px;
+      display: flex; align-items: center;
+      gap: 10px;
+    }
+    .form-card {
+      background: #14171f;
+      border-radius: 13px;
+      box-shadow: 0 1px 9px #0006;
+      margin: 0 24px 16px 24px;
+      padding: 22px 20px 10px 20px;
+      border: 1px solid #222b3c;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .label {
+      font-size: 1em;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .subtext {
+      font-size: .97em;
+      color: #9cb7c6;
+      margin-bottom: 9px;
+      margin-top: 1px;
+      font-weight: 400;
+      line-height: 1.2;
+    }
+    .input-row {
+      display: flex; flex-direction: row; gap: 12px; align-items: center; margin-bottom: 13px;
+      flex-wrap: wrap;
+    }
+    .input-row input, .input-row select {
+      min-width: 0;
+      max-width: 140px;
+    }
+    input, select {
+      font-size: 1em;
+      background: #181c24;
+      color: #fff;
+      border-radius: 8px;
+      border: 1px solid #222b3c;
+      padding: 8px 10px;
+      outline: none;
+      font-family: inherit;
+      width: 100%;
+      box-sizing: border-box;
+      margin-bottom: 2px;
+    }
+    input[type="date"], input[type="time"] { width: 110px;}
+    input[type="number"] { width: 80px;}
+    .icon-white {
+      color: #fff !important;
+      font-size: 1.13em;
+    }
+    .day-toggle-row {
+      display: flex; flex-wrap: wrap; margin-top: 3px; margin-bottom: 10px; gap: 8px;
+    }
+    .day-toggle-btn {
+      background: #232838;
+      color: #e0eefa;
+      border: 1.2px solid #284a80;
+      border-radius: 7px;
+      padding: 6px 14px;
+      font-size: 1em;
+      font-family: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .14s, color .14s, border .13s;
+      user-select: none;
+    }
+    .day-toggle-btn.selected {
+      background: var(--primary);
+      color: #fff;
+      border: 1.2px solid var(--primary-hover);
+    }
+    .distribution-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+    .add-dist-btn, .dist-del-btn {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 7px;
+      padding: 7px 12px;
+      cursor: pointer;
+      font-size: 1em;
+      font-weight: 700;
+      transition: background 0.13s;
+    }
+    .add-dist-btn:hover, .dist-del-btn:hover {
+      background: var(--primary-hover);
+    }
+    .dist-del-btn {
+      background: var(--red);
+      margin-left: 2px;
+      font-size: 0.97em;
+      padding: 6px 9px;
+    }
+    .generate-btn, .driver-add-btn {
+      background: var(--primary);
+      color: #fff;
+      font-weight: 700;
+      border: none;
+      border-radius: 8px;
+      padding: 15px 0;
+      cursor: pointer;
+      font-size: 1.18em;
+      box-shadow: 0 2px 8px #0d47a122;
+      transition: background 0.13s;
+      margin: 16px 24px 0 24px;
+      width: calc(100% - 48px);
+      display: block;
+    }
+    .generate-btn:hover, .driver-add-btn:hover {
+      background: var(--primary-hover);
+    }
+    .driver-select-bar {
+      margin: 18px 24px 0 24px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+    .driver-select-bar select {
+      font-size: 1em;
+      color: #fff;
+      background: #161b27;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-weight: 700;
+      outline: none;
+      box-shadow: 0 1px 7px #001d3833;
+    }
+    /* Table */
+    .table-wrap {
+      margin-top: 23px;
+      overflow-x: auto;
+      padding: 0 20px;
+    }
+    .month-table-wrap {
+      margin-bottom: 25px;
+      border-radius: var(--table-radius);
+      overflow: hidden;
+    }
+    .month-title {
+      font-size: 1.11em;
+      font-weight: 700;
+      color: var(--primary);
+      margin-left: 2px;
+      margin-bottom: 5px;
+      letter-spacing: 0.01em;
+      margin-top: 13px;
+    }
+    .data-table {
+      border-collapse: separate;
+      border-spacing: 0;
+      width: 100%;
+      min-width: 680px;
+      background: transparent;
+      font-size: 1em;
+      border-radius: var(--table-radius);
+      overflow: hidden;
+      box-shadow: 0 2px 10px #0d47a11c;
+      margin-bottom: 0;
+      table-layout: fixed;
+    }
+    .data-table th, .data-table td {
+      border: 1px solid #161b27;
+      padding: 7px 5px;
+      text-align: center;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: visible;
+      text-overflow: unset;
+      background-clip: padding-box;
+      vertical-align: middle;
+      font-size: 0.97em;
+      line-height: 1.25;
+    }
+    .data-table th { background: var(--table-head-bg); color: #fff; font-size: 1.07em;}
+    .data-table tr:nth-child(even) td { background: var(--table-even-bg);}
+    .data-table tr:nth-child(odd) td { background: var(--table-odd-bg);}
+    .data-table th:first-child, .data-table td:first-child {
+      border-top-left-radius: var(--table-radius);
+    }
+    .data-table th:last-child, .data-table td:last-child {
+      border-top-right-radius: var(--table-radius);
+    }
+    .data-table tr:last-child td:first-child {
+      border-bottom-left-radius: var(--table-radius);
+    }
+    .data-table tr:last-child td:last-child {
+      border-bottom-right-radius: var(--table-radius);
+    }
+    .action-btn {
+      background: none;
+      border: none;
+      color: var(--primary);
+      font-size: 1.09em;
+      cursor: pointer;
+      border-radius: 7px;
+      padding: 2px 7px;
+      transition: background 0.12s;
+    }
+    .action-btn.delete { color: var(--red);}
+    .action-btn:hover { background: #2a314b;}
+    .data-table input[type="number"], .data-table input[type="date"], .data-table input[type="time"] {
+      width: 100%;
+      min-width: 0;
+      font-size: 0.97em;
+      background: #161b27;
+      color: #fff;
+      border-radius: 6px;
+      border: 1px solid #222b3c;
+      padding: 5px 2px;
+      box-sizing: border-box;
+      text-align: center;
+      line-height: 1.22;
+    }
+    .data-table input[type="date"], .data-table input[type="time"] { min-width: 85px;}
+    @media (max-width: 950px) {
+      .container { max-width: 100vw; }
+      .form-card { margin: 0 7px 12px 7px; }
+      .generate-btn, .driver-add-btn { margin: 16px 7px 0 7px; width: calc(100% - 14px);}
+      .driver-select-bar { margin: 18px 7px 0 7px;}
+      .month-title { margin-left: 2px;}
+      .table-wrap { padding: 0 7px;}
+      .data-table { min-width: 480px;}
+    }
+    @media (max-width: 600px) {
+      html, body { font-size: 13.5px;}
+      .container { padding: 0 0 1vw 0;}
+      .form-card { margin: 0 1.5vw 9px 1.5vw; padding: 7px 3vw;}
+      .section-title, .label { font-size: .97em;}
+      .driver-select-bar { margin: 10px 1vw 0 1vw;}
+      .generate-btn, .driver-add-btn { font-size: .97em; }
+      .data-table th, .data-table td { padding: 4px 1px; font-size: 0.97em;}
+      .data-table { min-width: 380px;}
+    }
+    @media (max-width: 400px) {
+      .data-table input, .data-table select { font-size: .93em;}
+      .month-title { font-size: .97em;}
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h2>Random Odometer KM Reports</h2>
+  <form id="mainForm" autocomplete="off">
+    <div class="form-card">
+      <div class="section-title">Date Range <i class="fas fa-calendar-alt icon-white"></i></div>
+      <div class="input-row">
+        <label class="label" for="dateFrom">From</label>
+        <input type="date" id="dateFrom" required>
+        <label class="label" for="dateTo">To</label>
+        <input type="date" id="dateTo" required>
+      </div>
+      <div class="subtext">Pick the date period for random report generation.</div>
+    </div>
+    <div class="form-card">
+      <div class="section-title">Holiday Settings</div>
+      <div class="input-row" style="flex-wrap: wrap;">
+        <label class="label" for="holidayMode">Mode</label>
+        <select id="holidayMode">
+          <option value="random">Random Holidays</option>
+          <option value="select">Pick Days</option>
+        </select>
+      </div>
+      <div class="day-toggle-row" id="daySelectors" style="display:none;">
+        <button type="button" class="day-toggle-btn" data-day="0">Sun</button>
+        <button type="button" class="day-toggle-btn" data-day="1">Mon</button>
+        <button type="button" class="day-toggle-btn" data-day="2">Tue</button>
+        <button type="button" class="day-toggle-btn" data-day="3">Wed</button>
+        <button type="button" class="day-toggle-btn" data-day="4">Thu</button>
+        <button type="button" class="day-toggle-btn" data-day="5">Fri</button>
+        <button type="button" class="day-toggle-btn" data-day="6">Sat</button>
+      </div>
+      <div class="input-row" id="randomHolidayRow">
+        <label class="label" for="holidaysPerWeek">Random Holidays/Week</label>
+        <input type="number" id="holidaysPerWeek" min="0" max="6" value="1" style="width:54px;">
+      </div>
+      <div class="subtext">
+        Choose "Random Holidays" and set how many holidays per week, or "Pick Days" to set fixed holidays (e.g. Mon, Fri).
+      </div>
+    </div>
+    <div class="form-card">
+      <div class="section-title">Odometer Settings</div>
+      <div class="input-row">
+        <label class="label" for="odometerStart">Start</label>
+        <input type="number" id="odometerStart" placeholder="KM Start" required>
+        <label class="label" for="odometerEnd">End</label>
+        <input type="number" id="odometerEnd" placeholder="KM End" required>
+      </div>
+      <div class="subtext">Odometer will increment between these values, including hidden holiday km.</div>
+    </div>
+    <div class="form-card">
+      <div class="section-title">Time In/Out</div>
+      <div class="input-row">
+        <label class="label" for="inTimeFrom">In</label>
+        <input type="time" id="inTimeFrom" required>
+        <label class="label" for="inTimeTo">To</label>
+        <input type="time" id="inTimeTo" required>
+      </div>
+      <div class="input-row">
+        <label class="label" for="outTimeFrom">Out</label>
+        <input type="time" id="outTimeFrom" required>
+        <label class="label" for="outTimeTo">To</label>
+        <input type="time" id="outTimeTo" required>
+      </div>
+      <div class="subtext">Random time-in and time-out will be generated per day within these ranges.</div>
+    </div>
+    <div class="form-card">
+      <div class="section-title">Daily KM Distribution</div>
+      <div class="subtext">Specify how many days have each distance (must total 100%).</div>
+      <div id="distRows"></div>
+      <button type="button" class="add-dist-btn" id="addDistBtn"><i class="fas fa-plus"></i> Add KM/Percent</button>
+      <div style="margin-top:5px;color:#ffb327;font-size:.97em;" id="distSumInfo"></div>
+    </div>
+    <div class="form-card">
+      <div class="section-title">Holiday KM</div>
+      <div class="input-row">
+        <label class="label" for="holidayKmPercent">% of holidays</label>
+        <input type="number" id="holidayKmPercent" min="0" max="100" value="0">
+        <span style="color:#bbdefb;font-size:0.92em;">(hidden, but odometer will jump)</span>
+      </div>
+      <div class="input-row">
+        <label class="label" for="holidayKmMin">KM Range</label>
+        <input type="number" id="holidayKmMin" value="10" min="1" style="width:54px;">
+        <span style="color:#bbdefb;font-weight:700;">to</span>
+        <input type="number" id="holidayKmMax" value="50" min="1" style="width:54px;">
+        <span style="color:#bbdefb;">km</span>
+      </div>
+      <div class="subtext">On % of holidays, a hidden random km will be added to odometer (not visible, but jumps will be seen).</div>
+    </div>
+    <button type="button" class="generate-btn" id="generateBtn">Create Table</button>
+  </form>
+  <div class="table-wrap" id="tableWrap"></div>
+  <div class="driver-select-bar">
+    <label for="driverSelectBox">Driver:</label>
+    <select id="driverSelectBox"></select>
+    <button class="driver-add-btn" id="addToDriverBtn" disabled>Add Table to Driver</button>
+  </div>
+</div>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<script>
+/* The JavaScript logic here is the same as in the previous code and supports all features:
+   - Responsive, professional card UI
+   - Table columns show full text (no word-break, no ellipsis, single-line)
+   - Editing Km In/Out auto-calculates Total KM
+   - Holiday selection, random/per-day, holiday km percentage, odometer jumps
+   - Firebase integration for driver list and saving reports
+   - Desktop and mobile layouts
+   Please copy the JS logic from the previous answer for full details.
+*/
+const firebaseConfig = {
+  apiKey: "AIzaSyCirYQ_46JiSkMIwCNs1nSi89dvB1MUg_A",
+  authDomain: "deliverylog12.firebaseapp.com",
+  databaseURL: "https://deliverylog12-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "deliverylog12",
+  storageBucket: "deliverylog12.firebasestorage.app",
+  messagingSenderId: "19081371357",
+  appId: "1:19081371357:web:b9b59e732a4d90d4d44534",
+  measurementId: "G-FSZXXZQSL0"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+let allUsers = {};
+let generatedRows = [];
+let distArr = [{ km: 30, percent: 60 }]; // default
+
+function renderDistRows() {
+  const distRows = document.getElementById('distRows');
+  distRows.innerHTML = '';
+  distArr.forEach((d, i)=>{
+    const row = document.createElement('div');
+    row.className = 'distribution-row';
+    row.innerHTML = `
+      <input type="number" min="1" value="${d.km}" style="width:54px;" onchange="updateDist(${i},'km',this.value)">
+      <span style="color:#bbdefb;margin-right:5px;">km</span>
+      <input type="number" min="1" max="100" value="${d.percent}" style="width:54px;" onchange="updateDist(${i},'percent',this.value)">
+      <span class="percent-sign">%</span>
+      ${distArr.length>1?`<button type="button" class="dist-del-btn" onclick="deleteDist(${i})"><i class="fas fa-trash"></i></button>`:''}
+    `;
+    distRows.appendChild(row);
+  });
+  updateDistSumInfo();
+}
+window.updateDist = function(i, field, val) {
+  distArr[i][field] = +val;
+  renderDistRows();
+};
+window.deleteDist = function(i) {
+  distArr.splice(i,1);
+  renderDistRows();
+};
+document.getElementById('addDistBtn').onclick = function() {
+  distArr.push({ km: 30, percent: 10 });
+  renderDistRows();
+};
+function updateDistSumInfo() {
+  const sum = distArr.reduce((a,b)=>a+b.percent,0);
+  const el = document.getElementById('distSumInfo');
+  el.textContent = 'Total: '+sum+'% (must be 100%)';
+  el.style.color = (sum===100)?'#5fff8d':'#ffb327';
+}
+renderDistRows();
+
+const holidayMode = document.getElementById('holidayMode');
+const daySelectors = document.getElementById('daySelectors');
+const holidaysPerWeek = document.getElementById('holidaysPerWeek');
+const dayToggleBtns = Array.from(document.querySelectorAll('.day-toggle-btn'));
+const randomHolidayRow = document.getElementById('randomHolidayRow');
+let selectedDays = [];
+
+holidayMode.onchange = function() {
+  if(this.value === "select") {
+    daySelectors.style.display = 'flex';
+    holidaysPerWeek.setAttribute('disabled', 'disabled');
+    randomHolidayRow.style.display = 'none';
+    selectedDays = [];
+    dayToggleBtns.forEach(btn=>btn.classList.remove('selected'));
+  } else {
+    daySelectors.style.display = 'none';
+    holidaysPerWeek.removeAttribute('disabled');
+    randomHolidayRow.style.display = 'flex';
+    selectedDays = [];
+    dayToggleBtns.forEach(btn=>btn.classList.remove('selected'));
+  }
+};
+dayToggleBtns.forEach(btn=>{
+  btn.onclick = function() {
+    let val = +btn.getAttribute("data-day");
+    if(btn.classList.contains('selected')) {
+      btn.classList.remove('selected');
+      selectedDays = selectedDays.filter(x=>x!==val);
+    } else {
+      btn.classList.add('selected');
+      selectedDays.push(val);
+    }
+  }
+});
+
+function randomTime(from, to) {
+  let [fh, fm] = from.split(':').map(Number);
+  let [th, tm] = to.split(':').map(Number);
+  let start = fh*60+fm, end = th*60+tm;
+  if(end<start) [start,end]=[end,start];
+  let rand = Math.floor(Math.random()*(end-start+1))+start;
+  let h = Math.floor(rand/60), m = rand%60;
+  return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
+}
+function formatDate(d) {
+  return d.toISOString().slice(0,10);
+}
+function getWeekNumber(d) {
+  d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  let dayNum = d.getUTCDay() || 7;
+  d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+  let yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
+  return Math.ceil((((d - yearStart) / 86400000) + 1)/7);
+}
+function shuffle(arr) {
+  for(let i=arr.length-1;i>0;i--) {
+    let j = Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]]=[arr[j],arr[i]];
+  }
+  return arr;
+}
+function getMonthYearStr(dateStr) {
+  let d = new Date(dateStr);
+  return d.toLocaleString('default', { month: 'long', year: 'numeric' });
+}
+function renderTable() {
+  const wrap = document.getElementById('tableWrap');
+  if(generatedRows.length===0) {
+    wrap.innerHTML = '';
+    document.getElementById('addToDriverBtn').disabled = true;
+    return;
+  }
+  // Group by month
+  let monthMap = {};
+  generatedRows.forEach((row, i) => {
+    let mkey = row.date.slice(0,7);
+    if(!monthMap[mkey]) monthMap[mkey] = [];
+    monthMap[mkey].push({...row, _idx: i});
+  });
+  let months = Object.keys(monthMap).sort();
+  let html = '';
+  months.forEach(mkey => {
+    html += `<div class="month-table-wrap">
+      <div class="month-title">${getMonthYearStr(mkey+"-01")}</div>
+      <table class="data-table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Km In</th>
+          <th>Km Out</th>
+          <th>Total KM</th>
+          <th>Time In</th>
+          <th>Time Out</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+    `;
+    monthMap[mkey].forEach(row => {
+      html += `<tr>
+        <td><input type="date" value="${row.date}" onchange="editRow(${row._idx},'date',this.value)"></td>
+        <td><input type="number" value="${row.kmIn}" onchange="editKmInOut(${row._idx},'kmIn',this.value)"></td>
+        <td><input type="number" value="${row.kmOut}" onchange="editKmInOut(${row._idx},'kmOut',this.value)"></td>
+        <td><input type="number" value="${row.totalKm}" readonly tabindex="-1"></td>
+        <td><input type="time" value="${row.timeIn}" onchange="editRow(${row._idx},'timeIn',this.value)"></td>
+        <td><input type="time" value="${row.timeOut}" onchange="editRow(${row._idx},'timeOut',this.value)"></td>
+        <td>
+          <button class="action-btn delete" onclick="deleteRow(${row._idx})" title="Delete"><i class="fas fa-trash"></i></button>
+        </td>
+      </tr>`;
+    });
+    html += `</tbody></table></div>`;
+  });
+  wrap.innerHTML = html;
+  document.getElementById('addToDriverBtn').disabled = false;
+}
+window.editRow = function(i, field, val) {
+  generatedRows[i][field] = (field.indexOf('time')>=0||field==='date') ? val : +val;
+};
+window.editKmInOut = function(i, field, val) {
+  val = +val;
+  generatedRows[i][field] = val;
+  generatedRows[i].totalKm = generatedRows[i].kmOut - generatedRows[i].kmIn;
+  renderTable();
+};
+window.deleteRow = function(idx) {
+  generatedRows.splice(idx,1);
+  renderTable();
+};
+
+function renderDriverSelectBox() {
+  const select = document.getElementById('driverSelectBox');
+  select.innerHTML = `<option value="">-- Select Driver --</option>`;
+  Object.entries(allUsers).forEach(([userId, user]) => {
+    select.innerHTML += `<option value="${userId}">${user.name}</option>`;
+  });
+}
+db.ref("users").on("value", snap => {
+  allUsers = snap.val() || {};
+  renderDriverSelectBox();
+});
+
+document.getElementById('generateBtn').onclick = function() {
+  const dateFrom = document.getElementById('dateFrom').value;
+  const dateTo = document.getElementById('dateTo').value;
+  const holidayModeVal = document.getElementById('holidayMode').value;
+  let holidayUserDays = [];
+  if(holidayModeVal === "select") {
+    holidayUserDays = [];
+    dayToggleBtns.forEach(btn=>{
+      if(btn.classList.contains('selected')) holidayUserDays.push(+btn.getAttribute("data-day"));
+    });
+    if(holidayUserDays.length===0) {
+      alert('Select at least one holiday day!');
+      return;
+    }
+  }
+  const holidaysPerWeekVal = +document.getElementById('holidaysPerWeek').value || 0;
+  const odometerStart = +document.getElementById('odometerStart').value;
+  const odometerEnd = +document.getElementById('odometerEnd').value;
+  const inTimeFrom = document.getElementById('inTimeFrom').value;
+  const inTimeTo = document.getElementById('inTimeTo').value;
+  const outTimeFrom = document.getElementById('outTimeFrom').value;
+  const outTimeTo = document.getElementById('outTimeTo').value;
+  const holidayKmPercent = +document.getElementById('holidayKmPercent').value;
+  const holidayKmMin = +document.getElementById('holidayKmMin').value;
+  const holidayKmMax = +document.getElementById('holidayKmMax').value;
+
+  let totalPercent = distArr.reduce((a,b)=>a+b.percent,0);
+  if(totalPercent!==100) {
+    alert('Daily KM Percentages must sum to 100%!');
+    return;
+  }
+  for(let d of distArr) {
+    if(!d.km || !d.percent) {
+      alert('Fill all KM and Percent values in distribution!');
+      return;
+    }
+  }
+
+  if(!dateFrom || !dateTo || isNaN(odometerStart) || isNaN(odometerEnd) || !inTimeFrom || !inTimeTo || !outTimeFrom || !outTimeTo) {
+    alert('Please fill all required fields!');
+    return;
+  }
+  if(odometerStart > odometerEnd) {
+    alert('Odometer Start should be less than End.');
+    return;
+  }
+  if(holidayKmMin > holidayKmMax) {
+    alert('Holiday KM min must be <= max.');
+    return;
+  }
+
+  generatedRows = [];
+  let curDate = new Date(dateFrom);
+  let endDate = new Date(dateTo);
+  let days = [];
+  while(curDate <= endDate) {
+    days.push(new Date(curDate));
+    curDate.setDate(curDate.getDate()+1);
+  }
+
+  let workingDays = [];
+  let allHolidayDays = [];
+  let weekMap = {};
+
+  days.forEach(d => {
+    let y = d.getFullYear(), w = getWeekNumber(d);
+    let key = y+'-'+w;
+    if(!weekMap[key]) weekMap[key]=[];
+    weekMap[key].push(new Date(d));
+  });
+
+  for(let wk of Object.values(weekMap)) {
+    if(holidayModeVal === "select") {
+      wk.forEach(day=>{
+        if(holidayUserDays.includes(day.getDay())) allHolidayDays.push(day);
+        else workingDays.push(day);
+      });
+    } else {
+      let idxs = [...Array(wk.length).keys()];
+      shuffle(idxs);
+      let nHolidays = Math.min(holidaysPerWeekVal, wk.length);
+      let holidays = new Set(idxs.slice(0,nHolidays));
+      for(let i=0;i<wk.length;i++) {
+        if(holidays.has(i)) allHolidayDays.push(wk[i]);
+        else workingDays.push(wk[i]);
+      }
+    }
+  }
+
+  let holidayKmDates = [];
+  let holidayKmValues = [];
+  if (holidayKmPercent > 0 && allHolidayDays.length > 0) {
+    let nHolidayRows = Math.round(allHolidayDays.length * holidayKmPercent / 100);
+    shuffle(allHolidayDays);
+    holidayKmDates = allHolidayDays.slice(0, nHolidayRows).sort((a, b) => a - b);
+    for (let i = 0; i < holidayKmDates.length; i++) {
+      let km = Math.floor(Math.random() * (holidayKmMax - holidayKmMin + 1)) + holidayKmMin;
+      holidayKmValues.push({date: formatDate(holidayKmDates[i]), km: km});
+    }
+  }
+  let holidayMap = {};
+  holidayKmValues.forEach(obj => { holidayMap[obj.date] = obj.km; });
+
+  let totalWorkDays = workingDays.length;
+  let dayKms = [];
+  let assignedDays = 0;
+  for(let i=0;i<distArr.length;i++) {
+    let n = Math.round(distArr[i].percent/100*totalWorkDays);
+    if(i===distArr.length-1) n = totalWorkDays-assignedDays;
+    assignedDays += n;
+    for(let j=0;j<n;j++) dayKms.push(distArr[i].km);
+  }
+  shuffle(dayKms);
+
+  let totalHolidayKm = holidayKmValues.reduce((a, b) => a+b.km, 0);
+
+  let sumKm = dayKms.reduce((a,b)=>a+b,0);
+  let odomDiff = odometerEnd-odometerStart;
+  let diff = odomDiff - (sumKm + totalHolidayKm);
+  for(let i=0;i<Math.abs(diff);i++) {
+    let idx = i%dayKms.length;
+    if(diff>0) dayKms[idx]++;
+    else if(dayKms[idx]>1) dayKms[idx]--;
+  }
+
+  generatedRows = [];
+  workingDays.sort((a,b)=>a-b);
+  let currentKm = odometerStart;
+  let lastDate = null;
+  for(let i=0;i<workingDays.length;i++) {
+    let dateStr = formatDate(workingDays[i]);
+    let holidayJump = 0;
+    if (lastDate) {
+      let d1 = new Date(lastDate);
+      d1.setDate(d1.getDate()+1);
+      let d2 = new Date(dateStr);
+      while(d1 <= d2) {
+        let dStr = formatDate(d1);
+        if (holidayMap[dStr]) holidayJump += holidayMap[dStr];
+        d1.setDate(d1.getDate()+1);
+      }
+    } else {
+      let d1 = new Date(dateFrom);
+      let d2 = new Date(dateStr);
+      while(d1 < d2) {
+        let dStr = formatDate(d1);
+        if (holidayMap[dStr]) holidayJump += holidayMap[dStr];
+        d1.setDate(d1.getDate()+1);
+      }
+    }
+    let kmIn = currentKm + holidayJump;
+    let thisKm = dayKms[i];
+    let kmOut = kmIn + thisKm;
+    let timeIn = randomTime(inTimeFrom,inTimeTo);
+    let timeOut = randomTime(outTimeFrom,outTimeTo);
+    generatedRows.push({
+      date: dateStr,
+      kmIn: kmIn,
+      kmOut: kmOut,
+      totalKm: thisKm,
+      timeIn: timeIn,
+      timeOut: timeOut
+    });
+    currentKm = kmOut;
+    lastDate = dateStr;
+  }
+
+  renderTable();
+};
+
+document.getElementById('addToDriverBtn').onclick = function() {
+  const driverId = document.getElementById('driverSelectBox').value;
+  if(!driverId) {
+    alert('Select a driver first!');
+    return;
+  }
+  const user = allUsers[driverId];
+  if(!user) return alert('Driver not found!');
+  let updates = {};
+  generatedRows.forEach(row=>{
+    const newKey = db.ref().child('logs').push().key;
+    updates['/logs/'+newKey] = {
+      name: user.name,
+      driverId: driverId,
+      date: row.date,
+      kmIn: row.kmIn,
+      kmOut: row.kmOut,
+      totalKm: row.totalKm,
+      timeIn: row.timeIn,
+      timeOut: row.timeOut,
+      addedFromRandom: true
+    };
+  });
+  db.ref().update(updates).then(()=>{
+    alert('Random reports added to driver!');
+    generatedRows = [];
+    renderTable();
+  });
+};
+</script>
+</body>
+</html>
