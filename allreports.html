@@ -83,21 +83,24 @@
 
     /* Dark themed rows-per-page select */
     select#rowsPerPage{
-      background: #1d2430;
+      background: #0f1522;
       color: #fff;
       border: 1px solid var(--border);
       padding:8px 10px;
       border-radius:9px;
       font-weight:700;
+      appearance: menulist;
+      -webkit-appearance: menulist;
     }
 
     .actions-right { display:flex; gap:10px; align-items:center; }
     .btn {
       background: linear-gradient(90deg,var(--primary),var(--primary-hover));
       color:#fff; border:none; padding:8px 14px; border-radius:9px; cursor:pointer; font-weight:700;
+      display:inline-flex; align-items:center; gap:8px;
     }
     .btn.ghost { background:transparent; border:1px solid var(--border); color:var(--accent); }
-    .create-km { background: linear-gradient(90deg,#33c37a,#159a54); display:flex; align-items:center; gap:8px; }
+    .create-km { background: linear-gradient(90deg,#33c37a,#159a54); }
 
     .modes { display:flex; gap:8px; flex-wrap:wrap; }
     .mode-btn {
@@ -204,7 +207,7 @@
     .print-sheet .sheet-header .left { font-weight:800; font-size:18px; color:#111; }
     .print-sheet .sheet-header .right { text-align:right; font-weight:700; color:#111; background:var(--sheet-header); color:#fff; padding:8px 10px; border-radius:6px; }
 
-    /* responsive - show table on mobile same as desktop per request */
+    /* responsive: keep table view on mobile (horizontal scroll) */
     @media (max-width:900px){
       table.driver-report-table { min-width:820px; }
       .controls-area { gap:8px; }
@@ -455,36 +458,46 @@
       });
     }
 
+    // Build grouped rows by date: returns [{ date: 'YYYY-MM-DD', logs: [ ... ] }, ...] descending by date
+    function getRows(mode){
+      const arr = logsArrayFilteredByDriver(selectedDriver);
+      const map = {}; // date -> logs[]
+      const push = (log) => {
+        const dt = log.date || todayISO();
+        if(!map[dt]) map[dt] = [];
+        map[dt].push(log);
+      };
+
+      if(mode === 'daily'){
+        const d = todayISO();
+        arr.forEach(l => { if(l.date === d) push(l); });
+      } else if(mode === 'weekly'){
+        const t = todayISO();
+        const last7 = new Set(); for(let i=0;i<7;i++) last7.add(addDays(t, -i));
+        arr.forEach(l => { if(last7.has(l.date)) push(l); });
+      } else if(mode === 'monthly'){
+        if(!currentMonth) currentMonth = getAvailableMonthsForDriver(selectedDriver)[0] || todayISO().slice(0,7);
+        arr.forEach(l => { if(l.date && l.date.slice(0,7) === currentMonth) push(l); });
+      } else if(mode === 'custom'){
+        if(!modalFrom || !modalTo) {
+          // nothing
+        } else {
+          arr.forEach(l => { if(l.date >= modalFrom && l.date <= modalTo) push(l); });
+        }
+      } else {
+        // fallback: include all
+        arr.forEach(l => push(l));
+      }
+
+      const dates = Object.keys(map).sort((a,b) => b.localeCompare(a));
+      return dates.map(d => ({ date: d, logs: map[d] }));
+    }
+
     function getAvailableMonthsForDriver(driverId){
       const months = new Set();
       const arr = logsArrayFilteredByDriver(driverId);
       arr.forEach(l => { if(l.date && l.date.length >= 7) months.add(l.date.slice(0,7)); });
       return Array.from(months).sort((a,b) => b.localeCompare(a));
-    }
-
-    function getFilteredLogs(mode){
-      const arr = logsArrayFilteredByDriver(selectedDriver);
-      if(mode === 'daily'){
-        const today = todayISO();
-        return arr.filter(l => (l.date || '') === today);
-      }
-      if(mode === 'weekly'){
-        const today = todayISO();
-        const last7 = new Set();
-        for(let i=0;i<7;i++) last7.add(addDays(today, -i));
-        return arr.filter(l => last7.has(l.date));
-      }
-      if(mode === 'monthly'){
-        if(!currentMonth) {
-          currentMonth = getAvailableMonthsForDriver(selectedDriver)[0] || todayISO().slice(0,7);
-        }
-        return arr.filter(l => l.date && l.date.slice(0,7) === currentMonth);
-      }
-      if(mode === 'custom'){
-        if(!modalFrom || !modalTo) return [];
-        return arr.filter(l => l.date >= modalFrom && l.date <= modalTo);
-      }
-      return arr;
     }
 
     // ---------- Rendering ----------
@@ -516,10 +529,10 @@
       paginationTop.appendChild(next);
     }
 
-    function renderDesktop(logs){
-      // pagination
+    function renderDesktop(logs) {
+      // logs is a flat array (all matching logs), but we use pagination on the flat array
       totalPages = Math.max(1, Math.ceil(logs.length / rowsPerPage));
-      if(currentPage > totalPages) currentPage = totalPages;
+      if (currentPage > totalPages) currentPage = totalPages;
       const start = (currentPage - 1) * rowsPerPage;
       const pageItems = logs.slice(start, start + rowsPerPage);
 
@@ -591,8 +604,12 @@
 
     function renderReportsView(){
       rowsPerPage = parseInt(document.getElementById('rowsPerPage').value,10) || 10;
-      const filtered = getFilteredLogs(currentMode);
-      const totalKm = sumKm(filtered);
+      const grouped = getRows(currentMode); // [{date, logs:[]}, ...]
+      // flatten
+      const flattened = grouped.flatMap(g => g.logs);
+      const totalKm = sumKm(flattened);
+
+      // period text
       let periodText = '';
       if(currentMode === 'daily'){ periodText = toDisplayDate(todayISO()); }
       else if(currentMode === 'weekly'){ const t = todayISO(); const f = addDays(t, -6); periodText = `${toDisplayDate(f)} — ${toDisplayDate(t)}`; }
@@ -601,8 +618,8 @@
 
       renderDriverHeader(totalKm, periodText);
 
-      // Always render desktop/table view as requested
-      renderDesktop(filtered);
+      // render table (desktop style on all viewports)
+      renderDesktop(flattened);
     }
 
     // ---------- Edit modal logic ----------
@@ -641,7 +658,6 @@
       const timeIn = document.getElementById('editTimeIn').value;
       const timeOut = document.getElementById('editTimeOut').value;
 
-      // validation
       if(!date){ showEditError('Date is required'); return; }
       if(kmIn === '' || kmOut === ''){ showEditError('KM In and KM Out are required'); return; }
       if(Number(kmOut) < Number(kmIn)){ showEditError('KM Out must be greater than or equal to KM In'); return; }
@@ -657,7 +673,6 @@
           timeOut: timeOut || '',
           totalKm: totalKm
         });
-        // close modal and refresh
         document.getElementById('modalEdit').classList.remove('active');
         currentEditId = null;
       } catch(err){
@@ -674,10 +689,11 @@
 
     // ---------- Downloads ----------
     function downloadCSV(){
-      const arr = getFilteredLogs(currentMode);
+      const grouped = getRows(currentMode);
+      const flattened = grouped.flatMap(g => g.logs);
       const header = ['Date','Driver','KM In','KM Out','Total KM','Time In','Time Out'];
       const rows = [header];
-      arr.forEach(r => {
+      flattened.forEach(r => {
         const driver = (allUsers[r.userId] && allUsers[r.userId].name) || r.name || '';
         const kmIn = r.kmIn || '';
         const kmOut = r.kmOut || '';
@@ -700,89 +716,122 @@
       a.remove();
     }
 
-    async function downloadPDF(){
-      const arr = getFilteredLogs(currentMode);
-      const driverLabel = selectedDriver === '__all' ? 'All drivers' : (allUsers[selectedDriver] && allUsers[selectedDriver].name) || '—';
-      const periodText = (() => {
-        if(currentMode === 'daily') return toDisplayDate(todayISO());
-        if(currentMode === 'weekly'){ const t = todayISO(); const f = addDays(t, -6); return `${toDisplayDate(f)} — ${toDisplayDate(t)}`; }
-        if(currentMode === 'monthly') return currentMonth || getAvailableMonthsForDriver(selectedDriver)[0] || '';
-        if(currentMode === 'custom') return modalFrom && modalTo ? `${toDisplayDate(modalFrom)} — ${toDisplayDate(modalTo)}` : '';
-        return '';
-      })();
-      const totalKm = sumKm(arr);
+    // Use the helper the user provided (self-contained)
+    function downloadReportPdf({ selectedDriverName, allUsers, groupedRows, currentMode, currentMonth, filenamePrefix }){
+      // helpers (copied / self-contained)
+      function pad2(n){ return String(n).padStart(2,'0'); }
+      function todayISO(){ return new Date().toISOString().slice(0,10); }
+      function toDisplayDateLocal(iso){
+        if(!iso) return '';
+        const [y,m,d] = iso.split('-');
+        const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+        return `${pad2(d)}/${MONTHS[parseInt(m,10)-1]}/${y}`;
+      }
+      function escapeHtmlLocal(s){ if(s==null) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+      function sumKmLocal(rows){ return rows.reduce((s,r)=> s + (parseInt(r.totalKm||(((Number(r.kmOut)||0)-(Number(r.kmIn)||0)).toString()),10)||0), 0); }
+      function getLatestMonthForDriverLocal(){
+        if(currentMonth) return currentMonth;
+        const months = Array.from(new Set((groupedRows || []).map(g => g.date && g.date.slice(0,7)).filter(Boolean)));
+        return months.length ? months[0] : '';
+      }
 
-      const sheet = document.createElement('div');
-      sheet.className = 'print-sheet';
-      sheet.style.width = '100%';
-      sheet.innerHTML = `
-        <div class="sheet-header">
-          <div class="left">Ravintola Tandoori Villa — ${escapeHtml(driverLabel)}</div>
-          <div class="right">${escapeHtml(periodText)}<div style="font-size:12px;margin-top:6px;">Total KM: ${totalKm} km</div></div>
+      // flatten rows
+      const rows = (groupedRows || []).flatMap(g => g.logs || []);
+
+      // compute totals and period text
+      const totalKm = sumKmLocal(rows);
+      let periodText = '';
+      if(currentMode === 'weekly'){
+        periodText = 'Last 7 days';
+      } else if(currentMode === 'monthly'){
+        const m = currentMonth || getLatestMonthForDriverLocal();
+        periodText = m ? (new Date(m + '-01')).toLocaleString('default',{ month: 'long', year: 'numeric' }) : 'Monthly';
+      } else {
+        const dates = (groupedRows || []).map(g => g.date).sort();
+        if(dates.length) periodText = `${toDisplayDateLocal(dates[dates.length-1])} — ${toDisplayDateLocal(dates[0])}`;
+        else periodText = '—';
+      }
+
+      const driverObj = Object.values(allUsers || {}).find(u => u.name === selectedDriverName) || {};
+
+      // build printable HTML
+      const printable = document.createElement('div');
+      printable.style.padding = '12px';
+      printable.style.background = '#fff';
+      printable.style.color = '#111';
+      printable.style.fontFamily = 'Arial, Helvetica, sans-serif';
+      printable.style.boxSizing = 'border-box';
+
+      printable.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;gap:12px;">
+          <div style="flex:1;">
+            <h2 style="margin:0 0 6px 0;font-size:18px">${escapeHtmlLocal(selectedDriverName || '')}</h2>
+            <div style="font-size:12px;color:#444;margin-bottom:4px">Car: ${escapeHtmlLocal(driverObj.car||'-')}</div>
+            <div style="font-size:12px;color:#444">Address: ${escapeHtmlLocal(driverObj.address||'-')}</div>
+          </div>
+          <div style="text-align:right;min-width:160px;">
+            <div style="font-size:12px;color:#444;margin-bottom:8px">${escapeHtmlLocal(periodText)}</div>
+            <div style="background:#f7f9fb;padding:8px 12px;border-radius:6px;font-weight:700;color:#0a66c2">Total: ${totalKm} km</div>
+          </div>
         </div>
-        <table style="width:100%; border-collapse:collapse; font-size:12px;">
+
+        <table id="printTable" style="width:100%;border-collapse:collapse;font-size:12px;">
           <thead>
-            <tr style="background:${'#373f6b'}; color:#fff;">
-              <th style="padding:8px; text-align:left; border:1px solid #ddd;">Date</th>
-              <th style="padding:8px; text-align:left; border:1px solid #ddd;">Driver</th>
-              <th style="padding:8px; text-align:left; border:1px solid #ddd;">KM In</th>
-              <th style="padding:8px; text-align:left; border:1px solid #ddd;">KM Out</th>
-              <th style="padding:8px; text-align:left; border:1px solid #ddd;">Total KM</th>
-              <th style="padding:8px; text-align:left; border:1px solid #ddd;">Time In</th>
-              <th style="padding:8px; text-align:left; border:1px solid #ddd;">Time Out</th>
+            <tr>
+              <th style="background:#373f6b;color:#fff;padding:8px 10px;text-align:center">Date</th>
+              <th style="background:#373f6b;color:#fff;padding:8px 10px;text-align:center">Km In</th>
+              <th style="background:#373f6b;color:#fff;padding:8px 10px;text-align:center">Km Out</th>
+              <th style="background:#373f6b;color:#fff;padding:8px 10px;text-align:center">Total KM</th>
+              <th style="background:#373f6b;color:#fff;padding:8px 10px;text-align:center">Time In</th>
+              <th style="background:#373f6b;color:#fff;padding:8px 10px;text-align:center">Time Out</th>
             </tr>
           </thead>
           <tbody>
-            ${arr.map((r, idx) => {
-              const driverName = (allUsers[r.userId] && allUsers[r.userId].name) || r.name || '';
-              const kmIn = r.kmIn || '';
-              const kmOut = r.kmOut || '';
-              const total = r.totalKm !== undefined ? r.totalKm : ((Number(kmOut)||0) - (Number(kmIn)||0));
-              const timeIn = r.timeIn || '';
-              const timeOut = r.timeOut || '';
-              const bg = idx % 2 === 0 ? '#fff' : '#f6f8fb';
-              return `<tr style="background:${bg};">
-                <td style="padding:8px; border:1px solid #ddd;">${escapeHtml(toDisplayDate(r.date || ''))}</td>
-                <td style="padding:8px; border:1px solid #ddd;">${escapeHtml(driverName)}</td>
-                <td style="padding:8px; border:1px solid #ddd;">${escapeHtml(kmIn)}</td>
-                <td style="padding:8px; border:1px solid #ddd;">${escapeHtml(kmOut)}</td>
-                <td style="padding:8px; border:1px solid #ddd;">${escapeHtml(String(total))}</td>
-                <td style="padding:8px; border:1px solid #ddd;">${escapeHtml(timeIn)}</td>
-                <td style="padding:8px; border:1px solid #ddd;">${escapeHtml(timeOut)}</td>
-              </tr>`;
-            }).join('')}
+            ${rows.map((r, i) => `
+              <tr style="background:${ i % 2 ? 'rgba(0,0,0,0.03)' : '#ffffff'}">
+                <td style="padding:8px 10px;text-align:center;color:#111">${escapeHtmlLocal(toDisplayDateLocal(r.date))}</td>
+                <td style="padding:8px 10px;text-align:center;color:#111">${escapeHtmlLocal(r.kmIn || '')}</td>
+                <td style="padding:8px 10px;text-align:center;color:#111">${escapeHtmlLocal(r.kmOut || '')}</td>
+                <td style="padding:8px 10px;text-align:center;color:#111">${escapeHtmlLocal(r.totalKm || (((Number(r.kmOut)||0)-(Number(r.kmIn)||0)).toString()))}</td>
+                <td style="padding:8px 10px;text-align:center;color:#111">${escapeHtmlLocal(r.timeIn || '')}</td>
+                <td style="padding:8px 10px;text-align:center;color:#111">${escapeHtmlLocal(r.timeOut || '')}</td>
+              </tr>
+            `).join('')}
           </tbody>
         </table>
       `;
-      document.body.appendChild(sheet);
 
-      const filename = `report_${driverLabel.replace(/\s+/g,'_')}_${(new Date()).toISOString().slice(0,10)}.pdf`;
+      document.body.appendChild(printable);
+
+      const filename = (filenamePrefix ? filenamePrefix.replace(/\s+/g,'_') + '_' : '') +
+                       (selectedDriverName ? selectedDriverName.replace(/\s+/g,'_') + '_' : '') +
+                       (new Date()).toISOString().slice(0,10) + '.pdf';
+
       const opt = {
-        margin: [10, 10, 20, 10],
-        filename,
+        margin: [10, 10, 18, 10],
+        filename: filename,
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { scale: 2, useCORS: true },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
-      try {
-        const worker = html2pdf().set(opt).from(sheet);
-        const pdf = await worker.toPdf().get('pdf');
+
+      html2pdf().set(opt).from(printable).toPdf().get('pdf').then(function(pdf) {
         const totalPages = pdf.internal.getNumberOfPages();
-        for(let i=1;i<=totalPages;i++){
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        const pageHeight = pdf.internal.pageSize.getHeight();
+        pdf.setFontSize(10);
+        for (let i = 1; i <= totalPages; i++) {
           pdf.setPage(i);
-          pdf.setFontSize(9);
-          pdf.setTextColor(100);
           const footer = `Page ${i} of ${totalPages}`;
-          const pageWidth = pdf.internal.pageSize.getWidth();
-          pdf.text(footer, pageWidth / 2, pdf.internal.pageSize.getHeight() - 8, { align: 'center' });
+          pdf.text(footer, pageWidth / 2, pageHeight - 8, { align: 'center' });
         }
-        pdf.save(filename);
-      } catch(err){
-        console.error('PDF generation failed', err);
-        alert('PDF generation failed. See console.');
-      } finally {
-        sheet.remove();
-      }
+        pdf.save(opt.filename);
+      }).catch(function(err){
+        console.error('html2pdf error', err);
+        alert('PDF generation failed: ' + (err && err.message ? err.message : 'unknown error'));
+      }).finally(function(){
+        try { document.body.removeChild(printable); } catch(e){}
+      });
     }
 
     // ---------- Confirm modal ----------
@@ -796,6 +845,7 @@
       document.getElementById('modalConfirm').classList.remove('active');
       confirmCallback = null;
     }
+
     document.getElementById('modalConfirmCancel').onclick = hideConfirm;
     document.getElementById('modalConfirmOk').onclick = async () => {
       if(typeof confirmCallback === 'function') {
@@ -867,7 +917,7 @@
         months.forEach(m => {
           const [y, mm] = m.split('-');
           const d = new Date(y, Number(mm)-1, 1);
-          const text = `${d.toLocaleString(undefined,{month:'short'})} ${y}`; // e.g., Sep 2025
+          const text = `${d.toLocaleString(undefined,{month:'short'})} ${y}`;
           const opt = document.createElement('option');
           opt.value = m;
           opt.textContent = text + ' (' + m + ')';
@@ -912,7 +962,17 @@
     };
     document.getElementById('modalDownloadPdf').onclick = async () => {
       document.getElementById('modalDownload').classList.remove('active');
-      await downloadPDF();
+      // Build groupedRows from getRows and pass into helper; pass selectedDriverName (name) so helper can find car/address in allUsers
+      const groupedRows = getRows(currentMode);
+      const selectedDriverName = selectedDriver === '__all' ? 'All drivers' : (allUsers[selectedDriver] && allUsers[selectedDriver].name) || '';
+      downloadReportPdf({
+        selectedDriverName,
+        allUsers,
+        groupedRows,
+        currentMode,
+        currentMonth,
+        filenamePrefix: 'report'
+      });
     };
     document.getElementById('modalDownload').onclick = (e) => { if(e.target === document.getElementById('modalDownload')) document.getElementById('modalDownload').classList.remove('active'); };
 
@@ -963,7 +1023,6 @@
       setActiveMode('daily');
       rowsPerPage = parseInt(document.getElementById('rowsPerPage').value,10) || 10;
     })();
-
   </script>
 </body>
 </html>
