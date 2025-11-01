@@ -40,6 +40,7 @@
       -webkit-text-size-adjust:100%; text-size-adjust:100%;
     }
 
+    /* Container: make it full width on small screens */
     .container{
       max-width: var(--max-width);
       margin: 20px auto;
@@ -139,12 +140,14 @@
     .pagination-top button { background:transparent; border:1px solid var(--border); color:var(--accent); padding:6px 10px; border-radius:8px; cursor:pointer; font-weight:700; }
 
     .scroll-area { overflow:auto; width:100%; border-radius:8px; }
+
     table.driver-report-table {
       width:100%;
       min-width:900px;
       border-collapse:separate;
       border-spacing:0;
       font-weight:600;
+      table-layout: fixed;
     }
     .driver-report-table thead th {
       background: rgba(255,255,255,0.03);
@@ -156,9 +159,15 @@
       position:sticky;
       top:0;
       z-index:2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .driver-report-table tbody td {
       padding:10px 12px; color:#eaf6ff; border-bottom:1px solid rgba(255,255,255,0.03); font-weight:600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .driver-report-table tbody tr:nth-child(odd) { background: rgba(255,255,255,0.01); }
     .driver-report-table tbody tr:nth-child(even) { background: rgba(255,255,255,0.00); }
@@ -207,20 +216,26 @@
     .print-sheet .sheet-header .left { font-weight:800; font-size:18px; color:#111; }
     .print-sheet .sheet-header .right { text-align:right; font-weight:700; color:#111; background:var(--sheet-header); color:#fff; padding:8px 10px; border-radius:6px; }
 
-    /* responsive: keep table view on mobile (horizontal scroll) so mobile landscape shows exactly desktop look */
+    /* Mobile tweaks: full length container and prevent wrapping; reduce paddings for fit */
     @media (max-width:900px){
-      table.driver-report-table { min-width:820px; }
+      .container { width: 100%; padding: 10px; margin: 10px 0; }
+      table.driver-report-table { min-width:100%; font-size:13px; }
+      .driver-report-table thead th, .driver-report-table tbody td { padding:8px 10px; font-size:13px; white-space:nowrap; }
       .controls-area { gap:8px; }
-      select#driverSelect{ min-width:160px; }
+      select#driverSelect{ min-width:140px; }
     }
     @media (max-width:650px){
-      table.driver-report-table { min-width:720px; }
+      table.driver-report-table { min-width:100%; font-size:12px; }
       .driver-header { flex-direction:column; align-items:flex-start; gap:8px; }
       .driver-header .right { text-align:left; }
+      .driver-report-table thead th, .driver-report-table tbody td { padding:6px 8px; font-size:12px; }
     }
     @media (max-width:450px){
-      table.driver-report-table { min-width:640px; font-size:0.95rem; }
+      table.driver-report-table { min-width:100%; font-size:11px; }
+      .driver-report-table thead th, .driver-report-table tbody td { padding:6px 6px; font-size:11px; }
       .page-desc { display:none; }
+      .controls-left { flex-direction:column; align-items:flex-start; gap:6px; }
+      .actions-right { gap:6px; }
     }
   </style>
 </head>
@@ -444,15 +459,22 @@
       }, 0);
     }
 
-    // returns flat array of logs filtered by selectedDriver (userId)
+    // returns flat array of logs filtered by selectedDriver (userId or name)
     function logsArrayFilteredByDriver(driverId){
       const arr = Object.entries(allLogs).map(([id,obj]) => Object.assign({}, obj, { id }));
       if(driverId && driverId !== "__all"){
-        return arr.filter(x => x.userId === driverId).sort((a,b) => {
+        const driverName = (allUsers[driverId] && allUsers[driverId].name) || null;
+        return arr.filter(x => {
+          // Accept logs that have userId matching, or logs that store the driver name (older logs may lack userId)
+          if(x.userId && x.userId === driverId) return true;
+          if(driverName && x.name && x.name === driverName) return true;
+          return false;
+        }).sort((a,b) => {
           if(a.date === b.date) return (b.timestamp||'').localeCompare(a.timestamp||'');
           return b.date.localeCompare(a.date);
         });
       }
+      // "__all" - return everything sorted
       return arr.sort((a,b) => {
         if(a.date === b.date) return (b.timestamp||'').localeCompare(a.timestamp||'');
         return b.date.localeCompare(a.date);
@@ -538,14 +560,14 @@
       let html = `<table class="driver-report-table" role="table" aria-label="Drivers report">
         <thead>
           <tr>
-            <th>Date</th>
-            <th>Driver</th>
-            <th>KM In</th>
-            <th>KM Out</th>
-            <th>Total KM</th>
-            <th>Time In</th>
-            <th>Time Out</th>
-            <th>Actions</th>
+            <th style="width:110px">Date</th>
+            <th style="width:160px">Driver</th>
+            <th style="width:90px">KM In</th>
+            <th style="width:90px">KM Out</th>
+            <th style="width:90px">Total KM</th>
+            <th style="width:100px">Time In</th>
+            <th style="width:100px">Time Out</th>
+            <th style="width:120px">Actions</th>
           </tr>
         </thead>
         <tbody>`;
@@ -713,7 +735,7 @@
       a.remove();
     }
 
-    // PDF helper (based on user-provided helper) - accepts groupedRows and other params
+    // PDF helper (keeps same style as user-provided helper)
     function downloadReportPdf({ selectedDriverName, allUsers, groupedRows, currentMode, currentMonth, filenamePrefix }){
       function pad2(n){ return String(n).padStart(2,'0'); }
       function toDisplayDateLocal(iso){
@@ -848,7 +870,7 @@
     // ---------- Events ----------
     driverSelect.onchange = function(e){
       selectedDriver = e.target.value;
-      // Keep the currently active mode (daily/weekly/monthly/custom) intact and re-render for the selected driver.
+      // Keep the currently active mode and re-render for the selected driver.
       populateMonthModal();
       currentPage = 1;
       renderReportsView();
