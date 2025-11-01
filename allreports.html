@@ -27,7 +27,6 @@
       --border: #212a40;
       --danger: #ff3b30;
       --sheet-header: #373f6b;
-      --max-width: 1100px;
       --gap: 16px;
       --radius: 12px;
     }
@@ -40,18 +39,18 @@
       -webkit-text-size-adjust:100%; text-size-adjust:100%;
     }
 
-    /* Container: make it full width on small screens */
+    /* Container full width on desktop/tablet/mobile as requested */
     .container{
-      max-width: var(--max-width);
-      margin: 20px auto;
-      padding: 16px;
+      max-width: none;
+      margin: 10px;
+      padding: 12px;
       box-sizing: border-box;
-      width: calc(100% - 32px);
+      width: calc(100% - 20px);
     }
 
     .header{
       background: var(--card-bg);
-      padding: 14px 16px;
+      padding: 12px;
       border-radius: var(--radius);
       display:flex;
       align-items:center;
@@ -61,7 +60,7 @@
       box-shadow: 0 2px 12px rgba(66,165,245,0.06);
     }
     .header-left { display:flex; align-items:center; gap:12px; }
-    .page-title { font-size:1.15rem; font-weight:800; color:#fff; display:flex; align-items:center; gap:10px; }
+    .page-title { font-size:1.12rem; font-weight:800; color:#fff; display:flex; align-items:center; gap:10px; }
     .page-desc { color:var(--accent); opacity:0.95; font-weight:500; font-size:0.95rem; }
     #logoutHeader { background: var(--danger); border:none; color:#fff; padding:8px 12px; border-radius:9px; font-weight:700; cursor:pointer; }
 
@@ -103,6 +102,10 @@
     .btn.ghost { background:transparent; border:1px solid var(--border); color:var(--accent); }
     .create-km { background: linear-gradient(90deg,#33c37a,#159a54); }
 
+    /* Create button text variants */
+    .create-full { display:inline-block; }
+    .create-short { display:none; }
+
     .modes { display:flex; gap:8px; flex-wrap:wrap; }
     .mode-btn {
       background: transparent; border:1px solid var(--border); color:var(--accent); padding:8px 12px; border-radius:9px; cursor:pointer; font-weight:700;
@@ -141,6 +144,7 @@
 
     .scroll-area { overflow:auto; width:100%; border-radius:8px; }
 
+    /* fixed table layout, no wrapping, small size */
     table.driver-report-table {
       width:100%;
       min-width:900px;
@@ -148,14 +152,15 @@
       border-spacing:0;
       font-weight:600;
       table-layout: fixed;
+      font-size:13px;
     }
     .driver-report-table thead th {
       background: rgba(255,255,255,0.03);
       color:var(--muted);
-      padding:10px 12px;
+      padding:8px 10px;
       text-align:left;
       font-weight:800;
-      font-size:0.95rem;
+      font-size:0.92rem;
       position:sticky;
       top:0;
       z-index:2;
@@ -164,7 +169,7 @@
       text-overflow: ellipsis;
     }
     .driver-report-table tbody td {
-      padding:10px 12px; color:#eaf6ff; border-bottom:1px solid rgba(255,255,255,0.03); font-weight:600;
+      padding:8px 10px; color:#eaf6ff; border-bottom:1px solid rgba(255,255,255,0.03); font-weight:600;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -174,12 +179,13 @@
 
     .small-muted { color:var(--muted); font-weight:600; font-size:0.92rem; }
 
-    .action-delete {
-      background:transparent; border:1px solid var(--danger); color:var(--danger); padding:6px 8px; border-radius:8px; cursor:pointer; font-weight:800;
+    /* icons-only actions */
+    .action-delete, .action-edit {
+      width:36px; height:36px; display:inline-flex; align-items:center; justify-content:center;
+      border-radius:8px; cursor:pointer; border:1px solid transparent; background:transparent; color:inherit;
     }
-    .action-edit {
-      background:transparent; border:1px solid var(--primary); color:var(--primary); padding:6px 8px; border-radius:8px; cursor:pointer; font-weight:800; margin-right:6px;
-    }
+    .action-edit { border-color: rgba(66,165,245,0.22); color:var(--primary); }
+    .action-delete { border-color: rgba(255,59,48,0.22); color:var(--danger); }
 
     /* modals */
     .modal-bg {
@@ -206,8 +212,18 @@
 
     .form-row { display:flex; gap:8px; margin-top:8px; align-items:center; }
     .form-row label { min-width:80px; color:var(--muted); font-weight:700; font-size:0.9rem; }
-    .form-row input[type="text"], .form-row input[type="number"], .form-row input[type="date"], .form-row input[type="time"]{
+    .form-row input[type="text"], .form-row input[type="number"], .form-row input[type="date"], .form-row input[type="time"], select.modal-dark {
       background:#0f1522; color:#fff; border:1px solid var(--border); padding:8px 10px; border-radius:8px; font-weight:700; width:100%;
+    }
+
+    /* modal month select dark */
+    select#modalMonthSelect.modal-dark {
+      background: #0f1626;
+      color: #fff;
+      border: 1px solid var(--border);
+      padding:10px;
+      border-radius:8px;
+      font-weight:700;
     }
 
     /* printable sheet */
@@ -216,23 +232,32 @@
     .print-sheet .sheet-header .left { font-weight:800; font-size:18px; color:#111; }
     .print-sheet .sheet-header .right { text-align:right; font-weight:700; color:#111; background:var(--sheet-header); color:#fff; padding:8px 10px; border-radius:6px; }
 
-    /* Mobile tweaks: full length container and prevent wrapping; reduce paddings for fit */
+    /* Prevent splitting rows across pages in PDF printable DOM */
+    .print-sheet table tr, .print-sheet table td, .print-sheet table th {
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+
+    /* Mobile tweaks: full length and table small; don't wrap */
     @media (max-width:900px){
-      .container { width: 100%; padding: 10px; margin: 10px 0; }
-      table.driver-report-table { min-width:100%; font-size:13px; }
-      .driver-report-table thead th, .driver-report-table tbody td { padding:8px 10px; font-size:13px; white-space:nowrap; }
+      .container { width: calc(100% - 12px); padding:8px; margin:6px; }
+      table.driver-report-table { min-width:100%; font-size:12px; }
+      .driver-report-table thead th, .driver-report-table tbody td { padding:6px 8px; font-size:12px; white-space:nowrap; }
       .controls-area { gap:8px; }
       select#driverSelect{ min-width:140px; }
     }
     @media (max-width:650px){
-      table.driver-report-table { min-width:100%; font-size:12px; }
+      table.driver-report-table { min-width:100%; font-size:11px; }
       .driver-header { flex-direction:column; align-items:flex-start; gap:8px; }
       .driver-header .right { text-align:left; }
-      .driver-report-table thead th, .driver-report-table tbody td { padding:6px 8px; font-size:12px; }
+      .driver-report-table thead th, .driver-report-table tbody td { padding:6px 6px; font-size:11px; }
+      /* create button text change: show short text on small screens */
+      .create-full { display:none; }
+      .create-short { display:inline-block; }
     }
     @media (max-width:450px){
-      table.driver-report-table { min-width:100%; font-size:11px; }
-      .driver-report-table thead th, .driver-report-table tbody td { padding:6px 6px; font-size:11px; }
+      table.driver-report-table { min-width:100%; font-size:10px; }
+      .driver-report-table thead th, .driver-report-table tbody td { padding:5px 6px; font-size:10px; }
       .page-desc { display:none; }
       .controls-left { flex-direction:column; align-items:flex-start; gap:6px; }
       .actions-right { gap:6px; }
@@ -275,8 +300,17 @@
           <button class="mode-btn" id="customBtn" role="tab">Custom</button>
         </div>
 
-        <button id="createKm" class="btn create-km" title="Create KM table"><i class="fas fa-plus-circle"></i> Create KM Table</button>
+        <button id="createKm" class="btn create-km" title="Create KM table">
+          <i class="fas fa-plus-circle"></i>
+          <span class="create-full">Create KM Table</span>
+          <span class="create-short">Create</span>
+        </button>
+
         <button id="downloadBtn" class="btn" title="Download"><i class="fas fa-file-download"></i> Download</button>
+
+        <button id="deleteAllBtn" class="btn" title="Delete all shown rows" style="background:linear-gradient(90deg,#ff5b5b,#c93535);">
+          <i class="fas fa-trash-alt"></i> Delete All
+        </button>
       </div>
     </div>
 
@@ -289,7 +323,7 @@
       </div>
 
       <div class="scroll-area" id="tableScroll">
-        <!-- table injected here always (desktop-style on mobile as requested) -->
+        <!-- table injected here always -->
       </div>
     </div>
   </div>
@@ -300,7 +334,7 @@
   <div class="modal-bg" id="modalMonth">
     <div class="modal" role="dialog" aria-modal="true">
       <div class="title"><i class="far fa-calendar"></i> Select month (months with reports)</div>
-      <select id="modalMonthSelect" aria-label="Select month">
+      <select id="modalMonthSelect" class="modal-dark" aria-label="Select month">
         <option value="">Loading months…</option>
       </select>
       <div class="controls">
@@ -378,7 +412,7 @@
     </div>
   </div>
 
-  <!-- Confirm modal -->
+  <!-- Confirm modal (used for delete single and delete all) -->
   <div class="modal-bg" id="modalConfirm">
     <div class="modal" role="dialog" aria-modal="true">
       <div class="title"><i class="fas fa-exclamation-triangle" style="color:var(--danger)"></i> Confirm</div>
@@ -433,6 +467,7 @@
     const tableMeta = document.getElementById('tableMeta');
     const modalMonth = document.getElementById('modalMonth');
     const modalMonthSelect = document.getElementById('modalMonthSelect');
+    const deleteAllBtn = document.getElementById('deleteAllBtn');
 
     // helpers
     function pad2(n){ return String(n).padStart(2,'0'); }
@@ -459,13 +494,13 @@
       }, 0);
     }
 
-    // returns flat array of logs filtered by selectedDriver (userId or name)
+    // returns flat array of logs filtered by selectedDriver (userId or name fallback)
     function logsArrayFilteredByDriver(driverId){
       const arr = Object.entries(allLogs).map(([id,obj]) => Object.assign({}, obj, { id }));
       if(driverId && driverId !== "__all"){
         const driverName = (allUsers[driverId] && allUsers[driverId].name) || null;
         return arr.filter(x => {
-          // Accept logs that have userId matching, or logs that store the driver name (older logs may lack userId)
+          // Accept logs that have userId matching, or logs that store the driver name (legacy)
           if(x.userId && x.userId === driverId) return true;
           if(driverName && x.name && x.name === driverName) return true;
           return false;
@@ -561,13 +596,13 @@
         <thead>
           <tr>
             <th style="width:110px">Date</th>
-            <th style="width:160px">Driver</th>
+            <th style="width:200px">Driver</th>
             <th style="width:90px">KM In</th>
             <th style="width:90px">KM Out</th>
             <th style="width:90px">Total KM</th>
             <th style="width:100px">Time In</th>
             <th style="width:100px">Time Out</th>
-            <th style="width:120px">Actions</th>
+            <th style="width:80px">Actions</th>
           </tr>
         </thead>
         <tbody>`;
@@ -582,14 +617,14 @@
         html += `<tr data-log-id="${escapeHtml(log.id)}">
           <td>${escapeHtml(toDisplayDate(log.date || ''))}</td>
           <td>${escapeHtml(driverName)}</td>
-          <td>${escapeHtml(kmIn)}</td>
-          <td>${escapeHtml(kmOut)}</td>
-          <td>${escapeHtml(String(totalKmCell))}</td>
-          <td>${escapeHtml(timeIn)}</td>
-          <td>${escapeHtml(timeOut)}</td>
-          <td>
-            <button class="action-edit" data-log="${escapeHtml(log.id)}"><i class="fas fa-edit"></i> Edit</button>
-            <button class="action-delete" data-log="${escapeHtml(log.id)}"><i class="fas fa-trash"></i> Delete</button>
+          <td style="text-align:right">${escapeHtml(kmIn)}</td>
+          <td style="text-align:right">${escapeHtml(kmOut)}</td>
+          <td style="text-align:right">${escapeHtml(String(totalKmCell))}</td>
+          <td style="text-align:center">${escapeHtml(timeIn)}</td>
+          <td style="text-align:center">${escapeHtml(timeOut)}</td>
+          <td style="text-align:center">
+            <button class="action-edit" data-log="${escapeHtml(log.id)}" title="Edit" aria-label="Edit"><i class="fas fa-edit"></i></button>
+            <button class="action-delete" data-log="${escapeHtml(log.id)}" title="Delete" aria-label="Delete"><i class="fas fa-trash"></i></button>
           </td>
         </tr>`;
       });
@@ -637,7 +672,7 @@
 
       renderDriverHeader(totalKm, periodText);
 
-      // Always render desktop table view (so mobile landscape matches desktop)
+      // Always render desktop table view (full width table on all devices)
       renderDesktop(flattened);
     }
 
@@ -735,7 +770,7 @@
       a.remove();
     }
 
-    // PDF helper (keeps same style as user-provided helper)
+    // PDF helper (ensuring rows don't split across pages)
     function downloadReportPdf({ selectedDriverName, allUsers, groupedRows, currentMode, currentMonth, filenamePrefix }){
       function pad2(n){ return String(n).padStart(2,'0'); }
       function toDisplayDateLocal(iso){
@@ -763,23 +798,12 @@
       const driverObj = Object.values(allUsers || {}).find(u => u.name === selectedDriverName) || {};
 
       const printable = document.createElement('div');
-      printable.style.padding = '12px';
-      printable.style.background = '#fff';
-      printable.style.color = '#111';
-      printable.style.fontFamily = 'Arial, Helvetica, sans-serif';
+      printable.className = 'print-sheet';
       printable.style.boxSizing = 'border-box';
-
       printable.innerHTML = `
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;gap:12px;">
-          <div style="flex:1;">
-            <h2 style="margin:0 0 6px 0;font-size:18px">${escapeHtmlLocal(selectedDriverName || '')}</h2>
-            <div style="font-size:12px;color:#444;margin-bottom:4px">Car: ${escapeHtmlLocal(driverObj.car||'-')}</div>
-            <div style="font-size:12px;color:#444">Address: ${escapeHtmlLocal(driverObj.address||'-')}</div>
-          </div>
-          <div style="text-align:right;min-width:160px;">
-            <div style="font-size:12px;color:#444;margin-bottom:8px">${escapeHtmlLocal(periodText)}</div>
-            <div style="background:#f7f9fb;padding:8px 12px;border-radius:6px;font-weight:700;color:#0a66c2">Total: ${totalKm} km</div>
-          </div>
+        <div class="sheet-header">
+          <div class="left">Ravintola Tandoori Villa — ${escapeHtmlLocal(selectedDriverName || '')}</div>
+          <div class="right">${escapeHtmlLocal(periodText)}<div style="font-size:12px;margin-top:6px;">Total KM: ${totalKm} km</div></div>
         </div>
 
         <table id="printTable" style="width:100%;border-collapse:collapse;font-size:12px;">
@@ -794,19 +818,34 @@
             </tr>
           </thead>
           <tbody>
-            ${rows.map((r, i) => `
-              <tr style="background:${ i % 2 ? 'rgba(0,0,0,0.03)' : '#ffffff'}">
+            ${rows.map((r, i) => {
+              const kmIn = r.kmIn || '';
+              const kmOut = r.kmOut || '';
+              const total = r.totalKm !== undefined ? r.totalKm : ((Number(kmOut)||0) - (Number(kmIn)||0));
+              return `<tr style="background:${ i % 2 ? 'rgba(0,0,0,0.03)' : '#ffffff'}">
                 <td style="padding:8px 10px;text-align:center;color:#111">${escapeHtmlLocal(toDisplayDateLocal(r.date))}</td>
-                <td style="padding:8px 10px;text-align:center;color:#111">${escapeHtmlLocal(r.kmIn || '')}</td>
-                <td style="padding:8px 10px;text-align:center;color:#111">${escapeHtmlLocal(r.kmOut || '')}</td>
-                <td style="padding:8px 10px;text-align:center;color:#111">${escapeHtmlLocal(r.totalKm || (((Number(r.kmOut)||0)-(Number(r.kmIn)||0)).toString()))}</td>
+                <td style="padding:8px 10px;text-align:center;color:#111">${escapeHtmlLocal(kmIn)}</td>
+                <td style="padding:8px 10px;text-align:center;color:#111">${escapeHtmlLocal(kmOut)}</td>
+                <td style="padding:8px 10px;text-align:center;color:#111">${escapeHtmlLocal(String(total))}</td>
                 <td style="padding:8px 10px;text-align:center;color:#111">${escapeHtmlLocal(r.timeIn || '')}</td>
                 <td style="padding:8px 10px;text-align:center;color:#111">${escapeHtmlLocal(r.timeOut || '')}</td>
-              </tr>
-            `).join('')}
+              </tr>`;
+            }).join('')}
           </tbody>
         </table>
       `;
+
+      // ensure rows are not split across pages
+      const style = document.createElement('style');
+      style.innerHTML = `
+        .print-sheet table tr, .print-sheet table td, .print-sheet table th {
+          page-break-inside: avoid !important;
+          break-inside: avoid !important;
+        }
+        thead { display: table-header-group; } 
+        tfoot { display: table-footer-group; }
+      `;
+      printable.prepend(style);
 
       document.body.appendChild(printable);
 
@@ -819,7 +858,8 @@
         filename: filename,
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { scale: 2, useCORS: true },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        pagebreak: { mode: ['css', 'legacy'] }
       };
 
       html2pdf().set(opt).from(printable).toPdf().get('pdf').then(function(pdf) {
@@ -842,8 +882,10 @@
     }
 
     // ---------- Confirm modal ----------
-    function showConfirm(htmlDetails, onOk){
+    function showConfirm(htmlDetails, onOk, okLabel = 'Delete', cancelLabel = 'Cancel'){
       document.getElementById('modalConfirmDetails').innerHTML = htmlDetails;
+      document.getElementById('modalConfirmOk').textContent = okLabel;
+      document.getElementById('modalConfirmCancel').textContent = cancelLabel;
       document.getElementById('modalConfirm').classList.add('active');
       confirmCallback = onOk;
       setTimeout(() => document.getElementById('modalConfirmOk').focus(), 120);
@@ -870,7 +912,6 @@
     // ---------- Events ----------
     driverSelect.onchange = function(e){
       selectedDriver = e.target.value;
-      // Keep the currently active mode and re-render for the selected driver.
       populateMonthModal();
       currentPage = 1;
       renderReportsView();
@@ -934,6 +975,7 @@
         });
       }
     }
+
     document.getElementById('modalMonthCancel').onclick = () => modalMonth.classList.remove('active');
     document.getElementById('modalMonthShow').onclick = () => {
       const v = modalMonthSelect.value;
@@ -946,15 +988,17 @@
     modalMonth.onclick = (e) => { if(e.target === modalMonth) modalMonth.classList.remove('active'); };
 
     document.getElementById('modalCustomCancel').onclick = () => document.getElementById('modalCustom').classList.remove('active');
+    // Custom Show: close popup after selecting and render (explicit per user's request)
     document.getElementById('modalCustomShow').onclick = () => {
       const f = document.getElementById('modalFrom').value;
       const t = document.getElementById('modalTo').value;
       if(!f || !t){ alert('Select both From and To'); return; }
       if(f > t){ alert('From must be before or equal To'); return; }
       modalFrom = f; modalTo = t;
-      document.getElementById('modalCustom').classList.remove('active');
+      document.getElementById('modalCustom').classList.remove('active'); // close popup
       currentMode = 'custom';
-      setActiveMode('custom');
+      Object.values(modeButtons).forEach(b => b.classList.remove('active'));
+      if(modeButtons.custom) modeButtons.custom.classList.add('active');
       currentPage = 1;
       renderReportsView();
     };
@@ -985,11 +1029,29 @@
     document.getElementById('modalDownload').onclick = (e) => { if(e.target === document.getElementById('modalDownload')) document.getElementById('modalDownload').classList.remove('active'); };
 
     document.getElementById('createKm').onclick = () => window.location.href = 'kmtable.html';
+
     document.getElementById('logoutHeader').onclick = () => {
       if(confirm('Logout?')){
         localStorage.removeItem('user');
         window.location.href = 'login.html';
       }
+    };
+
+    // Delete All shown rows button - ask confirmation and delete only currently filtered rows
+    deleteAllBtn.onclick = () => {
+      const grouped = getRows(currentMode);
+      const flattened = grouped.flatMap(g => g.logs);
+      if(flattened.length === 0){ alert('No rows to delete for the current filter/mode'); return; }
+      showConfirm(`Delete ALL (${flattened.length}) shown records? This cannot be undone.`, async () => {
+        const ids = flattened.map(r => r.id).filter(Boolean);
+        // perform deletes in parallel (but in small batches to avoid spikes)
+        const batchSize = 50;
+        for(let i=0;i<ids.length;i+=batchSize){
+          const batch = ids.slice(i, i+batchSize);
+          await Promise.all(batch.map(id => db.ref('logs/' + id).remove().catch(err => { console.error('Failed to remove', id, err); })));
+        }
+        hideConfirm();
+      }, 'Delete All', 'Cancel');
     };
 
     // re-render on resize
