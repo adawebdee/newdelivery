@@ -69,44 +69,38 @@
       font-size:0.95rem;
       opacity:0.95;
     }
+
     .header-actions {
       float:right;
     }
     #logoutHeader { background: var(--danger); border:none; color:#fff; padding:8px 12px; border-radius:9px; font-weight:700; cursor:pointer; }
 
-    /* Controls structure:
-       On desktop: inline.
-       On mobile: stacked lines in this exact order:
-         line1: driver select
-         line2: per page + custom
-         line3: daily, last7, monthly
-         line4: create, download, delete all
+    /* Controls:
+       Desktop: all controls inline (driver, per page, modes, actions) — unchanged.
+       Mobile: arrange into the 4-line layout requested.
     */
     .controls {
       margin-top: var(--gap);
       display:flex;
-      flex-direction:column;
-      gap:10px;
+      gap:12px;
+      align-items:center;
+      justify-content:space-between;
+      flex-wrap:wrap;
     }
 
-    .row {
+    /* Default desktop layout: keep everything inline and unchanged */
+    .controls-left, .controls-right {
       display:flex;
       gap:12px;
       align-items:center;
-      flex-wrap:nowrap;
+      flex-wrap:wrap;
     }
-    .row.wrap { flex-wrap:wrap; }
 
-    .driver-select {
-      min-width: 220px;
-      flex: 0 0 auto;
-    }
-    select#driverSelect {
+    label.small { color:var(--muted); font-weight:600; margin-right:6px; font-size:0.95rem; white-space:nowrap; }
+    select#driverSelect{
       background:#1d2430; color:#fff; border:1px solid var(--border);
-      padding:8px 12px; border-radius:9px; font-weight:700;
-      min-width:220px;
+      padding:8px 12px; border-radius:9px; min-width:220px; font-weight:700;
     }
-
     select#rowsPerPage{
       background: #0f1522;
       color: #fff;
@@ -117,6 +111,7 @@
       white-space:nowrap;
     }
 
+    .modes { display:flex; gap:8px; flex-wrap:wrap; }
     .mode-btn {
       background: transparent; border:1px solid var(--border); color:var(--accent);
       padding:8px 12px; border-radius:9px; cursor:pointer; font-weight:700; white-space:nowrap;
@@ -125,12 +120,11 @@
 
     .btn {
       background: linear-gradient(90deg,var(--primary),var(--primary-hover));
-      color:#fff; border:none; padding:8px 12px; border-radius:9px; cursor:pointer; font-weight:700;
+      color:#fff; border:none; padding:8px 14px; border-radius:9px; cursor:pointer; font-weight:700;
       display:inline-flex; align-items:center; gap:8px; white-space:nowrap;
     }
     .btn.ghost { background:transparent; border:1px solid var(--border); color:var(--accent); }
 
-    /* create text variants for small screens */
     .create-full { display:inline-block; }
     .create-short { display:none; }
 
@@ -230,7 +224,7 @@
     }
     select#modalMonthSelect.modal-dark { background:#0f1626; color:#fff; padding:10px; border-radius:8px; border:1px solid var(--border); }
 
-    /* PDF print sheet header style: name bold, details small left; date right; total km bold on next line */
+    /* PDF print header */
     .print-sheet { background:#fff; color:#111; padding:18px; font-family: 'Poppins', Arial, sans-serif; }
     .print-sheet .sheet-header { display:flex; flex-direction:column; gap:6px; margin-bottom:12px; }
     .print-sheet .row-top { display:flex; justify-content:space-between; gap:12px; }
@@ -240,47 +234,48 @@
     .print-sheet .date-right { text-align:right; font-size:12px; color:#111; }
     .print-sheet .total-row { font-weight:700; color:#111; margin-top:6px; }
 
-    /* Prevent splitting rows across pages in printable DOM */
     .print-sheet table tr, .print-sheet table td, .print-sheet table th {
       page-break-inside: avoid;
       break-inside: avoid;
     }
-    thead { display: table-header-group; } 
-    tfoot { display: table-footer-group; }
+    thead { display: table-header-group; } tfoot { display: table-footer-group; }
 
-    /* Mobile layout specifics requested:
-       - line1: driver select
-       - line2: per page + custom
-       - line3: daily, last7, monthly (single line)
-       - line4: create, download, delete all
-       - make table meta and page label small and no-wrap
-    */
+    /* MOBILE SPECIFIC LAYOUT (only changes layout, leaves desktop intact) */
     @media (max-width:900px){
-      .controls { gap:8px; }
+      /* We'll place controls into the requested 4 lines on mobile.
+         Desktop retains original inline controls (no change).
+      */
 
-      /* build the 4-line structure by changing rows display */
-      .row { width:100%; display:flex; gap:8px; }
-      /* Driver alone on line 1 */
-      .row.driver-row { flex-wrap:nowrap; }
-      /* Per page + custom on line 2 */
-      .row.perpage-row { flex-wrap:nowrap; }
-      /* modes on line 3 single no-wrap */
-      .row.modes-row { overflow-x:auto; -webkit-overflow-scrolling:touch; flex-wrap:nowrap; }
-      /* actions on line 4 */
-      .row.actions-row { flex-wrap:nowrap; }
+      .controls {
+        display:block;
+      }
 
-      .driver-select { flex:1 1 auto; min-width:0; }
-      select#driverSelect { width:100%; }
+      /* Line 1: driver select (full width) */
+      .driver-row { display:block; margin-bottom:8px; }
+      .driver-row select#driverSelect { width:100%; min-width:0; }
 
+      /* Line 2: per page + custom (side-by-side) */
+      .perpage-row { display:flex; gap:8px; align-items:center; margin-bottom:8px; }
+      .perpage-row select#rowsPerPage { min-width:120px; }
+
+      /* Line 3: modes single no-wrap line */
+      .modes-row { display:block; margin-bottom:8px; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+      .modes { display:flex; gap:8px; white-space:nowrap; padding-bottom:6px; }
+
+      /* Line 4: actions: create, download, delete all */
+      .actions-row { display:flex; gap:8px; align-items:center; margin-bottom:8px; flex-wrap:nowrap; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+
+      /* show short create text */
       .create-full { display:none; }
       .create-short { display:inline-block; }
 
-      .tableMetaSmall { font-size:11px; white-space:nowrap;}
+      /* make metadata and page label small and not wrap */
+      .tableMetaSmall { font-size:11px; white-space:nowrap; }
       .pagination-top .pageLabel { font-size:11px; white-space:nowrap; }
 
+      /* tighten table paddings for small screens */
       table.driver-report-table { font-size:12px; }
       .driver-report-table thead th, .driver-report-table tbody td { padding:6px 8px; font-size:12px; }
-
     }
 
     @media (max-width:650px){
@@ -300,20 +295,18 @@
       </div>
     </div>
 
+    <!-- Controls -->
     <div class="controls">
-
-      <!-- line 1: driver select -->
-      <div class="row driver-row">
-        <div class="driver-select">
-          <label class="small" for="driverSelect" style="display:block;margin-bottom:6px;">Driver</label>
-          <select id="driverSelect" aria-label="Select driver">
-            <option value="__all">All drivers</option>
-          </select>
-        </div>
+      <!-- line 1: driver select (mobile full-width) -->
+      <div class="driver-row">
+        <label class="small" for="driverSelect" style="display:block;margin-bottom:6px;">Driver</label>
+        <select id="driverSelect" aria-label="Select driver">
+          <option value="__all">All drivers</option>
+        </select>
       </div>
 
-      <!-- line 2: per page and custom -->
-      <div class="row perpage-row">
+      <!-- line 2: per page + inline custom button -->
+      <div class="perpage-row">
         <div style="display:flex; align-items:center; gap:8px;">
           <label class="small" for="rowsPerPage">Per page</label>
           <select id="rowsPerPage" class="rows-per-page" title="Rows per page">
@@ -323,39 +316,34 @@
             <option value="50">50</option>
           </select>
         </div>
-
-        <div style="margin-left:12px; display:flex; align-items:center;">
-          <button id="customBtnInline" class="btn ghost" style="padding:6px 10px;">Custom</button>
+        <div style="display:flex; align-items:center; margin-left:8px;">
+          <button id="customBtnInline" class="btn ghost">Custom</button>
         </div>
       </div>
 
-      <!-- line 3: modes -->
-      <div class="row modes-row">
-        <div class="modes" role="tablist" aria-label="Mode switch" style="padding:4px 0;">
+      <!-- line 3: modes single no-wrap -->
+      <div class="modes-row">
+        <div class="modes" role="tablist" aria-label="Mode switch">
           <button class="mode-btn active" id="dailyBtn" role="tab">Daily</button>
           <button class="mode-btn" id="weeklyBtn" role="tab">Last 7 Days</button>
           <button class="mode-btn" id="monthlyBtn" role="tab">Monthly</button>
-          <button class="mode-btn" id="customBtn" role="tab" style="display:none">Custom (hidden)</button>
         </div>
       </div>
 
       <!-- line 4: actions -->
-      <div class="row actions-row">
-        <div style="display:flex; gap:8px;">
-          <button id="createKm" class="btn create-km" title="Create KM table">
-            <i class="fas fa-plus-circle"></i>
-            <span class="create-full">Create KM Table</span>
-            <span class="create-short">Create</span>
-          </button>
+      <div class="actions-row">
+        <button id="createKm" class="btn create-km" title="Create KM table">
+          <i class="fas fa-plus-circle"></i>
+          <span class="create-full">Create KM Table</span>
+          <span class="create-short">Create</span>
+        </button>
 
-          <button id="downloadBtn" class="btn" title="Download"><i class="fas fa-file-download"></i> Download</button>
+        <button id="downloadBtn" class="btn" title="Download"><i class="fas fa-file-download"></i> Download</button>
 
-          <button id="deleteAllBtn" class="btn" title="Delete all shown rows" style="background:linear-gradient(90deg,#ff5b5b,#c93535);">
-            <i class="fas fa-trash-alt"></i> Delete All
-          </button>
-        </div>
+        <button id="deleteAllBtn" class="btn" title="Delete all shown rows" style="background:linear-gradient(90deg,#ff5b5b,#c93535);">
+          <i class="fas fa-trash-alt"></i> Delete All
+        </button>
       </div>
-
     </div>
 
     <div id="driverHeaderHolder" style="margin-top:12px;"></div>
@@ -372,9 +360,7 @@
     </div>
   </div>
 
-  <!-- Modals -->
-
-  <!-- Month modal -->
+  <!-- Modals (month, custom, edit, download, confirm) -->
   <div class="modal-bg" id="modalMonth">
     <div class="modal" role="dialog" aria-modal="true">
       <div class="title"><i class="far fa-calendar"></i> Select month (months with reports)</div>
@@ -388,7 +374,6 @@
     </div>
   </div>
 
-  <!-- Custom date modal -->
   <div class="modal-bg" id="modalCustom">
     <div class="modal" role="dialog" aria-modal="true">
       <div class="title"><i class="far fa-calendar-alt"></i> Custom date range</div>
@@ -407,7 +392,6 @@
     </div>
   </div>
 
-  <!-- Edit modal (per-row editing) -->
   <div class="modal-bg" id="modalEdit">
     <div class="modal" role="dialog" aria-modal="true">
       <div class="title"><i class="fas fa-edit"></i> Edit log entry</div>
@@ -442,7 +426,6 @@
     </div>
   </div>
 
-  <!-- Download modal -->
   <div class="modal-bg" id="modalDownload">
     <div class="modal" role="dialog" aria-modal="true">
       <div class="title"><i class="fas fa-file-export"></i> Download report</div>
@@ -456,7 +439,6 @@
     </div>
   </div>
 
-  <!-- Confirm modal -->
   <div class="modal-bg" id="modalConfirm">
     <div class="modal" role="dialog" aria-modal="true">
       <div class="title"><i class="fas fa-exclamation-triangle" style="color:var(--danger)"></i> Confirm</div>
@@ -968,8 +950,7 @@
     const modeButtons = {
       daily: document.getElementById('dailyBtn'),
       weekly: document.getElementById('weeklyBtn'),
-      monthly: document.getElementById('monthlyBtn'),
-      custom: document.getElementById('customBtn')
+      monthly: document.getElementById('monthlyBtn')
     };
     function setActiveMode(mode){
       currentMode = mode;
@@ -979,8 +960,6 @@
       if(mode === 'monthly'){
         populateMonthModal();
         document.getElementById('modalMonth').classList.add('active');
-      } else if(mode === 'custom'){
-        document.getElementById('modalCustom').classList.add('active');
       } else {
         currentPage = 1;
         renderReportsView();
@@ -990,7 +969,6 @@
     modeButtons.weekly.onclick = () => setActiveMode('weekly');
     modeButtons.monthly.onclick = () => setActiveMode('monthly');
 
-    // inline custom button (line2) opens custom modal
     document.getElementById('customBtnInline').onclick = () => {
       document.getElementById('modalCustom').classList.add('active');
     };
@@ -1042,8 +1020,6 @@
       modalFrom = f; modalTo = t;
       document.getElementById('modalCustom').classList.remove('active');
       currentMode = 'custom';
-      Object.values(modeButtons).forEach(b => b.classList.remove('active'));
-      if(modeButtons.custom) modeButtons.custom.classList.add('active');
       currentPage = 1;
       renderReportsView();
     };
@@ -1135,10 +1111,7 @@
     (function init(){
       setActiveMode('daily');
       rowsPerPage = parseInt(document.getElementById('rowsPerPage').value,10) || 10;
-      // ensure custom inline opens same modal
-      document.getElementById('customBtnInline').addEventListener('click', () => {
-        document.getElementById('modalCustom').classList.add('active');
-      });
+      document.getElementById('customBtnInline').addEventListener('click', () => document.getElementById('modalCustom').classList.add('active'));
     })();
   </script>
 </body>
