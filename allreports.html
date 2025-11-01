@@ -81,13 +81,23 @@
       padding:8px 12px; border-radius:9px; min-width:220px; font-weight:700;
     }
 
+    /* Dark themed rows-per-page select */
+    select#rowsPerPage{
+      background: #1d2430;
+      color: #fff;
+      border: 1px solid var(--border);
+      padding:8px 10px;
+      border-radius:9px;
+      font-weight:700;
+    }
+
     .actions-right { display:flex; gap:10px; align-items:center; }
     .btn {
       background: linear-gradient(90deg,var(--primary),var(--primary-hover));
       color:#fff; border:none; padding:8px 14px; border-radius:9px; cursor:pointer; font-weight:700;
     }
     .btn.ghost { background:transparent; border:1px solid var(--border); color:var(--accent); }
-    .create-km { background: linear-gradient(90deg,#33c37a,#159a54); }
+    .create-km { background: linear-gradient(90deg,#33c37a,#159a54); display:flex; align-items:center; gap:8px; }
 
     .modes { display:flex; gap:8px; flex-wrap:wrap; }
     .mode-btn {
@@ -109,7 +119,7 @@
     .driver-header .left { font-weight:800; font-size:1.04rem; color:#fff; }
     .driver-header .right { text-align:right; color:var(--accent); font-weight:700; }
 
-    /* table / mobile list wrapper */
+    /* table */
     .table-wrap {
       margin-top: 14px;
       background: var(--card-bg);
@@ -155,23 +165,9 @@
     .action-delete {
       background:transparent; border:1px solid var(--danger); color:var(--danger); padding:6px 8px; border-radius:8px; cursor:pointer; font-weight:800;
     }
-
-    /* Mobile card view (used when screen small) */
-    .mobile-list { display:flex; flex-direction:column; gap:12px; }
-    .mobile-card {
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
-      border: 1px solid var(--border);
-      padding:12px;
-      border-radius:10px;
-      display:flex;
-      flex-direction:column;
-      gap:8px;
+    .action-edit {
+      background:transparent; border:1px solid var(--primary); color:var(--primary); padding:6px 8px; border-radius:8px; cursor:pointer; font-weight:800; margin-right:6px;
     }
-    .mobile-row { display:flex; gap:8px; justify-content:space-between; align-items:center; }
-    .mobile-row .label { color:var(--muted); font-weight:700; font-size:0.85rem; }
-    .mobile-row .value { font-weight:800; color:#fff; text-align:right; }
-
-    .card-actions { display:flex; gap:8px; justify-content:flex-end; margin-top:6px; }
 
     /* modals */
     .modal-bg {
@@ -187,18 +183,19 @@
       padding:18px;
       border-radius:12px;
       border: 2px solid var(--primary);
-      min-width:280px;
+      min-width:320px;
       max-width:95vw;
       color:var(--accent);
       box-shadow: 0 8px 28px rgba(0,0,0,0.6);
     }
-    .modal .title { font-weight:800; color:#fff; margin-bottom:8px; }
+    .modal .title { font-weight:800; color:#fff; margin-bottom:8px; display:flex; align-items:center; gap:8px; }
     .modal .controls { display:flex; gap:8px; justify-content:flex-end; margin-top:12px; }
     .modal .controls .btn { padding:8px 12px; }
 
-    /* month select styling */
-    select#modalMonthSelect {
-      width:100%; padding:10px; border-radius:8px; border:1px solid var(--border); background:#0f1522; color:#fff; font-weight:700;
+    .form-row { display:flex; gap:8px; margin-top:8px; align-items:center; }
+    .form-row label { min-width:80px; color:var(--muted); font-weight:700; font-size:0.9rem; }
+    .form-row input[type="text"], .form-row input[type="number"], .form-row input[type="date"], .form-row input[type="time"]{
+      background:#0f1522; color:#fff; border:1px solid var(--border); padding:8px 10px; border-radius:8px; font-weight:700; width:100%;
     }
 
     /* printable sheet */
@@ -207,20 +204,20 @@
     .print-sheet .sheet-header .left { font-weight:800; font-size:18px; color:#111; }
     .print-sheet .sheet-header .right { text-align:right; font-weight:700; color:#111; background:var(--sheet-header); color:#fff; padding:8px 10px; border-radius:6px; }
 
-    /* responsive */
+    /* responsive - show table on mobile same as desktop per request */
     @media (max-width:900px){
       table.driver-report-table { min-width:820px; }
+      .controls-area { gap:8px; }
+      select#driverSelect{ min-width:160px; }
     }
-    @media (max-width:700px){
-      .controls-area { flex-direction:column; align-items:stretch; gap:10px; }
-      select#driverSelect{ width:100%; min-width:unset; }
-      .actions-right { justify-content:flex-end; }
+    @media (max-width:650px){
+      table.driver-report-table { min-width:720px; }
       .driver-header { flex-direction:column; align-items:flex-start; gap:8px; }
       .driver-header .right { text-align:left; }
-      table.driver-report-table { min-width:700px; }
     }
-    @media (max-width:520px){
-      table.driver-report-table { min-width:640px; }
+    @media (max-width:450px){
+      table.driver-report-table { min-width:640px; font-size:0.95rem; }
+      .page-desc { display:none; }
     }
   </style>
 </head>
@@ -260,8 +257,8 @@
           <button class="mode-btn" id="customBtn" role="tab">Custom</button>
         </div>
 
-        <button id="createKm" class="btn create-km" title="Create KM table"><i class="fas fa-plus-circle"></i></button>
-        <button id="downloadBtn" class="btn" title="Download"><i class="fas fa-file-download"></i></button>
+        <button id="createKm" class="btn create-km" title="Create KM table"><i class="fas fa-plus-circle"></i> Create KM Table</button>
+        <button id="downloadBtn" class="btn" title="Download"><i class="fas fa-file-download"></i> Download</button>
       </div>
     </div>
 
@@ -274,7 +271,7 @@
       </div>
 
       <div class="scroll-area" id="tableScroll">
-        <!-- desktop table or mobile cards injected here -->
+        <!-- table injected here always (desktop-style on mobile as requested) -->
       </div>
     </div>
   </div>
@@ -284,7 +281,7 @@
   <!-- Month modal: shows only months that have reports for the selected driver -->
   <div class="modal-bg" id="modalMonth">
     <div class="modal" role="dialog" aria-modal="true">
-      <div class="title"><i class="far fa-calendar"></i> Select month (only months with reports)</div>
+      <div class="title"><i class="far fa-calendar"></i> Select month (months with reports)</div>
       <select id="modalMonthSelect">
         <option value="">Loading months…</option>
       </select>
@@ -299,13 +296,52 @@
   <div class="modal-bg" id="modalCustom">
     <div class="modal" role="dialog" aria-modal="true">
       <div class="title"><i class="far fa-calendar-alt"></i> Custom date range</div>
-      <div style="display:flex; gap:8px; margin-top:8px;">
-        <input id="modalFrom" type="date" style="flex:1; padding:8px; border-radius:8px; border:1px solid var(--border); background:#0f1522; color:#fff; font-weight:700;">
-        <input id="modalTo" type="date" style="flex:1; padding:8px; border-radius:8px; border:1px solid var(--border); background:#0f1522; color:#fff; font-weight:700;">
+      <div class="form-row">
+        <label>From</label>
+        <input id="modalFrom" type="date">
+      </div>
+      <div class="form-row">
+        <label>To</label>
+        <input id="modalTo" type="date">
       </div>
       <div class="controls">
         <button class="btn ghost" id="modalCustomCancel">Cancel</button>
         <button class="btn" id="modalCustomShow">Show Table</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit modal (per-row editing) -->
+  <div class="modal-bg" id="modalEdit">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div class="title"><i class="fas fa-edit"></i> Edit log entry</div>
+
+      <div class="form-row">
+        <label>Date</label>
+        <input id="editDate" type="date">
+      </div>
+      <div class="form-row">
+        <label>KM In</label>
+        <input id="editKmIn" type="number" min="0" step="1">
+      </div>
+      <div class="form-row">
+        <label>KM Out</label>
+        <input id="editKmOut" type="number" min="0" step="1">
+      </div>
+      <div class="form-row">
+        <label>Time In</label>
+        <input id="editTimeIn" type="time">
+      </div>
+      <div class="form-row">
+        <label>Time Out</label>
+        <input id="editTimeOut" type="time">
+      </div>
+
+      <div id="editError" style="color:var(--danger); margin-top:8px; display:none;"></div>
+
+      <div class="controls">
+        <button class="btn ghost" id="modalEditCancel">Cancel</button>
+        <button class="btn" id="modalEditSave">Save</button>
       </div>
     </div>
   </div>
@@ -340,12 +376,10 @@
     // ---------- Auth & Firebase ----------
     const userData = JSON.parse(localStorage.getItem('user') || 'null');
     if (!userData || userData.role !== 'admin') {
-      // Not admin - redirect to login
       window.location.href = 'login.html';
     }
     const currentAdmin = userData.name || 'admin';
 
-    // Firebase config (same as your main app)
     const firebaseConfig = {
       apiKey: "AIzaSyCirYQ_46JiSkMIwCNs1nSi89dvB1MUg_A",
       authDomain: "deliverylog12.firebaseapp.com",
@@ -360,17 +394,18 @@
     const db = firebase.database();
 
     // ---------- State ----------
-    let allUsers = {};   // { userId: {name, ...} }
-    let allLogs = {};    // { logId: {userId, name, date, kmIn, kmOut, totalKm, timeIn, timeOut, timestamp} }
-    let selectedDriver = "__all"; // userId or "__all"
-    let currentMode = 'daily'; // 'daily'|'weekly'|'monthly'|'custom'
-    let currentMonth = ''; // 'YYYY-MM' when monthly selected
+    let allUsers = {};
+    let allLogs = {};
+    let selectedDriver = "__all";
+    let currentMode = 'daily';
+    let currentMonth = '';
     let modalFrom = '';
     let modalTo = '';
     let currentPage = 1;
     let rowsPerPage = parseInt(document.getElementById('rowsPerPage').value,10) || 10;
     let totalPages = 1;
     let confirmCallback = null;
+    let currentEditId = null;
 
     // DOM refs
     const driverSelect = document.getElementById('driverSelect');
@@ -406,26 +441,27 @@
       }, 0);
     }
 
-    // convert logs object to array filtered by driverId if provided
     function logsArrayFilteredByDriver(driverId){
-      const arr = Object.entries(allLogs).map(([id, obj]) => Object.assign({}, obj, { id }));
+      const arr = Object.entries(allLogs).map(([id,obj]) => Object.assign({}, obj, { id }));
       if(driverId && driverId !== "__all"){
-        return arr.filter(x => x.userId === driverId).sort((a,b) => (b.date||'').localeCompare(a.date||'') || ((b.timestamp||'').localeCompare(a.timestamp||'')));
+        return arr.filter(x => x.userId === driverId).sort((a,b) => {
+          if(a.date === b.date) return (b.timestamp||'').localeCompare(a.timestamp||'');
+          return b.date.localeCompare(a.date);
+        });
       }
-      return arr.sort((a,b) => (b.date||'').localeCompare(a.date||'') || ((b.timestamp||'').localeCompare(a.timestamp||'')));
+      return arr.sort((a,b) => {
+        if(a.date === b.date) return (b.timestamp||'').localeCompare(a.timestamp||'');
+        return b.date.localeCompare(a.date);
+      });
     }
 
-    // Get available months from logs for the driver (YYYY-MM strings sorted desc)
     function getAvailableMonthsForDriver(driverId){
       const months = new Set();
       const arr = logsArrayFilteredByDriver(driverId);
-      arr.forEach(l => {
-        if(l.date && l.date.length >= 7) months.add(l.date.slice(0,7));
-      });
+      arr.forEach(l => { if(l.date && l.date.length >= 7) months.add(l.date.slice(0,7)); });
       return Array.from(months).sort((a,b) => b.localeCompare(a));
     }
 
-    // Build rows by mode (returns flat array of logs matching filter, sorted desc)
     function getFilteredLogs(mode){
       const arr = logsArrayFilteredByDriver(selectedDriver);
       if(mode === 'daily'){
@@ -464,7 +500,6 @@
 
     function renderPaginationTop(page, total){
       paginationTop.innerHTML = '';
-      // Only show for non-monthly mode (we still paginate monthly if many logs)
       const prev = document.createElement('button');
       prev.textContent = 'Previous';
       prev.disabled = page <= 1;
@@ -482,13 +517,8 @@
     }
 
     function renderDesktop(logs){
-      // logs is array of log objects already filtered and sorted desc
       // pagination
-      if(currentMode === 'monthly'){
-        totalPages = Math.max(1, Math.ceil(logs.length / rowsPerPage)); // still paginate monthly if many rows
-      } else {
-        totalPages = Math.max(1, Math.ceil(logs.length / rowsPerPage));
-      }
+      totalPages = Math.max(1, Math.ceil(logs.length / rowsPerPage));
       if(currentPage > totalPages) currentPage = totalPages;
       const start = (currentPage - 1) * rowsPerPage;
       const pageItems = logs.slice(start, start + rowsPerPage);
@@ -523,15 +553,25 @@
           <td>${escapeHtml(String(totalKmCell))}</td>
           <td>${escapeHtml(timeIn)}</td>
           <td>${escapeHtml(timeOut)}</td>
-          <td><button class="action-delete" data-log="${escapeHtml(log.id)}"><i class="fas fa-trash"></i></button></td>
+          <td>
+            <button class="action-edit" data-log="${escapeHtml(log.id)}"><i class="fas fa-edit"></i> Edit</button>
+            <button class="action-delete" data-log="${escapeHtml(log.id)}"><i class="fas fa-trash"></i> Delete</button>
+          </td>
         </tr>`;
       });
 
       html += `</tbody></table>`;
       tableScroll.innerHTML = html;
 
-      // meta
       tableMeta.textContent = `${logs.length} record(s) — mode: ${currentMode}`;
+
+      // attach edit handlers
+      tableScroll.querySelectorAll('.action-edit').forEach(btn => {
+        btn.onclick = () => {
+          const id = btn.getAttribute('data-log');
+          openEditModal(id);
+        };
+      });
 
       // attach delete handlers
       tableScroll.querySelectorAll('.action-delete').forEach(btn => {
@@ -549,68 +589,10 @@
       renderPaginationTop(currentPage, totalPages);
     }
 
-    function renderMobile(logs){
-      // mobile card list
-      totalPages = Math.max(1, Math.ceil(logs.length / rowsPerPage));
-      if(currentPage > totalPages) currentPage = totalPages;
-      const start = (currentPage - 1) * rowsPerPage;
-      const pageItems = logs.slice(start, start + rowsPerPage);
-
-      const wrapper = document.createElement('div');
-      wrapper.className = 'mobile-list';
-
-      pageItems.forEach(log => {
-        const driverName = (allUsers[log.userId] && allUsers[log.userId].name) || log.name || '—';
-        const kmIn = log.kmIn || '';
-        const kmOut = log.kmOut || '';
-        const totalKmCell = (log.totalKm !== undefined && log.totalKm !== null) ? log.totalKm : ((Number(kmOut)||0) - (Number(kmIn)||0));
-        const timeIn = log.timeIn || '';
-        const timeOut = log.timeOut || '';
-        const card = document.createElement('div');
-        card.className = 'mobile-card';
-        card.dataset.logId = log.id;
-
-        const row1 = document.createElement('div');
-        row1.className = 'mobile-row';
-        row1.innerHTML = `<div><div class="label">Date</div><div class="value">${escapeHtml(toDisplayDate(log.date||''))}</div></div><div><div class="label">Driver</div><div class="value">${escapeHtml(driverName)}</div></div>`;
-        const row2 = document.createElement('div');
-        row2.className = 'mobile-row';
-        row2.innerHTML = `<div><div class="label">KM In</div><div class="value">${escapeHtml(kmIn)}</div></div><div><div class="label">KM Out</div><div class="value">${escapeHtml(kmOut)}</div></div>`;
-        const row3 = document.createElement('div');
-        row3.className = 'mobile-row';
-        row3.innerHTML = `<div><div class="label">Total</div><div class="value" style="color:var(--primary)">${escapeHtml(String(totalKmCell))} km</div></div><div><div class="label">Time</div><div class="value">${escapeHtml(timeIn)} — ${escapeHtml(timeOut)}</div></div>`;
-        const actions = document.createElement('div');
-        actions.className = 'card-actions';
-        const delBtn = document.createElement('button');
-        delBtn.className = 'action-delete';
-        delBtn.innerHTML = '<i class="fas fa-trash"></i> Delete';
-        delBtn.onclick = () => {
-          showConfirm(`Delete log for <b>${escapeHtml(driverName)}</b>? This cannot be undone.`, async () => {
-            await db.ref('logs/' + log.id).remove();
-            hideConfirm();
-          });
-        };
-        actions.appendChild(delBtn);
-
-        card.appendChild(row1);
-        card.appendChild(row2);
-        card.appendChild(row3);
-        card.appendChild(actions);
-        wrapper.appendChild(card);
-      });
-
-      tableScroll.innerHTML = '';
-      tableScroll.appendChild(wrapper);
-
-      tableMeta.textContent = `${logs.length} record(s) — mode: ${currentMode}`;
-      renderPaginationTop(currentPage, totalPages);
-    }
-
     function renderReportsView(){
       rowsPerPage = parseInt(document.getElementById('rowsPerPage').value,10) || 10;
       const filtered = getFilteredLogs(currentMode);
       const totalKm = sumKm(filtered);
-      // period text
       let periodText = '';
       if(currentMode === 'daily'){ periodText = toDisplayDate(todayISO()); }
       else if(currentMode === 'weekly'){ const t = todayISO(); const f = addDays(t, -6); periodText = `${toDisplayDate(f)} — ${toDisplayDate(t)}`; }
@@ -619,12 +601,75 @@
 
       renderDriverHeader(totalKm, periodText);
 
-      const isMobile = window.innerWidth <= 700;
-      if(isMobile){
-        renderMobile(filtered);
-      } else {
-        renderDesktop(filtered);
+      // Always render desktop/table view as requested
+      renderDesktop(filtered);
+    }
+
+    // ---------- Edit modal logic ----------
+    function openEditModal(id){
+      const log = allLogs[id];
+      if(!log) return alert('Log not found');
+      currentEditId = id;
+      document.getElementById('editDate').value = log.date || '';
+      document.getElementById('editKmIn').value = log.kmIn || '';
+      document.getElementById('editKmOut').value = log.kmOut || '';
+      document.getElementById('editTimeIn').value = log.timeIn || '';
+      document.getElementById('editTimeOut').value = log.timeOut || '';
+      document.getElementById('editError').style.display = 'none';
+      document.getElementById('modalEdit').classList.add('active');
+      setTimeout(() => document.getElementById('editDate').focus(), 120);
+    }
+
+    document.getElementById('modalEditCancel').onclick = () => {
+      currentEditId = null;
+      document.getElementById('modalEdit').classList.remove('active');
+    };
+
+    document.getElementById('modalEdit').onclick = (e) => {
+      if(e.target === document.getElementById('modalEdit')) {
+        currentEditId = null;
+        document.getElementById('modalEdit').classList.remove('active');
       }
+    };
+
+    document.getElementById('modalEditSave').onclick = async () => {
+      const id = currentEditId;
+      if(!id) return;
+      const date = document.getElementById('editDate').value;
+      const kmIn = document.getElementById('editKmIn').value;
+      const kmOut = document.getElementById('editKmOut').value;
+      const timeIn = document.getElementById('editTimeIn').value;
+      const timeOut = document.getElementById('editTimeOut').value;
+
+      // validation
+      if(!date){ showEditError('Date is required'); return; }
+      if(kmIn === '' || kmOut === ''){ showEditError('KM In and KM Out are required'); return; }
+      if(Number(kmOut) < Number(kmIn)){ showEditError('KM Out must be greater than or equal to KM In'); return; }
+
+      const totalKm = String(Number(kmOut) - Number(kmIn));
+
+      try {
+        await db.ref('logs/' + id).update({
+          date,
+          kmIn: String(kmIn),
+          kmOut: String(kmOut),
+          timeIn: timeIn || '',
+          timeOut: timeOut || '',
+          totalKm: totalKm
+        });
+        // close modal and refresh
+        document.getElementById('modalEdit').classList.remove('active');
+        currentEditId = null;
+      } catch(err){
+        console.error('Update failed', err);
+        showEditError('Save failed, try again');
+      }
+    };
+
+    function showEditError(msg){
+      const el = document.getElementById('editError');
+      el.textContent = msg;
+      el.style.display = 'block';
     }
 
     // ---------- Downloads ----------
@@ -751,13 +796,23 @@
       document.getElementById('modalConfirm').classList.remove('active');
       confirmCallback = null;
     }
+    document.getElementById('modalConfirmCancel').onclick = hideConfirm;
+    document.getElementById('modalConfirmOk').onclick = async () => {
+      if(typeof confirmCallback === 'function') {
+        try {
+          await confirmCallback();
+        } catch(err) {
+          console.error(err);
+        } finally {
+          hideConfirm();
+        }
+      } else hideConfirm();
+    };
+    document.getElementById('modalConfirm').onclick = (e) => { if(e.target === document.getElementById('modalConfirm')) hideConfirm(); };
 
     // ---------- Events ----------
-
-    // Driver select change
     driverSelect.onchange = function(e){
       selectedDriver = e.target.value;
-      // refresh available months (for monthly modal)
       populateMonthModal();
       currentPage = 1;
       renderReportsView();
@@ -769,7 +824,6 @@
       renderReportsView();
     };
 
-    // Mode buttons
     const modeButtons = {
       daily: document.getElementById('dailyBtn'),
       weekly: document.getElementById('weeklyBtn'),
@@ -795,7 +849,6 @@
     modeButtons.monthly.onclick = () => setActiveMode('monthly');
     modeButtons.custom.onclick = () => setActiveMode('custom');
 
-    // Month modal interactions
     function populateMonthModal(){
       const months = getAvailableMonthsForDriver(selectedDriver);
       modalMonthSelect.innerHTML = '';
@@ -833,7 +886,6 @@
     };
     modalMonth.onclick = (e) => { if(e.target === modalMonth) modalMonth.classList.remove('active'); };
 
-    // Custom modal
     document.getElementById('modalCustomCancel').onclick = () => document.getElementById('modalCustom').classList.remove('active');
     document.getElementById('modalCustomShow').onclick = () => {
       const f = document.getElementById('modalFrom').value;
@@ -849,7 +901,6 @@
     };
     document.getElementById('modalCustom').onclick = (e) => { if(e.target === document.getElementById('modalCustom')) document.getElementById('modalCustom').classList.remove('active'); };
 
-    // Download modal
     document.getElementById('downloadBtn').onclick = () => {
       document.getElementById('modalDownload').classList.add('active');
       setTimeout(()=> document.getElementById('modalDownloadCsv').focus(), 120);
@@ -865,22 +916,6 @@
     };
     document.getElementById('modalDownload').onclick = (e) => { if(e.target === document.getElementById('modalDownload')) document.getElementById('modalDownload').classList.remove('active'); };
 
-    // Confirm modal
-    document.getElementById('modalConfirmCancel').onclick = hideConfirm;
-    document.getElementById('modalConfirmOk').onclick = async () => {
-      if(typeof confirmCallback === 'function'){
-        try {
-          await confirmCallback();
-        } catch(err) {
-          console.error(err);
-        } finally {
-          hideConfirm();
-        }
-      } else hideConfirm();
-    };
-    document.getElementById('modalConfirm').onclick = (e) => { if(e.target === document.getElementById('modalConfirm')) hideConfirm(); };
-
-    // Create KM and logout
     document.getElementById('createKm').onclick = () => window.location.href = 'kmtable.html';
     document.getElementById('logoutHeader').onclick = () => {
       if(confirm('Logout?')){
@@ -889,9 +924,8 @@
       }
     };
 
-    // Re-render on resize for switching desktop/mobile layout
+    // re-render on resize
     window.addEventListener('resize', () => {
-      // small debounce
       clearTimeout(window._renderResizeTimer);
       window._renderResizeTimer = setTimeout(() => renderReportsView(), 120);
     });
@@ -899,7 +933,6 @@
     // ---------- Firebase listeners ----------
     db.ref('users').on('value', snap => {
       allUsers = snap.val() || {};
-      // rebuild driver select
       const prev = selectedDriver;
       const keys = Object.keys(allUsers).sort((a,b) => (allUsers[a].name||'').localeCompare(allUsers[b].name||''));
       driverSelect.innerHTML = `<option value="__all">All drivers</option>`;
@@ -927,12 +960,10 @@
 
     // ---------- Initial setup ----------
     (function init(){
-      // default UI state
       setActiveMode('daily');
-      // populate rowsPerPage
       rowsPerPage = parseInt(document.getElementById('rowsPerPage').value,10) || 10;
-      // initial render will be triggered by Firebase listeners when they run
     })();
+
   </script>
 </body>
 </html>
