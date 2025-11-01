@@ -72,25 +72,78 @@
       flex-direction: column;
       gap: 0;
     }
-    .label {
+    /* Date range desktop: 2-row, label left, input right */
+    .date-range-section {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .date-range-row {
+      display: flex;
+      flex-direction: row;
+      gap: 18px;
+      align-items: center;
+      justify-content: flex-start;
+      flex-wrap: nowrap;
+    }
+    .date-label {
+      min-width: 100px;
       font-size: 1em;
       color: var(--accent);
       font-weight: 600;
-      margin-bottom: 0;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      min-width: 118px;
-      flex: 1 0 118px;
-      justify-content: flex-start;
+      text-align: left;
+      display: flex; align-items: center;
     }
-    .subtext {
-      font-size: .97em;
-      color: #9cb7c6;
-      margin-bottom: 9px;
-      margin-top: 1px;
-      font-weight: 400;
-      line-height: 1.2;
+    .date-cell {
+      flex: 1 1 160px;
+      display: flex; justify-content: flex-end;
+    }
+    .date-cell input[type="date"] {
+      width: 170px;
+      font-size: .93em;
+    }
+    @media (max-width: 700px) {
+      .form-card { margin: 0 8px 12px 8px; padding: 10px 4vw;}
+      .table-wrap { padding: 0 2vw; }
+      .section-title, .label { font-size: .97em;}
+      /* Date range mobile: label left, input right, one row per line */
+      .date-range-section { gap: 7px; }
+      .date-range-row {
+        flex-direction: row;
+        align-items: center;
+        gap: 10px;
+        justify-content: space-between;
+      }
+      .date-label { min-width: 60px; font-size: .98em;}
+      .date-cell { flex: 1 1 0; width: auto; min-width: 0; justify-content: flex-end;}
+      .date-cell input[type="date"] { width: 99%; min-width: 90px; }
+      /* Time in/out as 2 stacked cards, not side by side */
+      .time-section-split { flex-direction: column; gap: 15px; }
+      .time-card { padding: 12px 6px 7px 10px; }
+      .driver-select-bar { margin: 24px 7px 0 7px; flex-direction: row; justify-content: flex-start;}
+    }
+    /* ...rest of previous styles remain unchanged... */
+    .time-section-split {
+      display: flex;
+      gap: 24px;
+      justify-content: space-between;
+    }
+    .time-card {
+      background: #171b23;
+      border-radius: 11px;
+      padding: 16px 14px 10px 16px;
+      flex: 1 1 0;
+      border: 1px solid #232c44;
+      margin-bottom: 0;
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .time-section-title {
+      font-size: 1.05em;
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 7px;
+      letter-spacing: .01em;
+      display: flex; gap: 8px; align-items: center;
     }
     .input-row {
       display: flex; flex-direction: row; gap: 18px; align-items: center; margin-bottom: 16px;
@@ -102,9 +155,17 @@
       align-items: center;
       justify-content: flex-end;
     }
-    .input-row input, .input-row select {
-      min-width: 0;
-      max-width: 195px;
+    .label {
+      font-size: 1em;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 118px;
+      flex: 1 0 118px;
+      justify-content: flex-start;
     }
     input, select {
       font-size: .93em;
@@ -119,16 +180,23 @@
       box-sizing: border-box;
       margin-bottom: 2px;
     }
-    input[type="date"], input[type="time"] { width: 138px; font-size: .93em;}
-    input[type="number"] { width: 90px; font-size: .93em;}
-    ::placeholder {
-      color: #b1bed2 !important;
-      opacity: 1;
-      font-size: .91em;
+    input[type="time"] { width: 150px; font-size: .93em;}
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+      display: none;
     }
-    .icon-white {
-      color: #fff !important;
-      font-size: 1.13em;
+    input[type="number"] {
+      -moz-appearance: textfield;
+    }
+    .subtext {
+      font-size: .97em;
+      color: #9cb7c6;
+      margin-bottom: 9px;
+      margin-top: 1px;
+      font-weight: 400;
+      line-height: 1.2;
     }
     .day-toggle-row {
       display: flex; flex-wrap: wrap; margin-top: 3px; margin-bottom: 10px; gap: 10px;
@@ -201,8 +269,15 @@
       display: flex;
       align-items: center;
       gap: 20px;
-      justify-content: flex-end;
       flex-wrap: wrap;
+      justify-content: flex-start;
+    }
+    .driver-select-bar label {
+      min-width: 85px;
+      font-size: 1.01em;
+      font-weight: 600;
+      color: var(--accent);
+      text-align: left;
     }
     .driver-select-bar select {
       font-size: 1em;
@@ -214,6 +289,7 @@
       font-weight: 700;
       outline: none;
       box-shadow: 0 1px 7px #001d3833;
+      margin-left: 0;
     }
     /* Table */
     .table-wrap {
@@ -236,11 +312,15 @@
       margin-top: 13px;
       text-align: left;
     }
+    .scroll-table-x {
+      overflow-x: auto;
+      width: 100%;
+    }
     .data-table {
       border-collapse: separate;
       border-spacing: 0;
       width: 100%;
-      min-width: 820px;
+      min-width: 980px;
       background: transparent;
       font-size: 1em;
       border-radius: var(--table-radius);
@@ -252,14 +332,13 @@
     .data-table th, .data-table td {
       font-size: .92em;
       border: 1px solid #161b27;
-      padding: 10px 15px;
+      padding: 10px 18px;
       vertical-align: middle;
       text-align: right;
       background-clip: padding-box;
-      line-height: 1.3;
+      line-height: 1.2;
       white-space: nowrap;
       font-weight: 500;
-      background-color: var(--table-even-bg);
     }
     .data-table th {
       color: var(--table-header-text);
@@ -297,14 +376,14 @@
     .action-btn.delete { color: var(--red);}
     .action-btn:hover { background: #2a314b;}
     .data-table input[type="number"], .data-table input[type="date"], .data-table input[type="time"] {
-      width: 100%;
+      width: 120px;
       min-width: 0;
       font-size: .93em;
       background: #161b27;
       color: #fff;
       border-radius: 6px;
       border: 1px solid #222b3c;
-      padding: 5px 5px;
+      padding: 5px 7px;
       box-sizing: border-box;
       text-align: right;
       line-height: 1.15;
@@ -312,28 +391,65 @@
     .data-table input[type="date"], .data-table input[type="time"] { min-width: 98px;}
     .data-table td { text-align: right; }
     .data-table th { text-align: left; }
-    @media (max-width: 950px) {
+    ::placeholder {
+      color: #b1bed2 !important;
+      opacity: 1;
+      font-size: .89em;
+    }
+    /* --- Mobile View Adjustments --- */
+    @media (max-width: 700px) {
       .container { max-width: 100vw; }
-      .form-card { margin: 0 7px 15px 7px; }
-      .generate-btn, .driver-add-btn { margin: 18px 7px 0 7px; width: calc(100% - 14px);}
-      .driver-select-bar { margin: 24px 7px 0 7px;}
-      .month-title { margin-left: 2px;}
-      .table-wrap { padding: 0 7px;}
-      .data-table { min-width: 500px;}
+      .form-card { margin: 0 8px 12px 8px; padding: 10px 4vw;}
+      .table-wrap { padding: 0 2vw; }
+      .section-title, .label { font-size: .97em;}
+      .date-range-section { gap: 7px; }
+      .date-range-row {
+        flex-direction: row;
+        align-items: center;
+        gap: 10px;
+        justify-content: space-between;
+      }
+      .date-label { min-width: 60px; font-size: .98em;}
+      .date-cell { flex: 1 1 0; width: auto; min-width: 0; justify-content: flex-end;}
+      .date-cell input[type="date"] { width: 99%; min-width: 90px; }
+      .time-section-split { flex-direction: column; gap: 15px; }
+      .time-card { padding: 12px 6px 7px 10px; }
+      .driver-select-bar { margin: 24px 7px 0 7px; flex-direction: row; justify-content: flex-start;}
     }
     @media (max-width: 600px) {
       html, body { font-size: 13.5px;}
-      .container { padding: 0 0 1vw 0;}
       .form-card { margin: 0 1.5vw 11px 1.5vw; padding: 7px 3vw;}
-      .section-title, .label { font-size: .97em;}
-      .driver-select-bar { margin: 10px 1vw 0 1vw;}
+      .table-wrap { padding: 0 1vw;}
       .generate-btn, .driver-add-btn { font-size: .97em; }
       .data-table th, .data-table td { padding: 6px 2px; font-size: 0.93em;}
       .data-table { min-width: 350px;}
+      .data-table input[type="number"], .data-table input[type="date"], .data-table input[type="time"] { min-width: 60px; width: 60px;}
     }
     @media (max-width: 420px) {
       .data-table input, .data-table select { font-size: .89em;}
       .month-title { font-size: .97em;}
+    }
+    @media (min-width: 701px) {
+      input[type="number"]::-webkit-inner-spin-button,
+      input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+      input[type="number"] {
+        -moz-appearance: textfield;
+      }
+    }
+    @media (max-width:700px) {
+      .holiday-km-inline-unit {
+        margin-left: 6px;
+        margin-right: 0;
+        font-size: .91em;
+        color: #bbdefb;
+        font-weight: 600;
+      }
+    }
+    @media (min-width:701px) {
+      .holiday-km-inline-unit { display: none;}
     }
   </style>
 </head>
@@ -344,11 +460,15 @@
     <!-- Date Range -->
     <div class="form-card">
       <div class="section-title">Date Range <i class="fas fa-calendar-alt icon-white"></i></div>
-      <div class="input-row">
-        <div class="label">From</div>
-        <div class="input-cell"><input type="date" id="dateFrom" required></div>
-        <div class="label">To</div>
-        <div class="input-cell"><input type="date" id="dateTo" required></div>
+      <div class="date-range-section">
+        <div class="date-range-row">
+          <div class="date-label">From</div>
+          <div class="date-cell"><input type="date" id="dateFrom" required></div>
+        </div>
+        <div class="date-range-row">
+          <div class="date-label">To</div>
+          <div class="date-cell"><input type="date" id="dateTo" required></div>
+        </div>
       </div>
       <div class="subtext">Pick the date period for random report generation.</div>
     </div>
@@ -392,20 +512,31 @@
       </div>
       <div class="subtext">Odometer will increment between these values, including hidden holiday km.</div>
     </div>
-    <!-- Time In/Out -->
+    <!-- Time In/Out - split into two sections (desktop), stacked on mobile -->
     <div class="form-card">
-      <div class="section-title">Time In/Out</div>
-      <div class="input-row">
-        <div class="label">In</div>
-        <div class="input-cell"><input type="time" id="inTimeFrom" required></div>
-        <div class="label">To</div>
-        <div class="input-cell"><input type="time" id="inTimeTo" required></div>
-      </div>
-      <div class="input-row">
-        <div class="label">Out</div>
-        <div class="input-cell"><input type="time" id="outTimeFrom" required></div>
-        <div class="label">To</div>
-        <div class="input-cell"><input type="time" id="outTimeTo" required></div>
+      <div class="time-section-split">
+        <div class="time-card">
+          <div class="time-section-title">Time In <i class="fas fa-clock icon-white"></i></div>
+          <div class="input-row">
+            <div class="label">From</div>
+            <div class="input-cell"><input type="time" id="inTimeFrom" required></div>
+          </div>
+          <div class="input-row">
+            <div class="label">To</div>
+            <div class="input-cell"><input type="time" id="inTimeTo" required></div>
+          </div>
+        </div>
+        <div class="time-card">
+          <div class="time-section-title">Time Out <i class="fas fa-clock icon-white"></i></div>
+          <div class="input-row">
+            <div class="label">From</div>
+            <div class="input-cell"><input type="time" id="outTimeFrom" required></div>
+          </div>
+          <div class="input-row">
+            <div class="label">To</div>
+            <div class="input-cell"><input type="time" id="outTimeTo" required></div>
+          </div>
+        </div>
       </div>
       <div class="subtext">Random time-in and time-out will be generated per day within these ranges.</div>
     </div>
@@ -427,16 +558,23 @@
       </div>
       <div class="input-row">
         <div class="label">KM Range</div>
-        <div class="input-cell"><input type="number" id="holidayKmMin" value="10" min="1" style="width:54px;"></div>
+        <div class="input-cell" style="display:flex;align-items:center;">
+          <input type="number" id="holidayKmMin" value="10" min="1" style="width:54px;">
+          <span class="holiday-km-inline-unit">km</span>
+        </div>
         <div class="label" style="min-width:0;padding:0 6px;">to</div>
-        <div class="input-cell"><input type="number" id="holidayKmMax" value="50" min="1" style="width:54px;"></div>
-        <div class="label" style="min-width:0;">km</div>
+        <div class="input-cell" style="display:flex;align-items:center;">
+          <input type="number" id="holidayKmMax" value="50" min="1" style="width:54px;">
+          <span class="holiday-km-inline-unit">km</span>
+        </div>
       </div>
       <div class="subtext">On % of holidays, a hidden random km will be added to odometer (not visible, but jumps will be seen).</div>
     </div>
     <button type="button" class="generate-btn" id="generateBtn">Create Table</button>
   </form>
-  <div class="table-wrap" id="tableWrap"></div>
+  <div class="table-wrap">
+    <div id="tableWrap"></div>
+  </div>
   <div class="driver-select-bar">
     <label for="driverSelectBox">Driver:</label>
     <select id="driverSelectBox"></select>
@@ -445,7 +583,7 @@
 </div>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-<script>
+<script>/* The JavaScript logic is unchanged from the previous version. See earlier answer for the complete JS implementation. */
 const firebaseConfig = {
   apiKey: "AIzaSyCirYQ_46JiSkMIwCNs1nSi89dvB1MUg_A",
   authDomain: "deliverylog12.firebaseapp.com",
@@ -461,7 +599,6 @@ const db = firebase.database();
 let allUsers = {};
 let generatedRows = [];
 let distArr = [{ km: 30, percent: 60 }];
-
 function renderDistRows() {
   const distRows = document.getElementById('distRows');
   distRows.innerHTML = '';
@@ -582,6 +719,7 @@ function renderTable() {
   months.forEach(mkey => {
     html += `<div class="month-table-wrap">
       <div class="month-title">${getMonthYearStr(mkey+"-01")}</div>
+      <div class="scroll-table-x">
       <table class="data-table">
       <thead>
         <tr>
@@ -609,7 +747,7 @@ function renderTable() {
         </td>
       </tr>`;
     });
-    html += `</tbody></table></div>`;
+    html += `</tbody></table></div></div>`;
   });
   wrap.innerHTML = html;
   document.getElementById('addToDriverBtn').disabled = false;
@@ -839,6 +977,8 @@ document.getElementById('addToDriverBtn').onclick = function() {
     renderTable();
   });
 };
+// ... JavaScript logic as in the previous version ...
+// For brevity, please use the JS logic from the previous code blocks as it remains unchanged.
 </script>
 </body>
 </html>
