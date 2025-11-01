@@ -26,6 +26,7 @@
       --muted: #98bcd9;
       --border: #212a40;
       --danger: #ff3b30;
+      --sheet-header: #373f6b;
       --gap: 16px;
       --radius: 12px;
     }
@@ -37,7 +38,7 @@
       background: var(--main-bg); color:#fff;
     }
 
-    /* Full width container on all devices */
+    /* Container full width on desktop/tablet/mobile */
     .container{
       max-width: none;
       margin: 10px;
@@ -49,58 +50,43 @@
     .header{
       background: var(--card-bg);
       padding: 12px;
-      border-radius: 10px;
-      display:block;
+      border-radius: var(--radius);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
       gap:12px;
       border: 1px solid var(--border);
       box-shadow: 0 2px 12px rgba(66,165,245,0.06);
     }
-
-    .page-title {
-      font-size:1.18rem;
-      font-weight:800;
-      color:#fff;
-      margin: 0 0 6px 0;
-    }
-    .page-sub {
-      margin: 0;
-      color:var(--accent);
-      font-weight:500;
-      font-size:0.95rem;
-      opacity:0.95;
-    }
-
-    .header-actions {
-      float:right;
-    }
+    .header-left { display:flex; align-items:center; gap:12px; }
+    .page-title { font-size:1.12rem; font-weight:800; color:#fff; display:flex; align-items:center; gap:10px; }
+    .page-desc { color:var(--accent); opacity:0.95; font-weight:500; font-size:0.95rem; }
     #logoutHeader { background: var(--danger); border:none; color:#fff; padding:8px 12px; border-radius:9px; font-weight:700; cursor:pointer; }
 
-    /* Controls:
-       Desktop: all controls inline (driver, per page, modes, actions) — unchanged.
-       Mobile: arrange into the 4-line layout requested.
-    */
-    .controls {
+    /* Controls area: reorganized to allow mobile two rows */
+    .controls-area {
       margin-top: var(--gap);
       display:flex;
+      flex-direction:row;
       gap:12px;
-      align-items:center;
+      align-items:flex-start;
       justify-content:space-between;
-      flex-wrap:wrap;
+      flex-wrap:nowrap;
     }
 
-    /* Default desktop layout: keep everything inline and unchanged */
-    .controls-left, .controls-right {
-      display:flex;
-      gap:12px;
-      align-items:center;
-      flex-wrap:wrap;
+    .controls-left {
+      display:flex; gap:12px; align-items:center; flex-wrap:nowrap;
+      min-width: 0;
     }
 
     label.small { color:var(--muted); font-weight:600; margin-right:6px; font-size:0.95rem; white-space:nowrap; }
+
     select#driverSelect{
       background:#1d2430; color:#fff; border:1px solid var(--border);
       padding:8px 12px; border-radius:9px; min-width:220px; font-weight:700;
     }
+
+    /* Dark themed rows-per-page select */
     select#rowsPerPage{
       background: #0f1522;
       color: #fff;
@@ -108,31 +94,69 @@
       padding:8px 10px;
       border-radius:9px;
       font-weight:700;
+      appearance: menulist;
+      -webkit-appearance: menulist;
       white-space:nowrap;
     }
 
-    .modes { display:flex; gap:8px; flex-wrap:wrap; }
-    .mode-btn {
-      background: transparent; border:1px solid var(--border); color:var(--accent);
-      padding:8px 12px; border-radius:9px; cursor:pointer; font-weight:700; white-space:nowrap;
+    .controls-right {
+      display:flex;
+      gap:12px;
+      align-items:center;
+      flex-wrap:wrap;
     }
-    .mode-btn.active { background: linear-gradient(90deg,var(--primary),var(--primary-hover)); color:#fff; box-shadow:0 4px 18px rgba(66,165,245,0.12); }
+
+    .actions-top {
+      display:flex;
+      gap:8px;
+      align-items:center;
+      flex-wrap:nowrap;
+    }
+    .actions-bottom {
+      display:flex;
+      gap:8px;
+      align-items:center;
+      flex-wrap:nowrap;
+    }
 
     .btn {
       background: linear-gradient(90deg,var(--primary),var(--primary-hover));
       color:#fff; border:none; padding:8px 14px; border-radius:9px; cursor:pointer; font-weight:700;
-      display:inline-flex; align-items:center; gap:8px; white-space:nowrap;
+      display:inline-flex; align-items:center; gap:8px;
+      white-space:nowrap;
     }
     .btn.ghost { background:transparent; border:1px solid var(--border); color:var(--accent); }
+    .create-km { background: linear-gradient(90deg,#33c37a,#159a54); }
 
     .create-full { display:inline-block; }
     .create-short { display:none; }
 
-    /* Table */
+    .modes { display:flex; gap:8px; flex-wrap:nowrap; white-space:nowrap; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+    .mode-btn {
+      background: transparent; border:1px solid var(--border); color:var(--accent); padding:8px 12px; border-radius:9px; cursor:pointer; font-weight:700;
+      white-space:nowrap;
+    }
+    .mode-btn.active { background: linear-gradient(90deg,var(--primary),var(--primary-hover)); box-shadow: 0 4px 18px rgba(66,165,245,0.12); color:#fff; }
+
+    /* driver header */
+    .driver-header {
+      margin-top: var(--gap);
+      background: #0f1a36;
+      padding:12px 14px;
+      border-radius:10px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      border:1px solid var(--border);
+    }
+    .driver-header .left { font-weight:800; font-size:1.04rem; color:#fff; }
+    .driver-header .right { text-align:right; color:var(--accent); font-weight:700; }
+
+    /* table */
     .table-wrap {
-      margin-top: 12px;
+      margin-top: 14px;
       background: var(--card-bg);
-      border-radius: 10px;
+      border-radius: var(--radius);
       padding: 12px;
       border:1px solid var(--border);
       overflow:hidden;
@@ -154,6 +178,7 @@
 
     .scroll-area { overflow:auto; width:100%; border-radius:8px; }
 
+    /* fixed table layout, center all columns, no wrap */
     table.driver-report-table {
       width:100%;
       min-width:900px;
@@ -187,14 +212,17 @@
     .driver-report-table tbody tr:nth-child(odd) { background: rgba(255,255,255,0.01); }
     .driver-report-table tbody tr:nth-child(even) { background: rgba(255,255,255,0.00); }
 
-    .action-edit, .action-delete {
+    .small-muted { color:var(--muted); font-weight:600; font-size:0.92rem; }
+
+    /* icons-only actions */
+    .action-delete, .action-edit {
       width:36px; height:36px; display:inline-flex; align-items:center; justify-content:center;
       border-radius:8px; cursor:pointer; border:1px solid transparent; background:transparent; color:inherit;
     }
     .action-edit { border-color: rgba(66,165,245,0.22); color:var(--primary); }
     .action-delete { border-color: rgba(255,59,48,0.22); color:var(--danger); }
 
-    /* Modals */
+    /* modals */
     .modal-bg {
       display:none;
       position:fixed; inset:0; z-index:9999;
@@ -222,131 +250,107 @@
     .form-row input[type="text"], .form-row input[type="number"], .form-row input[type="date"], .form-row input[type="time"], select.modal-dark {
       background:#0f1522; color:#fff; border:1px solid var(--border); padding:8px 10px; border-radius:8px; font-weight:700; width:100%;
     }
+
     select#modalMonthSelect.modal-dark { background:#0f1626; color:#fff; padding:10px; border-radius:8px; border:1px solid var(--border); }
 
-    /* PDF print header */
+    /* printable sheet */
     .print-sheet { background:#fff; color:#111; padding:18px; font-family: 'Poppins', Arial, sans-serif; }
-    .print-sheet .sheet-header { display:flex; flex-direction:column; gap:6px; margin-bottom:12px; }
-    .print-sheet .row-top { display:flex; justify-content:space-between; gap:12px; }
-    .print-sheet .driver-left { text-align:left; }
-    .print-sheet .driver-name { font-weight:800; font-size:18px; color:#111; margin:0; }
-    .print-sheet .driver-details { font-size:12px; color:#111; margin:0; }
-    .print-sheet .date-right { text-align:right; font-size:12px; color:#111; }
-    .print-sheet .total-row { font-weight:700; color:#111; margin-top:6px; }
+    .print-sheet .sheet-header { margin-bottom:12px; }
+    .print-sheet .sheet-header .driver-name { font-weight:800; font-size:18px; color:#111; display:block; }
+    .print-sheet .sheet-header .driver-details { margin-top:6px; color:#111; font-weight:700; }
+    .print-sheet .sheet-header .total-km { margin-top:6px; font-weight:700; color:#111; }
 
+    /* ensure rows do not split across pages */
     .print-sheet table tr, .print-sheet table td, .print-sheet table th {
       page-break-inside: avoid;
       break-inside: avoid;
     }
-    thead { display: table-header-group; } tfoot { display: table-footer-group; }
+    thead { display: table-header-group; }
+    tfoot { display: table-footer-group; }
 
-    /* MOBILE SPECIFIC LAYOUT (only changes layout, leaves desktop intact) */
+    /* responsive: modes on single line, next line actions */
     @media (max-width:900px){
-      /* We'll place controls into the requested 4 lines on mobile.
-         Desktop retains original inline controls (no change).
-      */
-
-      .controls {
-        display:block;
-      }
-
-      /* Line 1: driver select (full width) */
-      .driver-row { display:block; margin-bottom:8px; }
-      .driver-row select#driverSelect { width:100%; min-width:0; }
-
-      /* Line 2: per page + custom (side-by-side) */
-      .perpage-row { display:flex; gap:8px; align-items:center; margin-bottom:8px; }
-      .perpage-row select#rowsPerPage { min-width:120px; }
-
-      /* Line 3: modes single no-wrap line */
-      .modes-row { display:block; margin-bottom:8px; overflow-x:auto; -webkit-overflow-scrolling:touch; }
-      .modes { display:flex; gap:8px; white-space:nowrap; padding-bottom:6px; }
-
-      /* Line 4: actions: create, download, delete all */
-      .actions-row { display:flex; gap:8px; align-items:center; margin-bottom:8px; flex-wrap:nowrap; overflow-x:auto; -webkit-overflow-scrolling:touch; }
-
-      /* show short create text */
-      .create-full { display:none; }
-      .create-short { display:inline-block; }
-
-      /* make metadata and page label small and not wrap */
-      .tableMetaSmall { font-size:11px; white-space:nowrap; }
-      .pagination-top .pageLabel { font-size:11px; white-space:nowrap; }
-
-      /* tighten table paddings for small screens */
+      .controls-area { flex-direction:column; align-items:flex-start; gap:8px; }
+      .controls-left { width:100%; display:flex; flex-direction:row; gap:8px; align-items:center; }
+      .controls-right { width:100%; display:flex; flex-direction:column; gap:8px; }
+      .actions-top { order:0; width:100%; }
+      .actions-bottom { order:1; width:100%; }
+      .modes { width:100%; }
+      /* smaller table paddings */
       table.driver-report-table { font-size:12px; }
-      .driver-report-table thead th, .driver-report-table tbody td { padding:6px 8px; font-size:12px; }
     }
 
     @media (max-width:650px){
-      .page-title { font-size:1.05rem; }
       .create-full { display:none; }
       .create-short { display:inline-block; }
+      .controls-left { gap:6px; }
+      .actions-top { overflow-x:auto; -webkit-overflow-scrolling:touch; }
+      .actions-bottom { overflow-x:auto; -webkit-overflow-scrolling:touch; }
+      table.driver-report-table { font-size:11px; }
+      .driver-report-table thead th, .driver-report-table tbody td { padding:6px 8px; }
+      .tableMetaSmall, .pagination-top .pageLabel { font-size:11px; }
     }
   </style>
 </head>
 <body>
   <div class="container" id="appContainer">
     <div class="header">
-      <h1 class="page-title">All Drivers KM Reports</h1>
-      <p class="page-sub">Ravintola Tandoori Villa — view, manage and export drivers' KM/time reports</p>
-      <div class="header-actions">
+      <div class="header-left">
+        <div class="page-title"><i class="fas fa-chart-line"></i> All Drivers KM Reports</div>
+        <div class="page-desc">Ravintola Tandoori Villa — view, manage and export drivers' KM/time reports</div>
+      </div>
+      <div class="header-right">
         <button id="logoutHeader">Logout</button>
       </div>
     </div>
 
-    <!-- Controls -->
-    <div class="controls">
-      <!-- line 1: driver select (mobile full-width) -->
-      <div class="driver-row">
-        <label class="small" for="driverSelect" style="display:block;margin-bottom:6px;">Driver</label>
+    <!-- Controls: top row contains driver + per-page + modes, bottom row contains create/download/delete all (stacked on mobile) -->
+    <div class="controls-area">
+      <div class="controls-left">
+        <label class="small">Driver</label>
         <select id="driverSelect" aria-label="Select driver">
           <option value="__all">All drivers</option>
         </select>
-      </div>
 
-      <!-- line 2: per page + inline custom button -->
-      <div class="perpage-row">
-        <div style="display:flex; align-items:center; gap:8px;">
-          <label class="small" for="rowsPerPage">Per page</label>
-          <select id="rowsPerPage" class="rows-per-page" title="Rows per page">
-            <option value="5">5</option>
-            <option value="10" selected>10</option>
-            <option value="20">20</option>
-            <option value="50">50</option>
-          </select>
-        </div>
-        <div style="display:flex; align-items:center; margin-left:8px;">
-          <button id="customBtnInline" class="btn ghost">Custom</button>
-        </div>
-      </div>
+        <label class="small">Per page</label>
+        <select id="rowsPerPage" class="rows-per-page" title="Rows per page">
+          <option value="5">5</option>
+          <option value="10" selected>10</option>
+          <option value="20">20</option>
+          <option value="50">50</option>
+        </select>
 
-      <!-- line 3: modes single no-wrap -->
-      <div class="modes-row">
+        <div style="width:8px"></div>
+
         <div class="modes" role="tablist" aria-label="Mode switch">
           <button class="mode-btn active" id="dailyBtn" role="tab">Daily</button>
           <button class="mode-btn" id="weeklyBtn" role="tab">Last 7 Days</button>
           <button class="mode-btn" id="monthlyBtn" role="tab">Monthly</button>
+          <button class="mode-btn" id="customBtn" role="tab">Custom</button>
         </div>
       </div>
 
-      <!-- line 4: actions -->
-      <div class="actions-row">
-        <button id="createKm" class="btn create-km" title="Create KM table">
-          <i class="fas fa-plus-circle"></i>
-          <span class="create-full">Create KM Table</span>
-          <span class="create-short">Create</span>
-        </button>
+      <div class="controls-right">
+        <!-- Actions top/bottom so mobile can show modes row then actions row -->
+        <div class="actions-top" aria-hidden="true"></div>
 
-        <button id="downloadBtn" class="btn" title="Download"><i class="fas fa-file-download"></i> Download</button>
+        <div class="actions-bottom">
+          <button id="createKm" class="btn create-km" title="Create KM table">
+            <i class="fas fa-plus-circle"></i>
+            <span class="create-full">Create KM Table</span>
+            <span class="create-short">Create</span>
+          </button>
 
-        <button id="deleteAllBtn" class="btn" title="Delete all shown rows" style="background:linear-gradient(90deg,#ff5b5b,#c93535);">
-          <i class="fas fa-trash-alt"></i> Delete All
-        </button>
+          <button id="downloadBtn" class="btn" title="Download"><i class="fas fa-file-download"></i> Download</button>
+
+          <button id="deleteAllBtn" class="btn" title="Delete all shown rows" style="background:linear-gradient(90deg,#ff5b5b,#c93535);">
+            <i class="fas fa-trash-alt"></i> Delete All
+          </button>
+        </div>
       </div>
     </div>
 
-    <div id="driverHeaderHolder" style="margin-top:12px;"></div>
+    <div id="driverHeaderHolder"></div>
 
     <div class="table-wrap">
       <div class="table-top">
@@ -360,7 +364,9 @@
     </div>
   </div>
 
-  <!-- Modals (month, custom, edit, download, confirm) -->
+  <!-- Modals -->
+
+  <!-- Month modal -->
   <div class="modal-bg" id="modalMonth">
     <div class="modal" role="dialog" aria-modal="true">
       <div class="title"><i class="far fa-calendar"></i> Select month (months with reports)</div>
@@ -374,6 +380,7 @@
     </div>
   </div>
 
+  <!-- Custom date modal -->
   <div class="modal-bg" id="modalCustom">
     <div class="modal" role="dialog" aria-modal="true">
       <div class="title"><i class="far fa-calendar-alt"></i> Custom date range</div>
@@ -392,6 +399,7 @@
     </div>
   </div>
 
+  <!-- Edit modal (per-row editing) -->
   <div class="modal-bg" id="modalEdit">
     <div class="modal" role="dialog" aria-modal="true">
       <div class="title"><i class="fas fa-edit"></i> Edit log entry</div>
@@ -426,6 +434,7 @@
     </div>
   </div>
 
+  <!-- Download modal -->
   <div class="modal-bg" id="modalDownload">
     <div class="modal" role="dialog" aria-modal="true">
       <div class="title"><i class="fas fa-file-export"></i> Download report</div>
@@ -439,6 +448,7 @@
     </div>
   </div>
 
+  <!-- Confirm modal (delete single and delete all) -->
   <div class="modal-bg" id="modalConfirm">
     <div class="modal" role="dialog" aria-modal="true">
       <div class="title"><i class="fas fa-exclamation-triangle" style="color:var(--danger)"></i> Confirm</div>
@@ -474,7 +484,7 @@
     // ---------- State ----------
     let allUsers = {};
     let allLogs = {};
-    let selectedDriver = "__all";
+    let selectedDriver = "__all"; // userId or "__all"
     let currentMode = 'daily';
     let currentMonth = '';
     let modalFrom = '';
@@ -534,6 +544,7 @@
           return b.date.localeCompare(a.date);
         });
       }
+      // "__all" - return everything sorted
       return arr.sort((a,b) => {
         if(a.date === b.date) return (b.timestamp||'').localeCompare(a.timestamp||'');
         return b.date.localeCompare(a.date);
@@ -562,6 +573,7 @@
         arr.forEach(l => { if(l.date && l.date.slice(0,7) === currentMonth) push(l); });
       } else if(mode === 'custom'){
         if(!modalFrom || !modalTo) {
+          // nothing
         } else {
           arr.forEach(l => { if(l.date >= modalFrom && l.date <= modalTo) push(l); });
         }
@@ -583,11 +595,11 @@
     // ---------- Rendering ----------
     function renderDriverHeader(totalKm, periodText){
       if(selectedDriver === "__all"){
-        driverHeaderHolder.innerHTML = `<div class="driver-header"><div class="left">All Drivers</div><div class="right">${escapeHtml(periodText)}<div style="font-size:0.88rem;margin-top:6px;">Total KM: <strong style="color:var(--primary);">${totalKm} km</strong></div></div></div>`;
+        driverHeaderHolder.innerHTML = `<div class="driver-header"><div class="left">All Drivers</div><div class="right">${escapeHtml(periodText)}<div style="font-size:0.88rem;margin-top:6px;">Total KM: <span style="color:var(--primary); font-weight:900;">${totalKm} km</span></div></div></div>`;
       } else {
         const user = allUsers[selectedDriver] || {};
         const name = user.name || '—';
-        driverHeaderHolder.innerHTML = `<div class="driver-header"><div class="left">${escapeHtml(name)}</div><div class="right">${escapeHtml(periodText)}<div style="font-size:0.88rem;margin-top:6px;">Total KM: <strong style="color:var(--primary);">${totalKm} km</strong></div></div></div>`;
+        driverHeaderHolder.innerHTML = `<div class="driver-header"><div class="left">${escapeHtml(name)}</div><div class="right">${escapeHtml(periodText)}<div style="font-size:0.88rem;margin-top:6px;">Total KM: <span style="color:var(--primary); font-weight:900;">${totalKm} km</span></div></div></div>`;
       }
     }
 
@@ -609,26 +621,32 @@
       paginationTop.appendChild(next);
     }
 
+    // Render desktop-style table; hides Driver column when a specific driver is selected
     function renderDesktop(logs) {
+      const showDriverCol = (selectedDriver === "__all");
+
       totalPages = Math.max(1, Math.ceil(logs.length / rowsPerPage));
       if (currentPage > totalPages) currentPage = totalPages;
       const start = (currentPage - 1) * rowsPerPage;
       const pageItems = logs.slice(start, start + rowsPerPage);
 
+      // Build header dynamically
+      let headerCols = [];
+      headerCols.push({ key: 'date', title: 'Date', width: '110px' });
+      if(showDriverCol) headerCols.push({ key: 'driver', title: 'Driver', width: '200px' });
+      headerCols.push({ key: 'kmin', title: 'KM In', width: '90px' });
+      headerCols.push({ key: 'kmout', title: 'KM Out', width: '90px' });
+      headerCols.push({ key: 'totalkm', title: 'Total KM', width: '90px' });
+      headerCols.push({ key: 'timein', title: 'Time In', width: '100px' });
+      headerCols.push({ key: 'timeout', title: 'Time Out', width: '100px' });
+      headerCols.push({ key: 'actions', title: 'Actions', width: '80px' });
+
       let html = `<table class="driver-report-table" role="table" aria-label="Drivers report">
-        <thead>
-          <tr>
-            <th style="width:110px">Date</th>
-            <th style="width:200px">Driver</th>
-            <th style="width:90px">KM In</th>
-            <th style="width:90px">KM Out</th>
-            <th style="width:90px">Total KM</th>
-            <th style="width:100px">Time In</th>
-            <th style="width:100px">Time Out</th>
-            <th style="width:80px">Actions</th>
-          </tr>
-        </thead>
-        <tbody>`;
+        <thead><tr>`;
+      headerCols.forEach(c => {
+        html += `<th style="width:${c.width}">${escapeHtml(c.title)}</th>`;
+      });
+      html += `</tr></thead><tbody>`;
 
       pageItems.forEach(log => {
         const driverName = (allUsers[log.userId] && allUsers[log.userId].name) || log.name || '—';
@@ -637,19 +655,23 @@
         const totalKmCell = (log.totalKm !== undefined && log.totalKm !== null) ? log.totalKm : ((Number(kmOut)||0) - (Number(kmIn)||0));
         const timeIn = log.timeIn || '';
         const timeOut = log.timeOut || '';
-        html += `<tr data-log-id="${escapeHtml(log.id)}">
-          <td>${escapeHtml(toDisplayDate(log.date || ''))}</td>
-          <td>${escapeHtml(driverName)}</td>
-          <td>${escapeHtml(kmIn)}</td>
-          <td>${escapeHtml(kmOut)}</td>
-          <td>${escapeHtml(String(totalKmCell))}</td>
-          <td>${escapeHtml(timeIn)}</td>
-          <td>${escapeHtml(timeOut)}</td>
-          <td>
-            <button class="action-edit" data-log="${escapeHtml(log.id)}" title="Edit"><i class="fas fa-edit"></i></button>
-            <button class="action-delete" data-log="${escapeHtml(log.id)}" title="Delete"><i class="fas fa-trash"></i></button>
-          </td>
-        </tr>`;
+
+        html += `<tr data-log-id="${escapeHtml(log.id)}">`;
+        // date
+        html += `<td>${escapeHtml(toDisplayDate(log.date || ''))}</td>`;
+        // driver (conditionally)
+        if(showDriverCol) html += `<td>${escapeHtml(driverName)}</td>`;
+        // other columns
+        html += `<td>${escapeHtml(kmIn)}</td>
+                 <td>${escapeHtml(kmOut)}</td>
+                 <td>${escapeHtml(String(totalKmCell))}</td>
+                 <td>${escapeHtml(timeIn)}</td>
+                 <td>${escapeHtml(timeOut)}</td>
+                 <td>
+                   <button class="action-edit" data-log="${escapeHtml(log.id)}" title="Edit"><i class="fas fa-edit"></i></button>
+                   <button class="action-delete" data-log="${escapeHtml(log.id)}" title="Delete"><i class="fas fa-trash"></i></button>
+                 </td>`;
+        html += `</tr>`;
       });
 
       html += `</tbody></table>`;
@@ -670,7 +692,15 @@
         btn.onclick = () => {
           const id = btn.getAttribute('data-log');
           const tr = btn.closest('tr');
-          const name = tr ? tr.children[1].textContent : '';
+          // When driver column hidden, name may not be in column 1; we try to read by looking up log data
+          let name = '';
+          const logObj = allLogs[id] || {};
+          if(logObj && (logObj.userId || logObj.name)) {
+            name = (allUsers[logObj.userId] && allUsers[logObj.userId].name) || logObj.name || '';
+          } else if(tr) {
+            // fallback: second cell might be driver if visible
+            try { name = tr.children[1] ? tr.children[1].textContent : ''; } catch(e){}
+          }
           showConfirm(`Delete log for <b>${escapeHtml(name)}</b>? This cannot be undone.`, async () => {
             await db.ref('logs/' + id).remove();
             hideConfirm();
@@ -683,7 +713,7 @@
 
     function renderReportsView(){
       rowsPerPage = parseInt(document.getElementById('rowsPerPage').value,10) || 10;
-      const grouped = getRows(currentMode);
+      const grouped = getRows(currentMode); // [{date, logs:[]}, ...]
       const flattened = grouped.flatMap(g => g.logs);
       const totalKm = sumKm(flattened);
 
@@ -694,10 +724,12 @@
       else if(currentMode === 'custom'){ periodText = modalFrom && modalTo ? `${toDisplayDate(modalFrom)} — ${toDisplayDate(modalTo)}` : 'Custom'; }
 
       renderDriverHeader(totalKm, periodText);
+
+      // Always render desktop table view (full width table on all devices)
       renderDesktop(flattened);
     }
 
-    // ---------- Edit modal ----------
+    // ---------- Edit modal logic ----------
     function openEditModal(id){
       const log = allLogs[id];
       if(!log) return alert('Log not found');
@@ -716,12 +748,14 @@
       currentEditId = null;
       document.getElementById('modalEdit').classList.remove('active');
     };
+
     document.getElementById('modalEdit').onclick = (e) => {
       if(e.target === document.getElementById('modalEdit')) {
         currentEditId = null;
         document.getElementById('modalEdit').classList.remove('active');
       }
     };
+
     document.getElementById('modalEditSave').onclick = async () => {
       const id = currentEditId;
       if(!id) return;
@@ -753,6 +787,7 @@
         showEditError('Save failed, try again');
       }
     };
+
     function showEditError(msg){
       const el = document.getElementById('editError');
       el.textContent = msg;
@@ -788,7 +823,7 @@
       a.remove();
     }
 
-    // PDF helper: header with name bold, details small on left, date on right, total km bold on new line
+    // PDF helper: driver name + details + total km plain bold (no boxed badge), avoid row splitting
     function downloadReportPdf({ selectedDriverName, allUsers, groupedRows, currentMode, currentMonth, filenamePrefix }){
       function pad2(n){ return String(n).padStart(2,'0'); }
       function toDisplayDateLocal(iso){
@@ -802,7 +837,6 @@
 
       const rows = (groupedRows || []).flatMap(g => g.logs || []);
       const totalKm = sumKmLocal(rows);
-
       let periodText = '';
       if(currentMode === 'weekly'){ periodText = 'Last 7 days'; }
       else if(currentMode === 'monthly'){
@@ -820,16 +854,13 @@
       printable.className = 'print-sheet';
       printable.style.boxSizing = 'border-box';
 
+      // Header: plain bold lines, no boxed total
       printable.innerHTML = `
         <div class="sheet-header">
-          <div class="row-top">
-            <div class="driver-left">
-              <div class="driver-name">${escapeHtmlLocal(selectedDriverName || '')}</div>
-              <div class="driver-details">${escapeHtmlLocal(driverObj.car || '')}${driverObj.car ? ' • ' : ''}${escapeHtmlLocal(driverObj.address || '')}</div>
-            </div>
-            <div class="date-right">${escapeHtmlLocal(periodText)}</div>
-          </div>
-          <div class="total-row"><strong>Total KM: ${totalKm} km</strong></div>
+          <div class="driver-name">${escapeHtmlLocal(selectedDriverName || '')}</div>
+          <div class="driver-details">${escapeHtmlLocal(driverObj.car || '')}${driverObj.car ? '  ' : ''}${escapeHtmlLocal(driverObj.address || '')}</div>
+          <div class="total-km"><strong>Total KM: ${totalKm} km</strong></div>
+          <div class="period" style="margin-top:6px;">${escapeHtmlLocal(periodText)}</div>
         </div>
 
         <table id="printTable" style="width:100%;border-collapse:collapse;font-size:12px;">
@@ -861,6 +892,7 @@
         </table>
       `;
 
+      // Prevent row splitting
       const style = document.createElement('style');
       style.innerHTML = `
         .print-sheet table tr, .print-sheet table td, .print-sheet table th {
@@ -919,6 +951,7 @@
       document.getElementById('modalConfirm').classList.remove('active');
       confirmCallback = null;
     }
+
     document.getElementById('modalConfirmCancel').onclick = hideConfirm;
     document.getElementById('modalConfirmOk').onclick = async () => {
       if(typeof confirmCallback === 'function') {
@@ -950,7 +983,8 @@
     const modeButtons = {
       daily: document.getElementById('dailyBtn'),
       weekly: document.getElementById('weeklyBtn'),
-      monthly: document.getElementById('monthlyBtn')
+      monthly: document.getElementById('monthlyBtn'),
+      custom: document.getElementById('customBtn')
     };
     function setActiveMode(mode){
       currentMode = mode;
@@ -960,6 +994,8 @@
       if(mode === 'monthly'){
         populateMonthModal();
         document.getElementById('modalMonth').classList.add('active');
+      } else if(mode === 'custom'){
+        document.getElementById('modalCustom').classList.add('active');
       } else {
         currentPage = 1;
         renderReportsView();
@@ -968,10 +1004,7 @@
     modeButtons.daily.onclick = () => setActiveMode('daily');
     modeButtons.weekly.onclick = () => setActiveMode('weekly');
     modeButtons.monthly.onclick = () => setActiveMode('monthly');
-
-    document.getElementById('customBtnInline').onclick = () => {
-      document.getElementById('modalCustom').classList.add('active');
-    };
+    modeButtons.custom.onclick = () => setActiveMode('custom');
 
     function populateMonthModal(){
       const months = getAvailableMonthsForDriver(selectedDriver);
@@ -999,7 +1032,6 @@
         });
       }
     }
-
     document.getElementById('modalMonthCancel').onclick = () => modalMonth.classList.remove('active');
     document.getElementById('modalMonthShow').onclick = () => {
       const v = modalMonthSelect.value;
@@ -1018,8 +1050,10 @@
       if(!f || !t){ alert('Select both From and To'); return; }
       if(f > t){ alert('From must be before or equal To'); return; }
       modalFrom = f; modalTo = t;
-      document.getElementById('modalCustom').classList.remove('active');
+      document.getElementById('modalCustom').classList.remove('active'); // close popup as requested
       currentMode = 'custom';
+      Object.values(modeButtons).forEach(b => b.classList.remove('active'));
+      if(modeButtons.custom) modeButtons.custom.classList.add('active');
       currentPage = 1;
       renderReportsView();
     };
@@ -1058,7 +1092,7 @@
       }
     };
 
-    // Delete All shown rows
+    // Delete All shown rows button - ask confirmation and delete only currently filtered rows
     deleteAllBtn.onclick = () => {
       const grouped = getRows(currentMode);
       const flattened = grouped.flatMap(g => g.logs);
@@ -1074,6 +1108,7 @@
       }, 'Delete All', 'Cancel');
     };
 
+    // re-render on resize
     window.addEventListener('resize', () => {
       clearTimeout(window._renderResizeTimer);
       window._renderResizeTimer = setTimeout(() => renderReportsView(), 120);
@@ -1111,7 +1146,6 @@
     (function init(){
       setActiveMode('daily');
       rowsPerPage = parseInt(document.getElementById('rowsPerPage').value,10) || 10;
-      document.getElementById('customBtnInline').addEventListener('click', () => document.getElementById('modalCustom').classList.add('active'));
     })();
   </script>
 </body>
