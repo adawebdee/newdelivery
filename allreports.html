@@ -36,6 +36,8 @@
       min-height:100vh; width:100vw;
       font-family: 'Poppins', Arial, sans-serif;
       background: var(--main-bg); color:#fff;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
     }
 
     /* Container full width on desktop/tablet/mobile */
@@ -63,7 +65,7 @@
     .page-desc { color:var(--accent); opacity:0.95; font-weight:500; font-size:0.95rem; }
     #logoutHeader { background: var(--danger); border:none; color:#fff; padding:8px 12px; border-radius:9px; font-weight:700; cursor:pointer; }
 
-    /* Controls area: reorganized to allow mobile two rows */
+    /* Controls area */
     .controls-area {
       margin-top: var(--gap);
       display:flex;
@@ -269,10 +271,132 @@
     thead { display: table-header-group; }
     tfoot { display: table-footer-group; }
 
-    /* Note: Responsive rules removed so mobile shows same layout as desktop. */
-
     /* a small accessibility/touch improvement: larger hit area for icon-only buttons */
     .action-delete, .action-edit { min-width:44px; min-height:44px; width:auto; height:auto; padding:6px 10px; }
+
+    /* ========== Tablet & Mobile adjustments (desktop remains unchanged) ========== */
+
+    @media (max-width:900px) {
+      /* Header: title on one line, subheading on the next; logout aligned to top-right */
+      .header {
+        padding:8px;
+        align-items:flex-start;
+      }
+      .header-left {
+        display:flex;
+        flex-direction:column;
+        gap:4px;
+        min-width:0;
+      }
+      /* main title should stay on one line and not wrap */
+      .page-title {
+        font-size:1rem;
+        font-weight:800;
+        display:block;
+        white-space:nowrap;
+        overflow:hidden;
+        text-overflow:ellipsis;
+      }
+      /* subheading on second line */
+      .page-desc {
+        font-size:0.88rem;
+        display:block;
+        white-space:nowrap;
+        overflow:hidden;
+        text-overflow:ellipsis;
+        color:var(--accent);
+      }
+      /* keep Logout at the top-right */
+      .header-right {
+        margin-left:auto;
+        align-self:flex-start;
+      }
+      #logoutHeader {
+        padding:6px 10px;
+        font-size:0.95rem;
+      }
+
+      /* Controls: allow wrapping so nothing goes out of the screen, shorten selects */
+      .controls-area {
+        flex-wrap:wrap;
+        gap:8px;
+      }
+      .controls-left {
+        gap:8px;
+        flex-wrap:wrap;
+        align-items:center;
+      }
+      select#driverSelect {
+        min-width:140px;
+        max-width:46%;
+      }
+      select#rowsPerPage {
+        min-width:60px;
+        max-width:18%;
+      }
+      .modes {
+        width:100%;
+        gap:6px;
+        overflow:auto;
+        -webkit-overflow-scrolling:touch;
+      }
+      .controls-right {
+        gap:8px;
+        flex-wrap:wrap;
+        justify-content:flex-end;
+        width:auto;
+      }
+      .actions-bottom {
+        width:100%;
+        justify-content:flex-start;
+      }
+      .create-full { display:inline-block; }
+      .create-short { display:none; }
+
+      /* Increase delete icon contrast and give a subtle background so it's visible on mobile */
+      .action-delete {
+        color:#ff8b85; /* brighter */
+        background: rgba(255, 59, 48, 0.08);
+        border-color: rgba(255,59,48,0.22);
+      }
+
+      /* reduce some spacing for compactness */
+      .table-wrap { padding:10px; }
+      .driver-header { padding:10px 12px; }
+      .table-top { gap:8px; margin-bottom:6px; }
+      .tableMetaSmall, .pagination-top .pageLabel { font-size:11px; }
+      table.driver-report-table { font-size:12px; min-width:700px; } /* allow smaller min-width for easier fitting, table still scrollable */
+      .driver-report-table thead th, .driver-report-table tbody td { padding:6px 8px; }
+    }
+
+    @media (max-width:650px) {
+      /* Further tighten spacing and font sizes on small phones */
+      .header { padding:8px; border-radius:10px; }
+      .page-title { font-size:0.98rem; }
+      .page-desc { font-size:0.82rem; }
+      #logoutHeader { padding:6px 8px; font-size:0.9rem; }
+
+      .controls-area { gap:6px; margin-top:10px; }
+      .controls-left { gap:6px; }
+      select#driverSelect { min-width:120px; max-width:60%; }
+      select#rowsPerPage { min-width:56px; max-width:18%; }
+
+      /* show compact create button on very small screens */
+      .create-full { display:none; }
+      .create-short { display:inline-block; }
+
+      /* Action buttons size tweak so they remain visible without overlapping */
+      .actions-bottom .btn { padding:10px 12px; font-size:13px; min-width:86px; }
+
+      /* ensure delete icon is clearly visible */
+      .action-delete { color:#ff6b5b; background: rgba(255, 59, 48, 0.12); }
+
+      /* table tweaks */
+      table.driver-report-table { font-size:11px; min-width:640px; }
+      .driver-report-table thead th, .driver-report-table tbody td { padding:5px 6px; }
+      .container { padding-bottom: 60px; } /* ensure controls are not overlapped by small screens */
+    }
+
   </style>
 </head>
 <body>
