@@ -29,7 +29,6 @@
       --sheet-header: #373f6b;
       --gap: 16px;
       --radius: 12px;
-      --side-gap: 10px;
     }
 
     html,body{
@@ -41,10 +40,10 @@
       -moz-osx-font-smoothing:grayscale;
     }
 
-    /* Container with small side spacing */
+    /* Container full width on desktop/tablet/mobile */
     .container{
       max-width: none;
-      margin: 10px auto;
+      margin: 10px;
       padding: 12px;
       box-sizing: border-box;
       width: calc(100% - 20px);
@@ -182,7 +181,7 @@
 
     .scroll-area { overflow:auto; width:100%; border-radius:8px; }
 
-    /* fixed table layout, center all columns, no wrap by default */
+    /* fixed table layout, center all columns, no wrap */
     table.driver-report-table {
       width:100%;
       min-width:900px;
@@ -220,13 +219,13 @@
 
     /* icons-only actions */
     .action-delete, .action-edit {
-      width:40px; height:40px; display:inline-flex; align-items:center; justify-content:center;
+      width:36px; height:36px; display:inline-flex; align-items:center; justify-content:center;
       border-radius:8px; cursor:pointer; border:1px solid transparent; background:transparent; color:inherit;
     }
-    .action-edit { border-color: rgba(66,165,245,0.22); color:var(--primary); background: rgba(66,165,245,0.04); }
-    .action-delete { border-color: rgba(255,59,48,0.28); color:var(--danger); background: rgba(255,59,48,0.06); }
+    .action-edit { border-color: rgba(66,165,245,0.22); color:var(--primary); }
+    .action-delete { border-color: rgba(255,59,48,0.22); color:var(--danger); }
 
-    .action-edit i, .action-delete i { font-size:16px; }
+    .action-edit i, .action-delete i { font-size:14px; }
 
     /* modals */
     .modal-bg {
@@ -259,14 +258,14 @@
 
     select#modalMonthSelect.modal-dark { background:#0f1626; color:#fff; padding:10px; border-radius:8px; border:1px solid var(--border); }
 
-    /* printable sheet (PDF styling helpers if needed) */
+    /* printable sheet */
     .print-sheet { background:#fff; color:#111; padding:18px; font-family: 'Poppins', Arial, sans-serif; }
     .print-sheet .sheet-header { margin-bottom:12px; }
     .print-sheet .sheet-header .driver-name { font-weight:800; font-size:18px; color:#111; display:block; }
     .print-sheet .sheet-header .driver-details { margin-top:6px; color:#111; font-weight:700; }
     .print-sheet .sheet-header .total-km { margin-top:6px; font-weight:700; color:#111; }
 
-    /* ensure rows do not split across pages in PDF */
+    /* ensure rows do not split across pages */
     .print-sheet table tr, .print-sheet table td, .print-sheet table th {
       page-break-inside: avoid;
       break-inside: avoid;
@@ -280,7 +279,7 @@
     /* ========== Tablet & Mobile adjustments (desktop remains unchanged) ========== */
 
     @media (max-width:900px) {
-      /* Header left column stacks and subheading wraps */
+      /* Header: title on one line, subheading allowed to wrap */
       .header {
         padding:8px;
         align-items:flex-start;
@@ -288,9 +287,10 @@
       .header-left {
         display:flex;
         flex-direction:column;
-        gap:6px;
+        gap:4px;
         min-width:0;
       }
+      /* main title should try to stay in one line, but allow wrapping if necessary (keeps visual) */
       .page-title {
         font-size:1rem;
         font-weight:800;
@@ -299,19 +299,28 @@
         overflow:hidden;
         text-overflow:ellipsis;
       }
-      /* subheading allowed to wrap on smaller screens */
+      /* subheading on second line and allowed to wrap if longer */
       .page-desc {
-        font-size:0.9rem;
+        font-size:0.88rem;
         display:block;
         white-space:normal;  /* allow wrapping */
         overflow:visible;
         text-overflow:unset;
         color:var(--accent);
-        max-width: calc(100% - 140px); /* keep logout visible */
+        max-width: calc(100vw - 160px); /* keep logout button visible */
         word-break: break-word;
       }
+      /* keep Logout at the top-right */
+      .header-right {
+        margin-left:auto;
+        align-self:flex-start;
+      }
+      #logoutHeader {
+        padding:6px 10px;
+        font-size:0.95rem;
+      }
 
-      /* Controls: wrap so nothing overflows the screen */
+      /* Controls: allow wrapping so nothing goes out of the screen, shorten selects */
       .controls-area {
         flex-wrap:wrap;
         gap:8px;
@@ -323,7 +332,7 @@
       }
       select#driverSelect {
         min-width:140px;
-        max-width:55%;
+        max-width:46%;
       }
       select#rowsPerPage {
         min-width:60px;
@@ -345,44 +354,62 @@
         width:100%;
         justify-content:flex-start;
       }
+      .create-full { display:inline-block; }
+      .create-short { display:none; }
 
-      /* make table background span nearly full viewport width with small side gutters */
+      /* Increase delete icon contrast and give a subtle background so it's visible on mobile */
+      .action-delete {
+        color:#ff8b85; /* brighter */
+        background: rgba(255, 59, 48, 0.08);
+        border-color: rgba(255,59,48,0.22);
+      }
+
+      /* make table background span full viewport width on small screens */
       .table-wrap {
         padding:10px;
-        width: calc(100vw - (var(--side-gap) * 2));
-        margin-left: calc(-1 * var(--side-gap));
-        margin-right: calc(-1 * var(--side-gap));
-        border-radius: 6px;
+        /* extend to edges */
+        width: calc(100vw - 20px);
+        margin-left: -10px;
+        margin-right: -10px;
+        border-radius: 0;
       }
 
       .driver-header { padding:10px 12px; }
       .table-top { gap:8px; margin-bottom:6px; }
       .tableMetaSmall, .pagination-top .pageLabel { font-size:11px; }
-      table.driver-report-table { font-size:12px; min-width:700px; } /* still scrollable */
+      table.driver-report-table { font-size:12px; min-width:700px; } /* allow smaller min-width for easier fitting, table still scrollable */
       .driver-report-table thead th, .driver-report-table tbody td { padding:6px 8px; }
     }
 
     @media (max-width:650px) {
-      /* Further tighten spacing on phones */
+      /* Further tighten spacing and font sizes on small phones */
+      .header { padding:8px; border-radius:10px; }
       .page-title { font-size:0.98rem; }
       .page-desc { font-size:0.82rem; }
       #logoutHeader { padding:6px 8px; font-size:0.9rem; }
 
+      .controls-area { gap:6px; margin-top:10px; }
+      .controls-left { gap:6px; }
       select#driverSelect { min-width:120px; max-width:60%; }
       select#rowsPerPage { min-width:56px; max-width:18%; }
 
+      /* show compact create button on very small screens */
       .create-full { display:none; }
       .create-short { display:inline-block; }
 
+      /* Action buttons size tweak so they remain visible without overlapping */
       .actions-bottom .btn { padding:10px 12px; font-size:13px; min-width:86px; }
+
+      /* ensure delete icon is clearly visible */
+      .action-delete { color:#ff6b5b; background: rgba(255, 59, 48, 0.12); }
 
       /* table tweaks */
       table.driver-report-table { font-size:11px; min-width:640px; }
       .driver-report-table thead th, .driver-report-table tbody td { padding:5px 6px; }
-      .container { padding-bottom: 60px; } /* ensure controls are not overlapped */
+      .container { padding-bottom: 60px; } /* ensure controls are not overlapped by small screens */
     }
 
-    /* PRINT/TABLE CSS helpers used in JS-constructed printable element */
+    /* PRINT/TABLET PDF helper styles applied in JS printable element too (kept here for consistency) */
     .print-info {
       width:100%;
       border-collapse:collapse;
@@ -420,7 +447,7 @@
       </div>
     </div>
 
-    <!-- Controls -->
+    <!-- Controls: top row contains driver + per-page + modes, bottom row contains create/download/delete all (stacked on mobile) -->
     <div class="controls-area">
       <div class="controls-left">
         <label class="small">Driver</label>
@@ -447,6 +474,7 @@
       </div>
 
       <div class="controls-right">
+        <!-- Actions top/bottom so mobile can show modes row then actions row -->
         <div class="actions-top" aria-hidden="true"></div>
 
         <div class="actions-bottom">
@@ -479,7 +507,9 @@
     </div>
   </div>
 
-  <!-- Modals (unchanged) -->
+  <!-- Modals -->
+
+  <!-- Month modal -->
   <div class="modal-bg" id="modalMonth">
     <div class="modal" role="dialog" aria-modal="true">
       <div class="title"><i class="far fa-calendar"></i> Select month (months with reports)</div>
@@ -493,6 +523,7 @@
     </div>
   </div>
 
+  <!-- Custom date modal -->
   <div class="modal-bg" id="modalCustom">
     <div class="modal" role="dialog" aria-modal="true">
       <div class="title"><i class="far fa-calendar-alt"></i> Custom date range</div>
@@ -511,6 +542,7 @@
     </div>
   </div>
 
+  <!-- Edit modal (per-row editing) -->
   <div class="modal-bg" id="modalEdit">
     <div class="modal" role="dialog" aria-modal="true">
       <div class="title"><i class="fas fa-edit"></i> Edit log entry</div>
@@ -545,6 +577,7 @@
     </div>
   </div>
 
+  <!-- Download modal -->
   <div class="modal-bg" id="modalDownload">
     <div class="modal" role="dialog" aria-modal="true">
       <div class="title"><i class="fas fa-file-export"></i> Download report</div>
@@ -558,6 +591,7 @@
     </div>
   </div>
 
+  <!-- Confirm modal (delete single and delete all) -->
   <div class="modal-bg" id="modalConfirm">
     <div class="modal" role="dialog" aria-modal="true">
       <div class="title"><i class="fas fa-exclamation-triangle" style="color:var(--danger)"></i> Confirm</div>
@@ -769,7 +803,7 @@
         // date
         html += `<td>${escapeHtml(toDisplayDate(log.date || ''))}</td>`;
         // driver (conditionally)
-        if(showDriverCol) html += `<td style="text-align:left; padding-left:10px">${escapeHtml(driverName)}</td>`;
+        if(showDriverCol) html += `<td>${escapeHtml(driverName)}</td>`;
         // other columns
         html += `<td>${escapeHtml(kmIn)}</td>
                  <td>${escapeHtml(kmOut)}</td>
@@ -801,11 +835,13 @@
         btn.onclick = () => {
           const id = btn.getAttribute('data-log');
           const tr = btn.closest('tr');
+          // When driver column hidden, name may not be in column 1; we try to read by looking up log data
           let name = '';
           const logObj = allLogs[id] || {};
           if(logObj && (logObj.userId || logObj.name)) {
             name = (allUsers[logObj.userId] && allUsers[logObj.userId].name) || logObj.name || '';
           } else if(tr) {
+            // fallback: second cell might be driver if visible
             try { name = tr.children[1] ? tr.children[1].textContent : ''; } catch(e){}
           }
           showConfirm(`Delete log for <b>${escapeHtml(name)}</b>? This cannot be undone.`, async () => {
@@ -905,42 +941,15 @@
     function downloadCSV(){
       const grouped = getRows(currentMode);
       const flattened = grouped.flatMap(g => g.logs);
-      const totalKm = sumKm(flattened);
-
-      // Info section rows
-      const driverObj = selectedDriver === '__all' ? {} : (allUsers[selectedDriver] || {});
-      const driverName = selectedDriver === '__all' ? 'All drivers' : (driverObj.name || '');
-      const infoRows = [
-        ['Name', driverName],
-        ['Car Reg#', driverObj.car || ''],
-        ['Address', driverObj.address || ''],
-        ['Date selected', (currentMode === 'custom' && modalFrom && modalTo) ? `${modalFrom} — ${modalTo}` : (currentMode === 'daily' ? todayISO() : (currentMode === 'monthly' ? currentMonth : (currentMode==='weekly' ? `${addDays(todayISO(),-6)} — ${todayISO()}` : currentMode))))],
-        ['Total KM', String(totalKm) + ' km'],
-        []
-      ];
-
-      // Build header (include Driver column if all drivers)
-      const header = selectedDriver === '__all' ? ['Date','Driver','KM In','KM Out','Total KM','Time In','Time Out']
-                                               : ['Date','KM In','KM Out','Total KM','Time In','Time Out'];
-
-      const rows = [];
-      // push info rows
-      infoRows.forEach(r => rows.push(r));
-      // push header
-      rows.push(header);
-
+      const header = ['Date','Driver','KM In','KM Out','Total KM','Time In','Time Out'];
+      const rows = [header];
       flattened.forEach(r => {
         const driver = (allUsers[r.userId] && allUsers[r.userId].name) || r.name || '';
         const kmIn = r.kmIn || '';
         const kmOut = r.kmOut || '';
         const total = r.totalKm !== undefined ? r.totalKm : ((Number(kmOut)||0) - (Number(kmIn)||0));
-        if(selectedDriver === '__all'){
-          rows.push([r.date || '', driver, kmIn, kmOut, String(total), r.timeIn || '', r.timeOut || '']);
-        } else {
-          rows.push([r.date || '', kmIn, kmOut, String(total), r.timeIn || '', r.timeOut || '']);
-        }
+        rows.push([r.date || '', driver, kmIn, kmOut, String(total), r.timeIn || '', r.timeOut || '']);
       });
-
       const csv = rows.map(r => r.map(cell => {
         const s = String(cell ?? '');
         if(s.includes('"') || s.includes(',') || s.includes('\n')) return `"${s.replace(/"/g,'""')}"`;
@@ -958,7 +967,7 @@
     }
 
     // PDF helper: create info section and table; ensure headers repeat and rows keep borders; show page numbers
-    function downloadReportPdf({ selectedDriverId, selectedDriverName, allUsersMap, groupedRows, currentMode, currentMonth, filenamePrefix }){
+    function downloadReportPdf({ selectedDriverName, allUsers, groupedRows, currentMode, currentMonth, filenamePrefix }){
       function pad2(n){ return String(n).padStart(2,'0'); }
       function toDisplayDateLocal(iso){
         if(!iso) return '';
@@ -985,15 +994,13 @@
         else periodText = '—';
       }
 
-      // Get driver object if single driver
-      const driverObj = selectedDriverId === '__all' ? {} : (allUsersMap[selectedDriverId] || {});
+      const driverObj = allUsers[selectedDriverName] || Object.values(allUsers || {}).find(u => u.name === selectedDriverName) || {};
 
-      // Build printable HTML
       const printable = document.createElement('div');
       printable.className = 'print-sheet';
       printable.style.boxSizing = 'border-box';
 
-      // Info section table
+      // Build info section as a small table-like block
       const infoHtml = `
         <table class="print-info" role="table" aria-label="Driver info">
           <tr>
@@ -1019,60 +1026,40 @@
         </table>
       `;
 
-      // Build table header (include Driver when all drivers)
-      const includeDriverCol = (selectedDriverId === '__all');
-      const tableHeadCols = includeDriverCol ? ['Date','Driver','Km In','Km Out','Total KM','Time In','Time Out']
-                                            : ['Date','Km In','Km Out','Total KM','Time In','Time Out'];
-
+      // Build printable table with borders; use thead to ensure repeated header across pages
       const tableHtml = `
         <table class="print-table" id="printTable" role="table" aria-label="Report table">
           <thead>
             <tr>
-              ${tableHeadCols.map(c => `<th>${escapeHtmlLocal(c)}</th>`).join('')}
+              <th>Date</th>
+              <th>Km In</th>
+              <th>Km Out</th>
+              <th>Total KM</th>
+              <th>Time In</th>
+              <th>Time Out</th>
             </tr>
           </thead>
           <tbody>
             ${rows.map((r, i) => {
-              const driver = (allUsersMap[r.userId] && allUsersMap[r.userId].name) || r.name || '';
               const kmIn = r.kmIn || '';
               const kmOut = r.kmOut || '';
               const total = r.totalKm !== undefined ? r.totalKm : ((Number(kmOut)||0) - (Number(kmIn)||0));
-              if(includeDriverCol){
-                return `<tr>
-                  <td>${escapeHtmlLocal(toDisplayDateLocal(r.date))}</td>
-                  <td style="text-align:left;padding-left:6px">${escapeHtmlLocal(driver)}</td>
-                  <td>${escapeHtmlLocal(kmIn)}</td>
-                  <td>${escapeHtmlLocal(kmOut)}</td>
-                  <td>${escapeHtmlLocal(String(total))}</td>
-                  <td>${escapeHtmlLocal(r.timeIn || '')}</td>
-                  <td>${escapeHtmlLocal(r.timeOut || '')}</td>
-                </tr>`;
-              } else {
-                return `<tr>
-                  <td>${escapeHtmlLocal(toDisplayDateLocal(r.date))}</td>
-                  <td>${escapeHtmlLocal(kmIn)}</td>
-                  <td>${escapeHtmlLocal(kmOut)}</td>
-                  <td>${escapeHtmlLocal(String(total))}</td>
-                  <td>${escapeHtmlLocal(r.timeIn || '')}</td>
-                  <td>${escapeHtmlLocal(r.timeOut || '')}</td>
-                </tr>`;
-              }
+              return `<tr>
+                <td>${escapeHtmlLocal(toDisplayDateLocal(r.date))}</td>
+                <td>${escapeHtmlLocal(kmIn)}</td>
+                <td>${escapeHtmlLocal(kmOut)}</td>
+                <td>${escapeHtmlLocal(String(total))}</td>
+                <td>${escapeHtmlLocal(r.timeIn || '')}</td>
+                <td>${escapeHtmlLocal(r.timeOut || '')}</td>
+              </tr>`;
             }).join('')}
           </tbody>
         </table>
       `;
 
-      // Put together
-      printable.innerHTML = `
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-          <div style="font-weight:800;font-size:16px;color:#0b3b72">Ravintola Tandoori Villa</div>
-          <div style="font-size:12px;color:#555">${new Date().toLocaleString()}</div>
-        </div>
-        ${infoHtml}
-        ${tableHtml}
-      `;
+      printable.innerHTML = `<div class="sheet-header">${infoHtml}</div>${tableHtml}`;
 
-      // PDF-specific CSS to ensure header repeats and rows don't split across pages
+      // Extra CSS to help pagination: keep rows intact but allow table to split between rows; ensure header repeats
       const style = document.createElement('style');
       style.innerHTML = `
         .print-sheet { padding:12px; color:#111; background:#fff; }
@@ -1254,10 +1241,11 @@
       document.getElementById('modalDownload').classList.remove('active');
       const groupedRows = getRows(currentMode);
       const selectedDriverName = selectedDriver === '__all' ? 'All drivers' : (allUsers[selectedDriver] && allUsers[selectedDriver].name) || '';
+      // Provide a mapping object for driver lookup by id -> object
+      // downloadReportPdf expects allUsers keyed by id or containing the matching name
       downloadReportPdf({
-        selectedDriverId: selectedDriver,
         selectedDriverName,
-        allUsersMap: allUsers,
+        allUsers,
         groupedRows,
         currentMode,
         currentMonth,
