@@ -62,7 +62,7 @@
     }
     .header-left { display:flex; align-items:center; gap:12px; }
     .page-title { font-size:1.12rem; font-weight:800; color:#fff; display:flex; align-items:center; gap:10px; }
-    .page-desc { color:var(--accent); opacity:0.95; font-weight:500; font-size:0.95rem; }
+    .page-desc { color:var(--accent); opacity:0.95; font-weight:500; font-size:0.95rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
     #logoutHeader { background: var(--danger); border:none; color:#fff; padding:8px 12px; border-radius:9px; font-weight:700; cursor:pointer; }
 
     /* Controls area */
@@ -225,6 +225,8 @@
     .action-edit { border-color: rgba(66,165,245,0.22); color:var(--primary); }
     .action-delete { border-color: rgba(255,59,48,0.22); color:var(--danger); }
 
+    .action-edit i, .action-delete i { font-size:14px; }
+
     /* modals */
     .modal-bg {
       display:none;
@@ -277,7 +279,7 @@
     /* ========== Tablet & Mobile adjustments (desktop remains unchanged) ========== */
 
     @media (max-width:900px) {
-      /* Header: title on one line, subheading on the next; logout aligned to top-right */
+      /* Header: title on one line, subheading allowed to wrap */
       .header {
         padding:8px;
         align-items:flex-start;
@@ -288,7 +290,7 @@
         gap:4px;
         min-width:0;
       }
-      /* main title should stay on one line and not wrap */
+      /* main title should try to stay in one line, but allow wrapping if necessary (keeps visual) */
       .page-title {
         font-size:1rem;
         font-weight:800;
@@ -297,14 +299,16 @@
         overflow:hidden;
         text-overflow:ellipsis;
       }
-      /* subheading on second line */
+      /* subheading on second line and allowed to wrap if longer */
       .page-desc {
         font-size:0.88rem;
         display:block;
-        white-space:nowrap;
-        overflow:hidden;
-        text-overflow:ellipsis;
+        white-space:normal;  /* allow wrapping */
+        overflow:visible;
+        text-overflow:unset;
         color:var(--accent);
+        max-width: calc(100vw - 160px); /* keep logout button visible */
+        word-break: break-word;
       }
       /* keep Logout at the top-right */
       .header-right {
@@ -360,8 +364,16 @@
         border-color: rgba(255,59,48,0.22);
       }
 
-      /* reduce some spacing for compactness */
-      .table-wrap { padding:10px; }
+      /* make table background span full viewport width on small screens */
+      .table-wrap {
+        padding:10px;
+        /* extend to edges */
+        width: calc(100vw - 20px);
+        margin-left: -10px;
+        margin-right: -10px;
+        border-radius: 0;
+      }
+
       .driver-header { padding:10px 12px; }
       .table-top { gap:8px; margin-bottom:6px; }
       .tableMetaSmall, .pagination-top .pageLabel { font-size:11px; }
@@ -397,6 +409,30 @@
       .container { padding-bottom: 60px; } /* ensure controls are not overlapped by small screens */
     }
 
+    /* PRINT/TABLET PDF helper styles applied in JS printable element too (kept here for consistency) */
+    .print-info {
+      width:100%;
+      border-collapse:collapse;
+      margin-bottom:12px;
+      font-size:13px;
+    }
+    .print-info td {
+      padding:6px 8px;
+      border:1px solid #ddd;
+      color:#111;
+    }
+    .print-table {
+      width:100%;
+      border-collapse:collapse;
+      font-size:12px;
+    }
+    .print-table th, .print-table td {
+      padding:8px 10px;
+      border:1px solid #ddd;
+      text-align:center;
+      color:#111;
+    }
+    .print-table thead th { background:#f0f3fb; color:#111; font-weight:800; }
   </style>
 </head>
 <body>
@@ -746,7 +782,7 @@
       headerCols.push({ key: 'totalkm', title: 'Total KM', width: '90px' });
       headerCols.push({ key: 'timein', title: 'Time In', width: '100px' });
       headerCols.push({ key: 'timeout', title: 'Time Out', width: '100px' });
-      headerCols.push({ key: 'actions', title: 'Actions', width: '80px' });
+      headerCols.push({ key: 'actions', title: 'Actions', width: '100px' });
 
       let html = `<table class="driver-report-table" role="table" aria-label="Drivers report">
         <thead><tr>`;
@@ -775,8 +811,8 @@
                  <td>${escapeHtml(timeIn)}</td>
                  <td>${escapeHtml(timeOut)}</td>
                  <td>
-                   <button class="action-edit" data-log="${escapeHtml(log.id)}" title="Edit"><i class="fas fa-edit"></i></button>
-                   <button class="action-delete" data-log="${escapeHtml(log.id)}" title="Delete"><i class="fas fa-trash"></i></button>
+                   <button class="action-edit" data-log="${escapeHtml(log.id)}" title="Edit"><i class="fas fa-edit" aria-hidden="true"></i></button>
+                   <button class="action-delete" data-log="${escapeHtml(log.id)}" title="Delete"><i class="fas fa-trash" aria-hidden="true"></i></button>
                  </td>`;
         html += `</tr>`;
       });
@@ -930,7 +966,7 @@
       a.remove();
     }
 
-    // PDF helper: driver name + details + total km plain bold (no boxed badge), avoid row splitting
+    // PDF helper: create info section and table; ensure headers repeat and rows keep borders; show page numbers
     function downloadReportPdf({ selectedDriverName, allUsers, groupedRows, currentMode, currentMonth, filenamePrefix }){
       function pad2(n){ return String(n).padStart(2,'0'); }
       function toDisplayDateLocal(iso){
@@ -944,41 +980,63 @@
 
       const rows = (groupedRows || []).flatMap(g => g.logs || []);
       const totalKm = sumKmLocal(rows);
+
       let periodText = '';
-      if(currentMode === 'weekly'){ periodText = 'Last 7 days'; }
+      if(currentMode === 'daily'){ periodText = toDisplayDateLocal(todayISO()); }
+      else if(currentMode === 'weekly'){ const t = todayISO(), f = addDays(t, -6); periodText = `${toDisplayDateLocal(f)} — ${toDisplayDateLocal(t)}`; }
       else if(currentMode === 'monthly'){
         const m = currentMonth || ((groupedRows && groupedRows[0] && groupedRows[0].date) ? groupedRows[0].date.slice(0,7) : '');
         periodText = m ? (new Date(m + '-01')).toLocaleString('default',{ month: 'long', year: 'numeric' }) : 'Monthly';
-      } else {
+      } else if(currentMode === 'custom'){ periodText = modalFrom && modalTo ? `${toDisplayDateLocal(modalFrom)} — ${toDisplayDateLocal(modalTo)}` : 'Custom'; }
+      else {
         const dates = (groupedRows || []).map(g => g.date).sort();
         if(dates.length) periodText = `${toDisplayDateLocal(dates[dates.length-1])} — ${toDisplayDateLocal(dates[0])}`;
         else periodText = '—';
       }
 
-      const driverObj = Object.values(allUsers || {}).find(u => u.name === selectedDriverName) || {};
+      const driverObj = allUsers[selectedDriverName] || Object.values(allUsers || {}).find(u => u.name === selectedDriverName) || {};
 
       const printable = document.createElement('div');
       printable.className = 'print-sheet';
       printable.style.boxSizing = 'border-box';
 
-      // Header: plain bold lines, no boxed total
-      printable.innerHTML = `
-        <div class="sheet-header">
-          <div class="driver-name">${escapeHtmlLocal(selectedDriverName || '')}</div>
-          <div class="driver-details">${escapeHtmlLocal(driverObj.car || '')}${driverObj.car ? '  ' : ''}${escapeHtmlLocal(driverObj.address || '')}</div>
-          <div class="total-km"><strong>Total KM: ${totalKm} km</strong></div>
-          <div class="period" style="margin-top:6px;">${escapeHtmlLocal(periodText)}</div>
-        </div>
+      // Build info section as a small table-like block
+      const infoHtml = `
+        <table class="print-info" role="table" aria-label="Driver info">
+          <tr>
+            <td style="width:28%"><strong>Name</strong></td>
+            <td style="width:72%">${escapeHtmlLocal(selectedDriverName || (driverObj.name || 'All drivers'))}</td>
+          </tr>
+          <tr>
+            <td><strong>Car Reg#</strong></td>
+            <td>${escapeHtmlLocal(driverObj.car || '')}</td>
+          </tr>
+          <tr>
+            <td><strong>Address</strong></td>
+            <td>${escapeHtmlLocal(driverObj.address || '')}</td>
+          </tr>
+          <tr>
+            <td><strong>Date selected</strong></td>
+            <td>${escapeHtmlLocal(periodText)}</td>
+          </tr>
+          <tr>
+            <td><strong>Total KM</strong></td>
+            <td>${escapeHtmlLocal(String(totalKm) + ' km')}</td>
+          </tr>
+        </table>
+      `;
 
-        <table id="printTable" style="width:100%;border-collapse:collapse;font-size:12px;">
+      // Build printable table with borders; use thead to ensure repeated header across pages
+      const tableHtml = `
+        <table class="print-table" id="printTable" role="table" aria-label="Report table">
           <thead>
             <tr>
-              <th style="background:#373f6b;color:#fff;padding:8px 10px;text-align:center">Date</th>
-              <th style="background:#373f6b;color:#fff;padding:8px 10px;text-align:center">Km In</th>
-              <th style="background:#373f6b;color:#fff;padding:8px 10px;text-align:center">Km Out</th>
-              <th style="background:#373f6b;color:#fff;padding:8px 10px;text-align:center">Total KM</th>
-              <th style="background:#373f6b;color:#fff;padding:8px 10px;text-align:center">Time In</th>
-              <th style="background:#373f6b;color:#fff;padding:8px 10px;text-align:center">Time Out</th>
+              <th>Date</th>
+              <th>Km In</th>
+              <th>Km Out</th>
+              <th>Total KM</th>
+              <th>Time In</th>
+              <th>Time Out</th>
             </tr>
           </thead>
           <tbody>
@@ -986,28 +1044,32 @@
               const kmIn = r.kmIn || '';
               const kmOut = r.kmOut || '';
               const total = r.totalKm !== undefined ? r.totalKm : ((Number(kmOut)||0) - (Number(kmIn)||0));
-              return `<tr style="background:${ i % 2 ? 'rgba(0,0,0,0.03)' : '#ffffff'}">
-                <td style="padding:8px 10px;text-align:center;color:#111">${escapeHtmlLocal(toDisplayDateLocal(r.date))}</td>
-                <td style="padding:8px 10px;text-align:center;color:#111">${escapeHtmlLocal(kmIn)}</td>
-                <td style="padding:8px 10px;text-align:center;color:#111">${escapeHtmlLocal(kmOut)}</td>
-                <td style="padding:8px 10px;text-align:center;color:#111">${escapeHtmlLocal(String(total))}</td>
-                <td style="padding:8px 10px;text-align:center;color:#111">${escapeHtmlLocal(r.timeIn || '')}</td>
-                <td style="padding:8px 10px;text-align:center;color:#111">${escapeHtmlLocal(r.timeOut || '')}</td>
+              return `<tr>
+                <td>${escapeHtmlLocal(toDisplayDateLocal(r.date))}</td>
+                <td>${escapeHtmlLocal(kmIn)}</td>
+                <td>${escapeHtmlLocal(kmOut)}</td>
+                <td>${escapeHtmlLocal(String(total))}</td>
+                <td>${escapeHtmlLocal(r.timeIn || '')}</td>
+                <td>${escapeHtmlLocal(r.timeOut || '')}</td>
               </tr>`;
             }).join('')}
           </tbody>
         </table>
       `;
 
-      // Prevent row splitting
+      printable.innerHTML = `<div class="sheet-header">${infoHtml}</div>${tableHtml}`;
+
+      // Extra CSS to help pagination: keep rows intact but allow table to split between rows; ensure header repeats
       const style = document.createElement('style');
       style.innerHTML = `
-        .print-sheet table tr, .print-sheet table td, .print-sheet table th {
-          page-break-inside: avoid !important;
-          break-inside: avoid !important;
-        }
-        thead { display: table-header-group; } 
-        tfoot { display: table-footer-group; }
+        .print-sheet { padding:12px; color:#111; background:#fff; }
+        .print-info td { border:1px solid #ccc; vertical-align:middle; }
+        .print-table { width:100%; border-collapse:collapse; page-break-inside:auto; }
+        .print-table thead { display:table-header-group; }
+        .print-table tbody { display:table-row-group; }
+        .print-table tr { page-break-inside:avoid; page-break-after:auto; }
+        .print-table th, .print-table td { border:1px solid #bbb; padding:6px 8px; font-size:11px; color:#111; }
+        .print-table th { background:#f3f6fb; font-weight:800; text-align:center; }
       `;
       printable.prepend(style);
 
@@ -1179,6 +1241,8 @@
       document.getElementById('modalDownload').classList.remove('active');
       const groupedRows = getRows(currentMode);
       const selectedDriverName = selectedDriver === '__all' ? 'All drivers' : (allUsers[selectedDriver] && allUsers[selectedDriver].name) || '';
+      // Provide a mapping object for driver lookup by id -> object
+      // downloadReportPdf expects allUsers keyed by id or containing the matching name
       downloadReportPdf({
         selectedDriverName,
         allUsers,
