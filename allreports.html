@@ -30,7 +30,6 @@
       --gap: 16px;
       --radius: 12px;
     }
-
     html,body{
       margin:0; padding:0; box-sizing:border-box;
       min-height:100vh; width:100vw;
@@ -38,150 +37,158 @@
       background: var(--main-bg); color:#fff;
       -webkit-font-smoothing:antialiased;
       -moz-osx-font-smoothing:grayscale;
+      overflow-x: hidden;
     }
 
-    /* Container full width on desktop/tablet/mobile */
     .container{
-      max-width: none;
-      margin: 10px;
-      padding: 12px;
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: max(1vw, 9px);
       box-sizing: border-box;
-      width: calc(100% - 20px);
+      width: 100%;
     }
-
     .header{
       background: var(--card-bg);
-      padding: 12px;
+      padding: 18px 20px 16px 20px;
       border-radius: var(--radius);
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
       border: 1px solid var(--border);
       box-shadow: 0 2px 12px rgba(66,165,245,0.06);
+      margin-bottom: 10px;
+      display: flex; flex-direction: column; align-items: flex-start; gap: 6px;
     }
-    .header-left { display:flex; align-items:center; gap:12px; }
-    .page-title { font-size:1.12rem; font-weight:800; color:#fff; display:flex; align-items:center; gap:10px; }
-    .page-desc { color:var(--accent); opacity:0.95; font-weight:500; font-size:0.95rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-    #logoutHeader { background: var(--danger); border:none; color:#fff; padding:8px 12px; border-radius:9px; font-weight:700; cursor:pointer; }
-
+    .page-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #fff;
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 1px;
+      line-height: 1.3;
+      flex-wrap: wrap;
+    }
+    .page-desc {
+      color: var(--accent);
+      opacity: 0.95;
+      font-weight: 500;
+      font-size:0.97rem;
+      padding-top:3px;
+      white-space: pre-line;
+      line-height: 1.45;
+      margin-bottom: 4px;
+      word-break: break-word;
+    }
+    .header-right {
+      align-self: stretch;
+      width: 100%;
+      display: flex;
+      justify-content: flex-end;
+    }
+    #logoutHeader {
+      background: var(--danger);
+      border: none;
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 9px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 7px;
+      width: 100%;
+      font-size:1rem;
+      letter-spacing:.02em;
+    }
     /* Controls area */
     .controls-area {
       margin-top: var(--gap);
-      display:flex;
-      flex-direction:row;
-      gap:12px;
-      align-items:flex-start;
-      justify-content:space-between;
-      flex-wrap:nowrap;
+      display: flex;
+      flex-direction: row;
+      gap: 12px;
+      align-items: flex-start;
+      justify-content: space-between;
+      flex-wrap: wrap;
     }
-
     .controls-left {
-      display:flex; gap:12px; align-items:center; flex-wrap:nowrap;
+      display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
       min-width: 0;
     }
+    label.small { color:var(--muted); font-weight:600; margin-right:4px; font-size:0.94rem; }
 
-    label.small { color:var(--muted); font-weight:600; margin-right:6px; font-size:0.95rem; white-space:nowrap; }
-
-    select#driverSelect{
-      background:#1d2430; color:#fff; border:1px solid var(--border);
-      padding:8px 12px; border-radius:9px; min-width:220px; font-weight:700;
-      white-space:nowrap;
-    }
-
-    /* Dark themed rows-per-page select */
+    select#driverSelect,
     select#rowsPerPage{
-      background: #0f1522;
-      color: #fff;
-      border: 1px solid var(--border);
-      padding:8px 10px;
-      border-radius:9px;
-      font-weight:700;
-      appearance: menulist;
-      -webkit-appearance: menulist;
-      white-space:nowrap;
+      background: #1d2430; color: #fff; border: 1px solid var(--border);
+      padding: 8px 11px; border-radius: 9px; min-width:120px; font-weight:700;
+      white-space:nowrap; font-size:1rem;
     }
 
-    .controls-right {
-      display:flex;
-      gap:12px;
-      align-items:center;
-      flex-wrap:wrap;
-    }
+    select#rowsPerPage { background: #0f1522; min-width: 80px; }
+    .controls-right { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
 
-    .actions-top {
-      display:flex;
-      gap:8px;
-      align-items:center;
-      flex-wrap:nowrap;
-    }
-    .actions-bottom {
-      display:flex;
-      gap:8px;
-      align-items:center;
-      flex-wrap:nowrap;
-    }
+    .actions-top,
+    .actions-bottom { display: flex; gap: 8px; align-items: center; flex-wrap:nowrap; }
 
     .btn {
       background: linear-gradient(90deg,var(--primary),var(--primary-hover));
       color:#fff; border:none; padding:8px 14px; border-radius:9px; cursor:pointer; font-weight:700;
       display:inline-flex; align-items:center; gap:8px;
-      white-space:nowrap;
+      white-space:nowrap; font-size:1rem;
     }
     .btn.ghost { background:transparent; border:1px solid var(--border); color:var(--accent); }
     .create-km { background: linear-gradient(90deg,#33c37a,#159a54); }
+    .create-full { display: inline-block; }
+    .create-short { display: none; }
 
-    .create-full { display:inline-block; }
-    .create-short { display:none; }
-
-    .modes { display:flex; gap:8px; flex-wrap:nowrap; white-space:nowrap; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+    .modes { display: flex; gap:7px; flex-wrap: nowrap; white-space:nowrap; overflow-x: auto; }
     .mode-btn {
-      background: transparent; border:1px solid var(--border); color:var(--accent); padding:8px 12px; border-radius:9px; cursor:pointer; font-weight:700;
-      white-space:nowrap;
+      background: transparent; border:1px solid var(--border); color:var(--accent);
+      padding:8px 12px; border-radius:9px; cursor:pointer; font-weight:700;
+      white-space:nowrap; font-size:0.98rem;
     }
-    .mode-btn.active { background: linear-gradient(90deg,var(--primary),var(--primary-hover)); box-shadow: 0 4px 18px rgba(66,165,245,0.12); color:#fff; }
+    .mode-btn.active { background: linear-gradient(90deg,var(--primary),var(--primary-hover)); color:#fff; }
 
-    /* driver header */
     .driver-header {
       margin-top: var(--gap);
       background: #0f1a36;
-      padding:12px 14px;
+      padding:15px 22px;
       border-radius:10px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
+      display:flex; align-items:center; justify-content:space-between;
       border:1px solid var(--border);
+      width: 100%;
+      max-width: 100vw;
+      box-sizing: border-box;
     }
-    .driver-header .left { font-weight:800; font-size:1.04rem; color:#fff; }
+    .driver-header .left { font-weight:800; font-size:1.13rem; color:#fff; }
     .driver-header .right { text-align:right; color:var(--accent); font-weight:700; }
 
-    /* table */
     .table-wrap {
       margin-top: 14px;
       background: var(--card-bg);
       border-radius: var(--radius);
-      padding: 12px;
+      padding: 0; /* for responsive full width */
       border:1px solid var(--border);
       overflow:hidden;
+      width:100%;
+      max-width: 100vw;
     }
-
     .table-top {
-      display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:8px;
+      display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:6px;
+      padding: 12px 22px 2px 22px;
+      background: rgba(255,255,255,0.01);
+      border-radius: 0;
+      width:100%;
     }
-
-    .tableMetaSmall {
-      font-size:12px;
-      color:var(--muted);
-      white-space:nowrap;
-    }
+    .tableMetaSmall { font-size:12px; color:var(--muted); white-space:nowrap; }
 
     .pagination-top { display:flex; gap:8px; align-items:center; }
-    .pagination-top button { background:transparent; border:1px solid var(--border); color:var(--accent); padding:6px 10px; border-radius:8px; cursor:pointer; font-weight:700; white-space:nowrap; }
+    .pagination-top button { background:transparent; border:1px solid var(--border); color:var(--accent); padding:6px 10px; border-radius:8px; cursor:pointer; font-weight:700; white-space:nowrap; font-size:0.95rem;}
     .pagination-top .pageLabel { font-size:12px; color:var(--muted); white-space:nowrap; }
 
-    .scroll-area { overflow:auto; width:100%; border-radius:8px; }
+    .scroll-area {
+      overflow-x:auto; border-radius:0 0 var(--radius) var(--radius); width:100%;
+      background: var(--card-bg);
+      padding: 0 3vw 3vw 3vw;
+      box-sizing: border-box;
+      /* allow scroll horizontally but flush with sides on mobile */
+    }
 
-    /* fixed table layout, center all columns, no wrap */
+    /* modern full-width table style */
     table.driver-report-table {
       width:100%;
       min-width:900px;
@@ -190,236 +197,101 @@
       font-weight:600;
       table-layout: fixed;
       font-size:13px;
+      background:transparent;
     }
     .driver-report-table thead th {
       background: rgba(255,255,255,0.03);
-      color:var(--muted);
-      padding:8px 10px;
-      text-align:center;
-      font-weight:800;
-      font-size:0.92rem;
-      position:sticky;
-      top:0;
-      z-index:2;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      color: var(--muted);
+      padding: 10px 10px; text-align: center;
+      font-weight:800; font-size:1.01rem;
+      position: sticky; top: 0; z-index: 1;
+      border-bottom:1.5px solid var(--border);
     }
     .driver-report-table tbody td {
-      padding:8px 10px; color:#eaf6ff; border-bottom:1px solid rgba(255,255,255,0.03); font-weight:600;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      text-align:center;
+      padding: 10px 10px; color:#eaf6ff;
+      border-bottom:1px solid rgba(255,255,255,0.03); font-weight:600;
+      white-space: nowrap; text-overflow: ellipsis; text-align: center;
+      background: transparent;
     }
-    .driver-report-table tbody tr:nth-child(odd) { background: rgba(255,255,255,0.01); }
-    .driver-report-table tbody tr:nth-child(even) { background: rgba(255,255,255,0.00); }
+    .driver-report-table tbody tr:nth-child(odd) { background: rgba(255,255,255,0.015); }
+    .driver-report-table tbody tr:nth-child(even) { background: rgba(255,255,255,0.01); }
 
     .small-muted { color:var(--muted); font-weight:600; font-size:0.92rem; }
 
-    /* icons-only actions */
+    /* Responsive full width and padding on sides for mobile/tablet */
+    @media (max-width:1100px) {
+      .container { max-width: none; width: 100vw; padding-left: 2vw; padding-right: 2vw; }
+      .table-wrap, .driver-header { border-radius:10px;}
+      .scroll-area { padding:0 1vw 1vw 1vw;}
+    }
+    @media (max-width:900px) {
+      .header{padding:14px 6vw 12px 6vw;}
+      .table-top {padding: 7px 3vw 1px 3vw;}
+      .driver-header {padding:13px 2vw;}
+      .scroll-area {padding: 0 .7vw 1vw .7vw;}
+      .container { max-width:none; width: 100vw; padding-bottom:40px;}
+    }
+    @media (max-width:650px) {
+      .header {
+        padding:12px 1.7vw 11px 1.7vw;
+        border-radius:10px; gap: 1px;
+      }
+      .table-top,
+      .driver-header { padding:11px .7vw 3px .7vw;}
+      .scroll-area{padding-left:0.5vw; padding-right:0.5vw;}
+    }
+    @media (max-width:500px){
+      .header,.container,.table-top, .driver-header, .table-wrap,.scroll-area {
+        padding-left:3px !important; padding-right:3px !important;
+      }
+      .container{padding-left:2px !important; padding-right:2px !important;}
+    }
+
+    /* Subheading multiline always */
+    .page-desc {
+      white-space: pre-line!important; overflow-wrap: break-word; word-break: break-word; display: block;
+    }
+    /* Move logout button under heading on all screens */
+    .header-right { width:100%; justify-content: flex-end; }
+    #logoutHeader { width:100%; margin-top:10px; }
+
+    /* Action icon buttons */
     .action-delete, .action-edit {
-      width:36px; height:36px; display:inline-flex; align-items:center; justify-content:center;
+      min-width:44px; min-height:40px; display:inline-flex; align-items:center; justify-content:center;
       border-radius:8px; cursor:pointer; border:1px solid transparent; background:transparent; color:inherit;
+      margin-right:1px; margin-left:1px;
     }
     .action-edit { border-color: rgba(66,165,245,0.22); color:var(--primary); }
     .action-delete { border-color: rgba(255,59,48,0.22); color:var(--danger); }
 
-    .action-edit i, .action-delete i { font-size:14px; }
+    .action-edit i, .action-delete i { font-size:15px; }
 
-    /* modals */
+    /* Modal background tweaks - always 100vw/100vh padded */
     .modal-bg {
-      display:none;
-      position:fixed; inset:0; z-index:9999;
-      background: rgba(13,32,70,0.82);
-      align-items:center; justify-content:center;
-      padding:16px;
+      display:none; position:fixed; inset:0; z-index:9999; background: rgba(13,32,70,0.82);
+      align-items:center; justify-content:center; padding:16px; width:100vw;height:100vh;
     }
     .modal-bg.active { display:flex; }
-    .modal {
+    .modal{
       background: var(--card-bg);
-      padding:18px;
-      border-radius:12px;
-      border: 2px solid var(--primary);
-      min-width:320px;
-      max-width:95vw;
-      color:var(--accent);
-      box-shadow: 0 8px 28px rgba(0,0,0,0.6);
+      padding:18px; border-radius:12px; border: 2px solid var(--primary);
+      min-width:320px; max-width:95vw; color:var(--accent); box-shadow: 0 8px 28px rgba(0,0,0,0.6);
     }
     .modal .title { font-weight:800; color:#fff; margin-bottom:8px; display:flex; align-items:center; gap:8px; }
     .modal .controls { display:flex; gap:8px; justify-content:flex-end; margin-top:12px; }
-    .modal .controls .btn { padding:8px 12px; }
-
     .form-row { display:flex; gap:8px; margin-top:8px; align-items:center; }
     .form-row label { min-width:80px; color:var(--muted); font-weight:700; font-size:0.9rem; }
     .form-row input[type="text"], .form-row input[type="number"], .form-row input[type="date"], .form-row input[type="time"], select.modal-dark {
       background:#0f1522; color:#fff; border:1px solid var(--border); padding:8px 10px; border-radius:8px; font-weight:700; width:100%;
     }
-
     select#modalMonthSelect.modal-dark { background:#0f1626; color:#fff; padding:10px; border-radius:8px; border:1px solid var(--border); }
 
-    /* printable sheet */
-    .print-sheet { background:#fff; color:#111; padding:18px; font-family: 'Poppins', Arial, sans-serif; }
-    .print-sheet .sheet-header { margin-bottom:12px; }
-    .print-sheet .sheet-header .driver-name { font-weight:800; font-size:18px; color:#111; display:block; }
-    .print-sheet .sheet-header .driver-details { margin-top:6px; color:#111; font-weight:700; }
-    .print-sheet .sheet-header .total-km { margin-top:6px; font-weight:700; color:#111; }
-
-    /* ensure rows do not split across pages */
-    .print-sheet table tr, .print-sheet table td, .print-sheet table th {
-      page-break-inside: avoid;
-      break-inside: avoid;
-    }
-    thead { display: table-header-group; }
-    tfoot { display: table-footer-group; }
-
-    /* a small accessibility/touch improvement: larger hit area for icon-only buttons */
-    .action-delete, .action-edit { min-width:44px; min-height:44px; width:auto; height:auto; padding:6px 10px; }
-
-    /* ========== Tablet & Mobile adjustments (desktop remains unchanged) ========== */
-
-    @media (max-width:900px) {
-      /* Header: title on one line, subheading allowed to wrap */
-      .header {
-        padding:8px;
-        align-items:flex-start;
-      }
-      .header-left {
-        display:flex;
-        flex-direction:column;
-        gap:4px;
-        min-width:0;
-      }
-      /* main title should try to stay in one line, but allow wrapping if necessary (keeps visual) */
-      .page-title {
-        font-size:1rem;
-        font-weight:800;
-        display:block;
-        white-space:nowrap;
-        overflow:hidden;
-        text-overflow:ellipsis;
-      }
-      /* subheading on second line and allowed to wrap if longer */
-      .page-desc {
-        font-size:0.88rem;
-        display:block;
-        white-space:normal;  /* allow wrapping */
-        overflow:visible;
-        text-overflow:unset;
-        color:var(--accent);
-        max-width: calc(100vw - 160px); /* keep logout button visible */
-        word-break: break-word;
-      }
-      /* keep Logout at the top-right */
-      .header-right {
-        margin-left:auto;
-        align-self:flex-start;
-      }
-      #logoutHeader {
-        padding:6px 10px;
-        font-size:0.95rem;
-      }
-
-      /* Controls: allow wrapping so nothing goes out of the screen, shorten selects */
-      .controls-area {
-        flex-wrap:wrap;
-        gap:8px;
-      }
-      .controls-left {
-        gap:8px;
-        flex-wrap:wrap;
-        align-items:center;
-      }
-      select#driverSelect {
-        min-width:140px;
-        max-width:46%;
-      }
-      select#rowsPerPage {
-        min-width:60px;
-        max-width:18%;
-      }
-      .modes {
-        width:100%;
-        gap:6px;
-        overflow:auto;
-        -webkit-overflow-scrolling:touch;
-      }
-      .controls-right {
-        gap:8px;
-        flex-wrap:wrap;
-        justify-content:flex-end;
-        width:auto;
-      }
-      .actions-bottom {
-        width:100%;
-        justify-content:flex-start;
-      }
-      .create-full { display:inline-block; }
-      .create-short { display:none; }
-
-      /* Increase delete icon contrast and give a subtle background so it's visible on mobile */
-      .action-delete {
-        color:#ff8b85; /* brighter */
-        background: rgba(255, 59, 48, 0.08);
-        border-color: rgba(255,59,48,0.22);
-      }
-
-      /* make table background span full viewport width on small screens */
-      .table-wrap {
-        padding:10px;
-        /* extend to edges */
-        width: calc(100vw - 20px);
-        margin-left: -10px;
-        margin-right: -10px;
-        border-radius: 0;
-      }
-
-      .driver-header { padding:10px 12px; }
-      .table-top { gap:8px; margin-bottom:6px; }
-      .tableMetaSmall, .pagination-top .pageLabel { font-size:11px; }
-      table.driver-report-table { font-size:12px; min-width:700px; } /* allow smaller min-width for easier fitting, table still scrollable */
-      .driver-report-table thead th, .driver-report-table tbody td { padding:6px 8px; }
-    }
-
-    @media (max-width:650px) {
-      /* Further tighten spacing and font sizes on small phones */
-      .header { padding:8px; border-radius:10px; }
-      .page-title { font-size:0.98rem; }
-      .page-desc { font-size:0.82rem; }
-      #logoutHeader { padding:6px 8px; font-size:0.9rem; }
-
-      .controls-area { gap:6px; margin-top:10px; }
-      .controls-left { gap:6px; }
-      select#driverSelect { min-width:120px; max-width:60%; }
-      select#rowsPerPage { min-width:56px; max-width:18%; }
-
-      /* show compact create button on very small screens */
-      .create-full { display:none; }
-      .create-short { display:inline-block; }
-
-      /* Action buttons size tweak so they remain visible without overlapping */
-      .actions-bottom .btn { padding:10px 12px; font-size:13px; min-width:86px; }
-
-      /* ensure delete icon is clearly visible */
-      .action-delete { color:#ff6b5b; background: rgba(255, 59, 48, 0.12); }
-
-      /* table tweaks */
-      table.driver-report-table { font-size:11px; min-width:640px; }
-      .driver-report-table thead th, .driver-report-table tbody td { padding:5px 6px; }
-      .container { padding-bottom: 60px; } /* ensure controls are not overlapped by small screens */
-    }
-
-    /* PRINT/TABLET PDF helper styles applied in JS printable element too (kept here for consistency) */
+    /* Custom print table, using row/col separation for info */
     .print-info {
-      width:100%;
-      border-collapse:collapse;
-      margin-bottom:12px;
-      font-size:13px;
+      width:100%; border-collapse:collapse; margin-bottom:12px; font-size:13px;
     }
     .print-info td {
-      padding:6px 8px;
-      border:1px solid #ddd;
-      color:#111;
+      padding:6px 8px; border:1px solid #ddd; color:#111; background: #f8fbfd;
     }
     .print-table {
       width:100%;
@@ -427,34 +299,48 @@
       font-size:12px;
     }
     .print-table th, .print-table td {
-      padding:8px 10px;
-      border:1px solid #ddd;
-      text-align:center;
-      color:#111;
+      padding:8px 10px; border:1px solid #ddd; text-align:center; color:#111;
     }
-    .print-table thead th { background:#f0f3fb; color:#111; font-weight:800; }
+    .print-table thead th {background:#f0f3fb; color:#111; font-weight:800;}
+
+    /* PDF/print header repeat on new page; prevent row break */
+    .print-sheet table tr, .print-sheet table td, .print-sheet table th { page-break-inside: avoid; break-inside: avoid; }
+    .print-table thead { display: table-header-group; }
+    .print-table tbody { display: table-row-group; }
+    .print-table tr { page-break-inside:avoid; page-break-after:auto; }
+
+    /* Improved button sizes for mobile/tablet */
+    @media (max-width:900px) {
+      .btn, .mode-btn, select#driverSelect, select#rowsPerPage { font-size: 0.98rem !important; padding:9px 10px;}
+      .actions-bottom .btn { min-width:90px; }
+    }
+    @media (max-width:650px) {
+      .btn, .mode-btn, select#driverSelect, select#rowsPerPage { font-size: 0.94rem !important;}
+      .create-full { display:none; }
+      .create-short { display:inline-block; }
+    }
   </style>
 </head>
 <body>
   <div class="container" id="appContainer">
     <div class="header">
-      <div class="header-left">
-        <div class="page-title"><i class="fas fa-chart-line"></i> All Drivers KM Reports</div>
-        <div class="page-desc">Ravintola Tandoori Villa — view, manage and export drivers' KM/time reports</div>
+      <div class="page-title"><i class="fas fa-chart-line"></i> All Drivers KM Reports</div>
+      <div class="page-desc">
+        Ravintola Tandoori Villa – view, manage and export drivers' KM/time reports.
+        Filter by driver, select time range and export the logs to CSV or PDF.<br>
+        (Page is fully responsive for mobile, tablet, and desktop.)
       </div>
       <div class="header-right">
         <button id="logoutHeader">Logout</button>
       </div>
     </div>
 
-    <!-- Controls: top row contains driver + per-page + modes, bottom row contains create/download/delete all (stacked on mobile) -->
     <div class="controls-area">
       <div class="controls-left">
         <label class="small">Driver</label>
         <select id="driverSelect" aria-label="Select driver">
           <option value="__all">All drivers</option>
         </select>
-
         <label class="small">Per page</label>
         <select id="rowsPerPage" class="rows-per-page" title="Rows per page">
           <option value="5">5</option>
@@ -462,9 +348,7 @@
           <option value="20">20</option>
           <option value="50">50</option>
         </select>
-
         <div style="width:8px"></div>
-
         <div class="modes" role="tablist" aria-label="Mode switch">
           <button class="mode-btn active" id="dailyBtn" role="tab">Daily</button>
           <button class="mode-btn" id="weeklyBtn" role="tab">Last 7 Days</button>
@@ -472,20 +356,15 @@
           <button class="mode-btn" id="customBtn" role="tab">Custom</button>
         </div>
       </div>
-
       <div class="controls-right">
-        <!-- Actions top/bottom so mobile can show modes row then actions row -->
         <div class="actions-top" aria-hidden="true"></div>
-
         <div class="actions-bottom">
           <button id="createKm" class="btn create-km" title="Create KM table">
             <i class="fas fa-plus-circle"></i>
             <span class="create-full">Create KM Table</span>
             <span class="create-short">Create</span>
           </button>
-
           <button id="downloadBtn" class="btn" title="Download"><i class="fas fa-file-download"></i> Download</button>
-
           <button id="deleteAllBtn" class="btn" title="Delete all shown rows" style="background:linear-gradient(90deg,#ff5b5b,#c93535);">
             <i class="fas fa-trash-alt"></i> Delete All
           </button>
@@ -494,20 +373,14 @@
     </div>
 
     <div id="driverHeaderHolder"></div>
-
     <div class="table-wrap">
       <div class="table-top">
         <div id="tableMeta" class="tableMetaSmall">No data</div>
         <div class="pagination-top" id="paginationTop"></div>
       </div>
-
-      <div class="scroll-area" id="tableScroll">
-        <!-- table injected here always -->
-      </div>
+      <div class="scroll-area" id="tableScroll"></div>
     </div>
   </div>
-
-  <!-- Modals -->
 
   <!-- Month modal -->
   <div class="modal-bg" id="modalMonth">
@@ -522,7 +395,6 @@
       </div>
     </div>
   </div>
-
   <!-- Custom date modal -->
   <div class="modal-bg" id="modalCustom">
     <div class="modal" role="dialog" aria-modal="true">
@@ -541,12 +413,10 @@
       </div>
     </div>
   </div>
-
   <!-- Edit modal (per-row editing) -->
   <div class="modal-bg" id="modalEdit">
     <div class="modal" role="dialog" aria-modal="true">
       <div class="title"><i class="fas fa-edit"></i> Edit log entry</div>
-
       <div class="form-row">
         <label>Date</label>
         <input id="editDate" type="date">
@@ -567,16 +437,13 @@
         <label>Time Out</label>
         <input id="editTimeOut" type="time">
       </div>
-
       <div id="editError" style="color:var(--danger); margin-top:8px; display:none;"></div>
-
       <div class="controls">
         <button class="btn ghost" id="modalEditCancel">Cancel</button>
         <button class="btn" id="modalEditSave">Save</button>
       </div>
     </div>
   </div>
-
   <!-- Download modal -->
   <div class="modal-bg" id="modalDownload">
     <div class="modal" role="dialog" aria-modal="true">
@@ -590,7 +457,6 @@
       </div>
     </div>
   </div>
-
   <!-- Confirm modal (delete single and delete all) -->
   <div class="modal-bg" id="modalConfirm">
     <div class="modal" role="dialog" aria-modal="true">
@@ -767,29 +633,28 @@
     // Render desktop-style table; hides Driver column when a specific driver is selected
     function renderDesktop(logs) {
       const showDriverCol = (selectedDriver === "__all");
-
       totalPages = Math.max(1, Math.ceil(logs.length / rowsPerPage));
       if (currentPage > totalPages) currentPage = totalPages;
       const start = (currentPage - 1) * rowsPerPage;
       const pageItems = logs.slice(start, start + rowsPerPage);
 
       // Build header dynamically
-      let headerCols = [];
-      headerCols.push({ key: 'date', title: 'Date', width: '110px' });
+      let headerCols = [
+        { key: 'date', title: 'Date', width: '110px' },
+      ];
       if(showDriverCol) headerCols.push({ key: 'driver', title: 'Driver', width: '200px' });
-      headerCols.push({ key: 'kmin', title: 'KM In', width: '90px' });
-      headerCols.push({ key: 'kmout', title: 'KM Out', width: '90px' });
-      headerCols.push({ key: 'totalkm', title: 'Total KM', width: '90px' });
-      headerCols.push({ key: 'timein', title: 'Time In', width: '100px' });
-      headerCols.push({ key: 'timeout', title: 'Time Out', width: '100px' });
-      headerCols.push({ key: 'actions', title: 'Actions', width: '100px' });
+      headerCols.push(
+        { key: 'kmin', title: 'KM In', width: '90px' },
+        { key: 'kmout', title: 'KM Out', width: '90px' },
+        { key: 'totalkm', title: 'Total KM', width: '90px' },
+        { key: 'timein', title: 'Time In', width: '100px' },
+        { key: 'timeout', title: 'Time Out', width: '100px' },
+        { key: 'actions', title: 'Actions', width: '100px' }
+      );
 
       let html = `<table class="driver-report-table" role="table" aria-label="Drivers report">
-        <thead><tr>`;
-      headerCols.forEach(c => {
-        html += `<th style="width:${c.width}">${escapeHtml(c.title)}</th>`;
-      });
-      html += `</tr></thead><tbody>`;
+        <thead><tr>${headerCols.map(c=>`<th style="width:${c.width}">${escapeHtml(c.title)}</th>`).join('')}</tr></thead>
+        <tbody>`;
 
       pageItems.forEach(log => {
         const driverName = (allUsers[log.userId] && allUsers[log.userId].name) || log.name || '—';
@@ -800,11 +665,8 @@
         const timeOut = log.timeOut || '';
 
         html += `<tr data-log-id="${escapeHtml(log.id)}">`;
-        // date
         html += `<td>${escapeHtml(toDisplayDate(log.date || ''))}</td>`;
-        // driver (conditionally)
         if(showDriverCol) html += `<td>${escapeHtml(driverName)}</td>`;
-        // other columns
         html += `<td>${escapeHtml(kmIn)}</td>
                  <td>${escapeHtml(kmOut)}</td>
                  <td>${escapeHtml(String(totalKmCell))}</td>
@@ -816,12 +678,9 @@
                  </td>`;
         html += `</tr>`;
       });
-
       html += `</tbody></table>`;
       tableScroll.innerHTML = html;
-
       tableMeta.textContent = `${logs.length} record(s) — mode: ${currentMode}`;
-
       // attach edit handlers
       tableScroll.querySelectorAll('.action-edit').forEach(btn => {
         btn.onclick = () => {
@@ -938,26 +797,61 @@
     }
 
     // ---------- Downloads ----------
-    function downloadCSV(){
+    function downloadCSV() {
       const grouped = getRows(currentMode);
       const flattened = grouped.flatMap(g => g.logs);
-      const header = ['Date','Driver','KM In','KM Out','Total KM','Time In','Time Out'];
-      const rows = [header];
+      let driverObj = selectedDriver === "__all"
+        ? {}
+        : (allUsers[selectedDriver] || {});
+      let driverName = selectedDriver === "__all"
+        ? "All drivers"
+        : driverObj.name || "";
+      let totalKm = sumKm(flattened);
+      let periodText = '';
+      if(currentMode === 'daily'){ periodText = toDisplayDate(todayISO()); }
+      else if(currentMode === 'weekly'){ const t = todayISO(), f = addDays(t,-6); periodText = `${toDisplayDate(f)} — ${toDisplayDate(t)}`; }
+      else if(currentMode === 'monthly'){ periodText = currentMonth ? currentMonth : (getAvailableMonthsForDriver(selectedDriver)[0] || ''); periodText = periodText?periodText.split('-').join('/'):''; }
+      else if(currentMode === 'custom'){ periodText = modalFrom && modalTo ? `${toDisplayDate(modalFrom)} — ${toDisplayDate(modalTo)}` : 'Custom'; }
+
+      // "Driver Info" section
+      let info = [
+        ['Name', driverName],
+        ['Car Reg#', driverObj.car || ''],
+        ['Address', driverObj.address || ''],
+        ['Date selected', periodText],
+        ['Total KM', totalKm + ' km']
+      ];
+      let lines = [];
+      info.forEach(row =>
+        lines.push(row.map(cell => `"${String(cell).replace(/"/g,'""')}"`).join(','))
+      );
+
+      lines.push(""); // blank line
+
+      // Table: if "all", include Driver column
+      const header = ['Date'];
+      if(selectedDriver === '__all') header.push('Driver');
+      header.push('KM In','KM Out','Total KM','Time In','Time Out');
+      lines.push(header.map(cell => `"${cell}"`).join(','));
+
       flattened.forEach(r => {
         const driver = (allUsers[r.userId] && allUsers[r.userId].name) || r.name || '';
         const kmIn = r.kmIn || '';
         const kmOut = r.kmOut || '';
         const total = r.totalKm !== undefined ? r.totalKm : ((Number(kmOut)||0) - (Number(kmIn)||0));
-        rows.push([r.date || '', driver, kmIn, kmOut, String(total), r.timeIn || '', r.timeOut || '']);
+        let row = [r.date || ''];
+        if(selectedDriver === '__all') row.push(driver);
+        row.push(kmIn, kmOut, String(total), r.timeIn || '', r.timeOut || '');
+        lines.push(row.map(cell => {
+          let s = String(cell??'');
+          if(s.includes('"') || s.includes(',') || s.includes('\n')) return '"' + s.replace(/"/g,'""') + '"';
+          return s;
+        }).join(','));
       });
-      const csv = rows.map(r => r.map(cell => {
-        const s = String(cell ?? '');
-        if(s.includes('"') || s.includes(',') || s.includes('\n')) return `"${s.replace(/"/g,'""')}"`;
-        return s;
-      }).join(',')).join('\n');
 
+      const csv = lines.join('\n');
+      const filename = `reports_${driverName.replace(/\s+/g,'_')}_${new Date().toISOString().slice(0,10)}.csv`;
       const blob = new Blob([csv], {type: 'text/csv;charset=utf-8;'});
-      const filename = `reports_${selectedDriver === '__all' ? 'all' : (allUsers[selectedDriver] && allUsers[selectedDriver].name || selectedDriver)}_${new Date().toISOString().slice(0,10)}.csv`;
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
       a.download = filename;
@@ -966,8 +860,7 @@
       a.remove();
     }
 
-    // PDF helper: create info section and table; ensure headers repeat and rows keep borders; show page numbers
-    function downloadReportPdf({ selectedDriverName, allUsers, groupedRows, currentMode, currentMonth, filenamePrefix }){
+    function downloadReportPdf({ selectedDriverName, allUsers, groupedRows, currentMode, currentMonth, filenamePrefix }) {
       function pad2(n){ return String(n).padStart(2,'0'); }
       function toDisplayDateLocal(iso){
         if(!iso) return '';
@@ -977,13 +870,11 @@
       }
       function escapeHtmlLocal(s){ if(s==null) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
       function sumKmLocal(rows){ return rows.reduce((s,r)=> s + (parseInt(r.totalKm||(((Number(r.kmOut)||0)-(Number(r.kmIn)||0)).toString()),10)||0), 0); }
-
       const rows = (groupedRows || []).flatMap(g => g.logs || []);
       const totalKm = sumKmLocal(rows);
-
       let periodText = '';
       if(currentMode === 'daily'){ periodText = toDisplayDateLocal(todayISO()); }
-      else if(currentMode === 'weekly'){ const t = todayISO(), f = addDays(t, -6); periodText = `${toDisplayDateLocal(f)} — ${toDisplayDateLocal(t)}`; }
+      else if(currentMode === 'weekly'){ const t = todayISO(), f = addDays(t,-6); periodText = `${toDisplayDateLocal(f)} — ${toDisplayDateLocal(t)}`; }
       else if(currentMode === 'monthly'){
         const m = currentMonth || ((groupedRows && groupedRows[0] && groupedRows[0].date) ? groupedRows[0].date.slice(0,7) : '');
         periodText = m ? (new Date(m + '-01')).toLocaleString('default',{ month: 'long', year: 'numeric' }) : 'Monthly';
@@ -993,83 +884,61 @@
         if(dates.length) periodText = `${toDisplayDateLocal(dates[dates.length-1])} — ${toDisplayDateLocal(dates[0])}`;
         else periodText = '—';
       }
+      let driverObj = (selectedDriverName && allUsers)
+        ? (Object.values(allUsers).find(u=>u.name===selectedDriverName) || allUsers[selectedDriverName] || {}) : {};
+      if(selectedDriverName === "All drivers") driverObj = {};
 
-      const driverObj = allUsers[selectedDriverName] || Object.values(allUsers || {}).find(u => u.name === selectedDriverName) || {};
-
-      const printable = document.createElement('div');
-      printable.className = 'print-sheet';
-      printable.style.boxSizing = 'border-box';
-
-      // Build info section as a small table-like block
+      // Info table (with some style)
       const infoHtml = `
-        <table class="print-info" role="table" aria-label="Driver info">
-          <tr>
-            <td style="width:28%"><strong>Name</strong></td>
-            <td style="width:72%">${escapeHtmlLocal(selectedDriverName || (driverObj.name || 'All drivers'))}</td>
-          </tr>
-          <tr>
-            <td><strong>Car Reg#</strong></td>
-            <td>${escapeHtmlLocal(driverObj.car || '')}</td>
-          </tr>
-          <tr>
-            <td><strong>Address</strong></td>
-            <td>${escapeHtmlLocal(driverObj.address || '')}</td>
-          </tr>
-          <tr>
-            <td><strong>Date selected</strong></td>
-            <td>${escapeHtmlLocal(periodText)}</td>
-          </tr>
-          <tr>
-            <td><strong>Total KM</strong></td>
-            <td>${escapeHtmlLocal(String(totalKm) + ' km')}</td>
-          </tr>
+        <table class="print-info" style="font-size:13px;width:96%;max-width:650px;margin-bottom:12px;border-radius:8px;background:#f8fbfd;border:1.5px solid #dae9fc;">
+          <tr><td style="width:32%"><strong>Name</strong></td><td style="width:68%">${escapeHtmlLocal(selectedDriverName || driverObj.name || "All drivers")}</td></tr>
+          <tr><td><strong>Car Reg#</strong></td><td>${escapeHtmlLocal(driverObj.car || '')}</td></tr>
+          <tr><td><strong>Address</strong></td><td>${escapeHtmlLocal(driverObj.address || '')}</td></tr>
+          <tr><td><strong>Date selected</strong></td><td>${escapeHtmlLocal(periodText)}</td></tr>
+          <tr><td><strong>Total KM</strong></td><td>${escapeHtmlLocal(String(totalKm) + ' km')}</td></tr>
         </table>
       `;
-
-      // Build printable table with borders; use thead to ensure repeated header across pages
+      // Dynamic header
+      let tableHeaders = `<th>Date</th>`;
+      if(selectedDriverName === "All drivers") tableHeaders += `<th>Driver</th>`;
+      tableHeaders += `<th>Km In</th><th>Km Out</th><th>Total KM</th><th>Time In</th><th>Time Out</th>`;
       const tableHtml = `
-        <table class="print-table" id="printTable" role="table" aria-label="Report table">
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Km In</th>
-              <th>Km Out</th>
-              <th>Total KM</th>
-              <th>Time In</th>
-              <th>Time Out</th>
-            </tr>
-          </thead>
+        <table class="print-table" id="printTable" role="table" aria-label="Report table" style="border-radius:8px;overflow:hidden;">
+          <thead><tr>${tableHeaders}</tr></thead>
           <tbody>
-            ${rows.map((r, i) => {
+            ${rows.map((r) => {
+              const driver = (allUsers[r.userId] && allUsers[r.userId].name) || r.name || '';
               const kmIn = r.kmIn || '';
               const kmOut = r.kmOut || '';
               const total = r.totalKm !== undefined ? r.totalKm : ((Number(kmOut)||0) - (Number(kmIn)||0));
-              return `<tr>
-                <td>${escapeHtmlLocal(toDisplayDateLocal(r.date))}</td>
-                <td>${escapeHtmlLocal(kmIn)}</td>
-                <td>${escapeHtmlLocal(kmOut)}</td>
+              let rowHtml = `<td>${escapeHtmlLocal(toDisplayDateLocal(r.date))}</td>`;
+              if(selectedDriverName === "All drivers") rowHtml += `<td>${escapeHtmlLocal(driver)}</td>`;
+              rowHtml += `<td>${escapeHtmlLocal(kmIn)}</td><td>${escapeHtmlLocal(kmOut)}</td>
                 <td>${escapeHtmlLocal(String(total))}</td>
-                <td>${escapeHtmlLocal(r.timeIn || '')}</td>
-                <td>${escapeHtmlLocal(r.timeOut || '')}</td>
-              </tr>`;
+                <td>${escapeHtmlLocal(r.timeIn || '')}</td><td>${escapeHtmlLocal(r.timeOut || '')}</td>`;
+              return `<tr>${rowHtml}</tr>`;
             }).join('')}
           </tbody>
         </table>
       `;
 
+      const printable = document.createElement('div');
+      printable.className = 'print-sheet';
+      printable.style.boxSizing = 'border-box';
+      printable.style.padding = "16px 0 18px 0";
       printable.innerHTML = `<div class="sheet-header">${infoHtml}</div>${tableHtml}`;
 
       // Extra CSS to help pagination: keep rows intact but allow table to split between rows; ensure header repeats
       const style = document.createElement('style');
       style.innerHTML = `
         .print-sheet { padding:12px; color:#111; background:#fff; }
-        .print-info td { border:1px solid #ccc; vertical-align:middle; }
+        .print-info td { border:1px solid #ccc; background:#f8fbfd; }
         .print-table { width:100%; border-collapse:collapse; page-break-inside:auto; }
         .print-table thead { display:table-header-group; }
         .print-table tbody { display:table-row-group; }
         .print-table tr { page-break-inside:avoid; page-break-after:auto; }
-        .print-table th, .print-table td { border:1px solid #bbb; padding:6px 8px; font-size:11px; color:#111; }
-        .print-table th { background:#f3f6fb; font-weight:800; text-align:center; }
+        .print-table th,.print-table td { border:1px solid #bbb; padding:7px 8px; font-size:11.7px; color:#111;}
+        .print-table th { background:#e7f1fc; font-weight:800; text-align:center;}
       `;
       printable.prepend(style);
 
@@ -1080,7 +949,7 @@
                        (new Date()).toISOString().slice(0,10) + '.pdf';
 
       const opt = {
-        margin: [10, 10, 18, 10],
+        margin: [8, 5, 18, 5],
         filename: filename,
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { scale: 2, useCORS: true },
@@ -1100,7 +969,6 @@
         }
         pdf.save(opt.filename);
       }).catch(function(err){
-        console.error('html2pdf error', err);
         alert('PDF generation failed: ' + (err && err.message ? err.message : 'unknown error'));
       }).finally(function(){
         try { document.body.removeChild(printable); } catch(e){}
