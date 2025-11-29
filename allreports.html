@@ -265,11 +265,31 @@
       .actions-bottom { gap:6px; }
       .btn { padding:8px 10px; font-size:0.94rem; }
 
-      /* MOBILE SPECIFIC LAYOUTS:
-         - Place Create and Logout side-by-side
-         - Place Download and Delete All side-by-side at the top of the table
-         We'll move DOM nodes with JS on small screens to ensure exact grouping while keeping HTML intact.
+      /* MOBILE SPECIFIC:
+         Show mobile-only controls and hide desktop-only originals
       */
+      .mobile-only { display:inline-flex !important; }
+      .desktop-only { display:none !important; }
+
+      /* style mobile logout placed next to create in controls right area */
+      .actions-bottom .mobile-logout {
+        background: var(--danger);
+        border-radius: 9px;
+        padding: 8px 10px;
+        font-weight:700;
+        display:inline-flex;
+        align-items:center;
+        gap:8px;
+      }
+
+      /* mobile table actions container placed inside .table-top */
+      .mobile-table-actions {
+        display:flex;
+        gap:8px;
+        align-items:center;
+      }
+      .mobile-table-actions .btn { padding:8px 10px; font-size:0.94rem; }
+
     }
 
     /* Subheading multiline always */
@@ -367,7 +387,7 @@
         Filter by driver, select time range and export the logs to CSV or PDF.<br>
         (Page is fully responsive for mobile, tablet, and desktop.)
       </div>
-      <div class="header-right">
+      <div class="header-right desktop-only">
         <button id="logoutHeader">Logout</button>
       </div>
     </div>
@@ -401,8 +421,15 @@
             <span class="create-full">Create KM Table</span>
             <span class="create-short">Create</span>
           </button>
-          <button id="downloadBtn" class="btn" title="Download"><i class="fas fa-file-download"></i> Download</button>
-          <button id="deleteAllBtn" class="btn" title="Delete all shown rows" style="background:linear-gradient(90deg,#ff5b5b,#c93535);">
+
+          <!-- Mobile-only logout duplicate (shown side-by-side with Create on small screens) -->
+          <button id="logoutMobile" class="mobile-only mobile-logout" title="Logout (mobile)">
+            <i class="fas fa-sign-out-alt"></i> Logout
+          </button>
+
+          <!-- Original Download & Delete kept but marked desktop-only so they hide on mobile -->
+          <button id="downloadBtn" class="btn desktop-only" title="Download"><i class="fas fa-file-download"></i> Download</button>
+          <button id="deleteAllBtn" class="btn desktop-only" title="Delete all shown rows" style="background:linear-gradient(90deg,#ff5b5b,#c93535);">
             <i class="fas fa-trash-alt"></i> Delete All
           </button>
         </div>
@@ -413,6 +440,15 @@
     <div class="table-wrap">
       <div class="table-top">
         <div id="tableMeta" class="tableMetaSmall">No data</div>
+
+        <!-- Mobile-only container that will show Download & Delete side-by-side on top of reports table -->
+        <div class="mobile-table-actions mobile-only" id="mobileTableActions" style="display:none;">
+          <button id="downloadMobile" class="btn" title="Download (mobile)"><i class="fas fa-file-download"></i> Download</button>
+          <button id="deleteMobile" class="btn" title="Delete all shown rows (mobile)" style="background:linear-gradient(90deg,#ff5b5b,#c93535);">
+            <i class="fas fa-trash-alt"></i> Delete All
+          </button>
+        </div>
+
         <div class="pagination-top" id="paginationTop"></div>
       </div>
       <div class="scroll-area" id="tableScroll" aria-live="polite" aria-atomic="true"></div>
@@ -550,25 +586,12 @@
     const modalMonth = document.getElementById('modalMonth');
     const modalMonthSelect = document.getElementById('modalMonthSelect');
     const deleteAllBtn = document.getElementById('deleteAllBtn');
-    const controlsRight = document.getElementById('controlsRight');
-    const headerRight = document.querySelector('.header-right');
-    const logoutHeader = document.getElementById('logoutHeader');
-    const createKmBtn = document.getElementById('createKm');
     const downloadBtn = document.getElementById('downloadBtn');
 
-    // to restore DOM positions after mobile
-    const domPositions = {
-      logout: { parent: headerRight, next: logoutHeader.nextSibling },
-      download: { parent: controlsRight.querySelector('.actions-bottom'), next: downloadBtn.nextSibling },
-      deleteAll: { parent: controlsRight.querySelector('.actions-bottom'), next: deleteAllBtn.nextSibling },
-      create: { parent: controlsRight.querySelector('.actions-bottom'), next: createKmBtn.nextSibling }
-    };
-    // helper move function
-    function moveNode(node, parent, nextSibling) {
-      if (!node || !parent) return;
-      if (nextSibling && parent.contains(nextSibling)) parent.insertBefore(node, nextSibling);
-      else parent.appendChild(node);
-    }
+    // mobile clones
+    const logoutMobile = document.getElementById('logoutMobile');
+    const downloadMobile = document.getElementById('downloadMobile');
+    const deleteMobile = document.getElementById('deleteMobile');
 
     // helpers
     function pad2(n){ return String(n).padStart(2,'0'); }
@@ -944,69 +967,84 @@
         ? (Object.values(allUsers).find(u=>u.name===selectedDriverName) || allUsers[selectedDriverName] || {}) : {};
       if(selectedDriverName === "All drivers") driverObj = {};
 
-      // Info table (FULL WIDTH now, black & white)
+      // Details / Info — full width; leave space below before table (like Google Sheets)
       const infoHtml = `
-        <table class="print-info" style="font-size:13px;width:100%;max-width:none;margin-bottom:12px;border-collapse:collapse;border:1px solid #333;">
-          <tr><td style="width:28%;font-weight:700;border-right:1px solid #333;">Name</td><td style="width:72%">${escapeHtmlLocal(selectedDriverName || driverObj.name || "All drivers")}</td></tr>
-          <tr><td style="font-weight:700;border-right:1px solid #333;">Car Reg#</td><td>${escapeHtmlLocal(driverObj.car || '')}</td></tr>
-          <tr><td style="font-weight:700;border-right:1px solid #333;">Address</td><td>${escapeHtmlLocal(driverObj.address || '')}</td></tr>
-          <tr><td style="font-weight:700;border-right:1px solid #333;">Date selected</td><td>${escapeHtmlLocal(periodText)}</td></tr>
-          <tr><td style="font-weight:700;border-right:1px solid #333;">Total KM</td><td>${escapeHtmlLocal(String(totalKm) + ' km')}</td></tr>
+        <table class="print-info" style="font-size:13px;width:100%;max-width:100%;margin-bottom:18px;border-collapse:collapse;">
+          <tr><td style="width:28%;font-weight:700;padding:10px 12px 10px 12px;background:#fff;border:none;">Name</td><td style="width:72%;padding:10px 12px 10px 12px;background:#fff;border:none;">${escapeHtmlLocal(selectedDriverName || driverObj.name || "All drivers")}</td></tr>
+          <tr><td style="font-weight:700;padding:10px 12px;background:#fff;border:none;">Car Reg#</td><td style="padding:10px 12px;background:#fff;border:none;">${escapeHtmlLocal(driverObj.car || '')}</td></tr>
+          <tr><td style="font-weight:700;padding:10px 12px;background:#fff;border:none;">Address</td><td style="padding:10px 12px;background:#fff;border:none;">${escapeHtmlLocal(driverObj.address || '')}</td></tr>
+          <tr><td style="font-weight:700;padding:10px 12px;background:#fff;border:none;">Date selected</td><td style="padding:10px 12px;background:#fff;border:none;">${escapeHtmlLocal(periodText)}</td></tr>
+          <tr><td style="font-weight:700;padding:10px 12px;background:#fff;border:none;">Total KM</td><td style="padding:10px 12px;background:#fff;border:none;">${escapeHtmlLocal(String(totalKm) + ' km')}</td></tr>
         </table>
       `;
-      // Dynamic header (black & white)
-      let tableHeaders = `<th style="background:#fff;color:#000;border:1px solid #333;">Date</th>`;
-      if(selectedDriverName === "All drivers") tableHeaders += `<th style="background:#fff;color:#000;border:1px solid #333;">Driver</th>`;
-      tableHeaders += `<th style="background:#fff;color:#000;border:1px solid #333;">Km In</th><th style="background:#fff;color:#000;border:1px solid #333;">Km Out</th><th style="background:#fff;color:#000;border:1px solid #333;">Total KM</th><th style="background:#fff;color:#000;border:1px solid #333;">Time In</th><th style="background:#fff;color:#000;border:1px solid #333;">Time Out</th>`;
+
+      // Table: google-sheet like style — no gridlines, alternating row colors, decent padding (not condensed)
+      // Theme header color:
+      const themeColor = '#1976d2'; // matches --primary-hover used in interface
+
+      // Dynamic header
+      let tableHeaders = `<th style="background:${themeColor};color:#fff;padding:12px 10px;text-align:center;position:sticky;top:0;">Date</th>`;
+      if(selectedDriverName === "All drivers") tableHeaders += `<th style="background:${themeColor};color:#fff;padding:12px 10px;text-align:center;position:sticky;top:0;">Driver</th>`;
+      tableHeaders += `<th style="background:${themeColor};color:#fff;padding:12px 10px;text-align:center;position:sticky;top:0;">Km In</th>
+                       <th style="background:${themeColor};color:#fff;padding:12px 10px;text-align:center;position:sticky;top:0;">Km Out</th>
+                       <th style="background:${themeColor};color:#fff;padding:12px 10px;text-align:center;position:sticky;top:0;">Total KM</th>
+                       <th style="background:${themeColor};color:#fff;padding:12px 10px;text-align:center;position:sticky;top:0;">Time In</th>
+                       <th style="background:${themeColor};color:#fff;padding:12px 10px;text-align:center;position:sticky;top:0;">Time Out</th>`;
+
       const tableHtml = `
-        <table class="print-table" id="printTable" role="table" aria-label="Report table" style="border-radius:8px;overflow:hidden;border-collapse:collapse;">
+        <table class="print-table" id="printTable" role="table" aria-label="Report table" style="border-collapse:separate;width:100%;margin-top:6px;">
           <thead><tr>${tableHeaders}</tr></thead>
           <tbody>
-            ${rows.map((r) => {
+            ${rows.map((r, idx) => {
               const driver = (allUsers[r.userId] && allUsers[r.userId].name) || r.name || '';
               const kmIn = r.kmIn || '';
               const kmOut = r.kmOut || '';
               const total = r.totalKm !== undefined ? r.totalKm : ((Number(kmOut)||0) - (Number(kmIn)||0));
-              let rowHtml = `<td style="border:1px solid #333;">${escapeHtmlLocal(toDisplayDateLocal(r.date))}</td>`;
-              if(selectedDriverName === "All drivers") rowHtml += `<td style="border:1px solid #333;">${escapeHtmlLocal(driver)}</td>`;
-              rowHtml += `<td style="border:1px solid #333;">${escapeHtmlLocal(kmIn)}</td><td style="border:1px solid #333;">${escapeHtmlLocal(kmOut)}</td>
-                <td style="border:1px solid #333;">${escapeHtmlLocal(String(total))}</td>
-                <td style="border:1px solid #333;">${escapeHtmlLocal(r.timeIn || '')}</td><td style="border:1px solid #333;">${escapeHtmlLocal(r.timeOut || '')}</td>`;
+              const bg = (idx % 2 === 0) ? '#ffffff' : '#f3f6fb'; // alternating colors, subtle
+              let rowHtml = `<td style="background:${bg};padding:10px 12px;border:none;text-align:center;">${escapeHtmlLocal(toDisplayDateLocal(r.date))}</td>`;
+              if(selectedDriverName === "All drivers") rowHtml += `<td style="background:${bg};padding:10px 12px;border:none;text-align:center;">${escapeHtmlLocal(driver)}</td>`;
+              rowHtml += `<td style="background:${bg};padding:10px 12px;border:none;text-align:center;">${escapeHtmlLocal(kmIn)}</td>
+                <td style="background:${bg};padding:10px 12px;border:none;text-align:center;">${escapeHtmlLocal(kmOut)}</td>
+                <td style="background:${bg};padding:10px 12px;border:none;text-align:center;">${escapeHtmlLocal(String(total))}</td>
+                <td style="background:${bg};padding:10px 12px;border:none;text-align:center;">${escapeHtmlLocal(r.timeIn || '')}</td>
+                <td style="background:${bg};padding:10px 12px;border:none;text-align:center;">${escapeHtmlLocal(r.timeOut || '')}</td>`;
               return `<tr>${rowHtml}</tr>`;
             }).join('')}
           </tbody>
         </table>
       `;
 
-      // Build printable wrapper where driver info is clearly separated on top, and table below.
+      // printable wrapper: details full width, space, then sheet-like table
       const printable = document.createElement('div');
       printable.className = 'print-sheet';
       printable.style.boxSizing = 'border-box';
-      printable.style.padding = "16px 14px 18px 14px";
+      printable.style.padding = "18px 18px 22px 18px";
       printable.style.background = "#fff";
       printable.style.color = "#000";
-      // Change font to a serif for PDF as requested
-      printable.style.fontFamily = "'Times New Roman', Times, serif";
+      // use clean sans-serif that resembles Google Sheets printing
+      printable.style.fontFamily = "Arial, Helvetica, sans-serif";
       printable.innerHTML = `
-        <div style="width:100%;display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <div style="width:100%;display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
           <div style="font-weight:800;font-size:16px;color:#000;">All Drivers KM Reports</div>
           <div style="font-size:11px;color:#444;">Generated: ${new Date().toLocaleString()}</div>
         </div>
-        <div class="sheet-info">${infoHtml}</div>
-        <div class="sheet-table">${tableHtml}</div>
+        ${infoHtml}
+        <div style="height:10px"></div>
+        ${tableHtml}
       `;
 
-      // Extra CSS to help pagination: ensure black & white, serif font and header repeats
+      // CSS for printable sheet to control pagination and header repetition and no borders (gridlines removed)
       const style = document.createElement('style');
       style.innerHTML = `
-        .print-sheet { padding:12px; color:#000; background:#fff; font-family: 'Times New Roman', Times, serif; }
-        .print-info td { border:1px solid #333; background:#fff; color:#000; }
-        .print-table { width:100%; border-collapse:collapse; page-break-inside:auto; font-family: 'Times New Roman', Times, serif; color:#000; }
+        .print-sheet { padding:12px; color:#000; background:#fff; font-family: Arial, Helvetica, sans-serif; }
+        .print-info td { background:#fff; color:#000; border:none; }
+        .print-table { width:100%; border-collapse:separate; page-break-inside:auto; font-family: Arial, Helvetica, sans-serif; color:#000; }
         .print-table thead { display:table-header-group; }
         .print-table tbody { display:table-row-group; }
         .print-table tr { page-break-inside:avoid; page-break-after:auto; }
-        .print-table th,.print-table td { border:1px solid #333; padding:7px 8px; font-size:11.7px; color:#000; background:#fff; }
-        .print-table th { background:#fff; font-weight:800; text-align:center; }
+        .print-table th { padding:12px 10px; font-size:12px; font-weight:700; border:none; }
+        .print-table td { padding:10px 12px; font-size:11.5px; border:none; }
+        /* ensure header repeats on each printed page */
         @media all {
           .print-table thead { display: table-header-group; }
           .print-table tbody { display: table-row-group; }
@@ -1021,7 +1059,7 @@
                        (new Date()).toISOString().slice(0,10) + '.pdf';
 
       const opt = {
-        margin: [8, 5, 18, 5],
+        margin: [8, 6, 18, 6],
         filename: filename,
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { scale: 2, useCORS: true, logging: false },
@@ -1029,7 +1067,7 @@
         pagebreak: { mode: ['css', 'legacy'] }
       };
 
-      // Use html2pdf to render; header rows set as table-header-group should repeat per page.
+      // Render to PDF. Because header is display:table-header-group it should repeat on each page.
       html2pdf().set(opt).from(printable).toPdf().get('pdf').then(function(pdf) {
         const totalPages = pdf.internal.getNumberOfPages();
         const pageWidth = pdf.internal.pageSize.getWidth();
@@ -1169,10 +1207,12 @@
     };
     document.getElementById('modalCustom').onclick = (e) => { if(e.target === document.getElementById('modalCustom')) document.getElementById('modalCustom').classList.remove('active'); };
 
+    // Download modal open
     document.getElementById('downloadBtn').onclick = () => {
       document.getElementById('modalDownload').classList.add('active');
       setTimeout(()=> document.getElementById('modalDownloadCsv').focus(), 120);
     };
+
     document.getElementById('modalDownloadCancel').onclick = () => document.getElementById('modalDownload').classList.remove('active');
     document.getElementById('modalDownloadCsv').onclick = () => {
       document.getElementById('modalDownload').classList.remove('active');
@@ -1182,8 +1222,6 @@
       document.getElementById('modalDownload').classList.remove('active');
       const groupedRows = getRows(currentMode);
       const selectedDriverName = selectedDriver === '__all' ? 'All drivers' : (allUsers[selectedDriver] && allUsers[selectedDriver].name) || '';
-      // Provide a mapping object for driver lookup by id -> object
-      // downloadReportPdf expects allUsers keyed by id or containing the matching name
       downloadReportPdf({
         selectedDriverName,
         allUsers,
@@ -1197,15 +1235,29 @@
 
     document.getElementById('createKm').onclick = () => window.location.href = 'kmtable.html';
 
-    document.getElementById('logoutHeader').onclick = () => {
+    // Logout: original (desktop)
+    document.getElementById('logoutHeader')?.addEventListener('click', () => {
       if(confirm('Logout?')){
         localStorage.removeItem('user');
         window.location.href = 'login.html';
       }
-    };
+    });
+    // Logout: mobile duplicate triggers same behavior
+    logoutMobile?.addEventListener('click', () => {
+      if(confirm('Logout?')){
+        localStorage.removeItem('user');
+        window.location.href = 'login.html';
+      }
+    });
 
-    // Delete All shown rows button - ask confirmation and delete only currently filtered rows
-    deleteAllBtn.onclick = () => {
+    // Download / Delete mobile duplicates
+    downloadMobile?.addEventListener('click', () => {
+      // open download modal same as desktop
+      document.getElementById('modalDownload').classList.add('active');
+      setTimeout(()=> document.getElementById('modalDownloadCsv').focus(), 120);
+    });
+    deleteMobile?.addEventListener('click', () => {
+      // trigger same delete all action as desktop
       const grouped = getRows(currentMode);
       const flattened = grouped.flatMap(g => g.logs);
       if(flattened.length === 0){ alert('No rows to delete for the current filter/mode'); return; }
@@ -1218,13 +1270,41 @@
         }
         hideConfirm();
       }, 'Delete All', 'Cancel');
-    };
+    });
 
-    // re-render on resize
+    // Original desktop Download/Delete handlers
+    document.getElementById('downloadBtn')?.addEventListener('click', (e) => {
+      // already handled above with opening modal
+    });
+
+    deleteAllBtn?.addEventListener('click', () => {
+      const grouped = getRows(currentMode);
+      const flattened = grouped.flatMap(g => g.logs);
+      if(flattened.length === 0){ alert('No rows to delete for the current filter/mode'); return; }
+      showConfirm(`Delete ALL (${flattened.length}) shown records? This cannot be undone.`, async () => {
+        const ids = flattened.map(r => r.id).filter(Boolean);
+        const batchSize = 50;
+        for(let i=0;i<ids.length;i+=batchSize){
+          const batch = ids.slice(i, i+batchSize);
+          await Promise.all(batch.map(id => db.ref('logs/' + id).remove().catch(err => { console.error('Failed to remove', id, err); })));
+        }
+        hideConfirm();
+      }, 'Delete All', 'Cancel');
+    });
+
+    // re-render on resize and show/hide mobile table actions
+    function updateMobileVisibility() {
+      const isMobile = window.innerWidth <= 500;
+      const mobileTableActions = document.getElementById('mobileTableActions');
+      if (mobileTableActions) {
+        mobileTableActions.style.display = isMobile ? 'flex' : 'none';
+      }
+      // ensure mobile-only/desktop-only elements respect classes (CSS handles display)
+    }
     window.addEventListener('resize', () => {
       clearTimeout(window._renderResizeTimer);
       window._renderResizeTimer = setTimeout(() => {
-        redistributeMobileControls();
+        updateMobileVisibility();
         renderReportsView();
       }, 120);
     });
@@ -1249,6 +1329,7 @@
       driverSelect.value = selectedDriver;
       populateMonthModal();
       renderReportsView();
+      updateMobileVisibility();
     });
 
     db.ref('logs').on('value', snap => {
@@ -1257,80 +1338,12 @@
       renderReportsView();
     });
 
-    // ---------- Mobile control redistribution ----------
-    // Will move logout into controls-right next to Create on small screens and restore on large screens.
-    // Will also move Download and Delete All into the .table-top area on small screens so they appear top of table side-by-side.
-    let mobileActionsContainer = null;
-
-    function createMobileActionsContainerIfNeeded() {
-      if (!mobileActionsContainer) {
-        mobileActionsContainer = document.createElement('div');
-        mobileActionsContainer.id = 'mobileTableActions';
-        mobileActionsContainer.style.display = 'flex';
-        mobileActionsContainer.style.gap = '8px';
-        mobileActionsContainer.style.alignItems = 'center';
-        mobileActionsContainer.style.justifyContent = 'flex-end';
-      }
-      return mobileActionsContainer;
-    }
-
-    function redistributeMobileControls() {
-      const isMobile = window.innerWidth <= 500;
-      // restore first to avoid duplicates
-      if (!isMobile) {
-        // restore logout
-        moveNode(logoutHeader, domPositions.logout.parent, domPositions.logout.next);
-        // restore create, download, delete back to actions-bottom
-        const actionsBottom = controlsRight.querySelector('.actions-bottom');
-        if (actionsBottom) {
-          moveNode(createKmBtn, actionsBottom, domPositions.create.next);
-          moveNode(downloadBtn, actionsBottom, domPositions.download.next);
-          moveNode(deleteAllBtn, actionsBottom, domPositions.deleteAll.next);
-        }
-        // remove mobile actions container if exists
-        const tableTop = document.querySelector('.table-top');
-        const existing = document.getElementById('mobileTableActions');
-        if (existing && tableTop.contains(existing)) tableTop.removeChild(existing);
-        return;
-      }
-
-      // Mobile: place create and logout side-by-side inside controls-right.actions-bottom
-      const actionsBottom = controlsRight.querySelector('.actions-bottom');
-      if (actionsBottom) {
-        moveNode(createKmBtn, actionsBottom, null);
-        moveNode(logoutHeader, actionsBottom, null);
-      }
-
-      // Mobile: place download and delete into .table-top as a side-by-side group
-      const tableTop = document.querySelector('.table-top');
-      if (tableTop) {
-        const mobileActions = createMobileActionsContainerIfNeeded();
-        // style mobileActions to fit inside table-top right side
-        mobileActions.style.marginLeft = '12px';
-        // ensure placed in tableTop (right side)
-        // remove existing if already appended elsewhere
-        if (!tableTop.contains(mobileActions)) {
-          tableTop.appendChild(mobileActions);
-        }
-        // move download and delete into mobileActions
-        moveNode(downloadBtn, mobileActions, null);
-        moveNode(deleteAllBtn, mobileActions, null);
-        // make sure mobileActions is on the right by setting margin-left:auto if needed
-        mobileActions.style.marginLeft = 'auto';
-      }
-    }
-
-    // Run redistribution initially and on load
-    window.addEventListener('load', () => {
-      redistributeMobileControls();
-    });
-
     // ---------- Initial setup ----------
     (function init(){
       setActiveMode('daily');
       rowsPerPage = parseInt(document.getElementById('rowsPerPage').value,10) || 10;
-      // ensure redistribution runs once
-      setTimeout(redistributeMobileControls, 80);
+      // ensure mobile visibility updated initially
+      setTimeout(updateMobileVisibility, 60);
     })();
   </script>
 </body>
