@@ -264,6 +264,12 @@
       .controls-left { flex:1 1 auto; min-width:0; }
       .actions-bottom { gap:6px; }
       .btn { padding:8px 10px; font-size:0.94rem; }
+
+      /* MOBILE SPECIFIC LAYOUTS:
+         - Place Create and Logout side-by-side
+         - Place Download and Delete All side-by-side at the top of the table
+         We'll move DOM nodes with JS on small screens to ensure exact grouping while keeping HTML intact.
+      */
     }
 
     /* Subheading multiline always */
@@ -387,7 +393,7 @@
           <button class="mode-btn" id="customBtn" role="tab">Custom</button>
         </div>
       </div>
-      <div class="controls-right">
+      <div class="controls-right" id="controlsRight">
         <div class="actions-top" aria-hidden="true"></div>
         <div class="actions-bottom">
           <button id="createKm" class="btn create-km" title="Create KM table">
@@ -544,6 +550,25 @@
     const modalMonth = document.getElementById('modalMonth');
     const modalMonthSelect = document.getElementById('modalMonthSelect');
     const deleteAllBtn = document.getElementById('deleteAllBtn');
+    const controlsRight = document.getElementById('controlsRight');
+    const headerRight = document.querySelector('.header-right');
+    const logoutHeader = document.getElementById('logoutHeader');
+    const createKmBtn = document.getElementById('createKm');
+    const downloadBtn = document.getElementById('downloadBtn');
+
+    // to restore DOM positions after mobile
+    const domPositions = {
+      logout: { parent: headerRight, next: logoutHeader.nextSibling },
+      download: { parent: controlsRight.querySelector('.actions-bottom'), next: downloadBtn.nextSibling },
+      deleteAll: { parent: controlsRight.querySelector('.actions-bottom'), next: deleteAllBtn.nextSibling },
+      create: { parent: controlsRight.querySelector('.actions-bottom'), next: createKmBtn.nextSibling }
+    };
+    // helper move function
+    function moveNode(node, parent, nextSibling) {
+      if (!node || !parent) return;
+      if (nextSibling && parent.contains(nextSibling)) parent.insertBefore(node, nextSibling);
+      else parent.appendChild(node);
+    }
 
     // helpers
     function pad2(n){ return String(n).padStart(2,'0'); }
@@ -919,22 +944,22 @@
         ? (Object.values(allUsers).find(u=>u.name===selectedDriverName) || allUsers[selectedDriverName] || {}) : {};
       if(selectedDriverName === "All drivers") driverObj = {};
 
-      // Info table (with some style)
+      // Info table (FULL WIDTH now, black & white)
       const infoHtml = `
-        <table class="print-info" style="font-size:13px;width:96%;max-width:650px;margin-bottom:12px;border-radius:8px;background:#f8fbfd;border:1.5px solid #dae9fc;">
-          <tr><td style="width:32%"><strong>Name</strong></td><td style="width:68%">${escapeHtmlLocal(selectedDriverName || driverObj.name || "All drivers")}</td></tr>
-          <tr><td><strong>Car Reg#</strong></td><td>${escapeHtmlLocal(driverObj.car || '')}</td></tr>
-          <tr><td><strong>Address</strong></td><td>${escapeHtmlLocal(driverObj.address || '')}</td></tr>
-          <tr><td><strong>Date selected</strong></td><td>${escapeHtmlLocal(periodText)}</td></tr>
-          <tr><td><strong>Total KM</strong></td><td>${escapeHtmlLocal(String(totalKm) + ' km')}</td></tr>
+        <table class="print-info" style="font-size:13px;width:100%;max-width:none;margin-bottom:12px;border-collapse:collapse;border:1px solid #333;">
+          <tr><td style="width:28%;font-weight:700;border-right:1px solid #333;">Name</td><td style="width:72%">${escapeHtmlLocal(selectedDriverName || driverObj.name || "All drivers")}</td></tr>
+          <tr><td style="font-weight:700;border-right:1px solid #333;">Car Reg#</td><td>${escapeHtmlLocal(driverObj.car || '')}</td></tr>
+          <tr><td style="font-weight:700;border-right:1px solid #333;">Address</td><td>${escapeHtmlLocal(driverObj.address || '')}</td></tr>
+          <tr><td style="font-weight:700;border-right:1px solid #333;">Date selected</td><td>${escapeHtmlLocal(periodText)}</td></tr>
+          <tr><td style="font-weight:700;border-right:1px solid #333;">Total KM</td><td>${escapeHtmlLocal(String(totalKm) + ' km')}</td></tr>
         </table>
       `;
-      // Dynamic header
-      let tableHeaders = `<th>Date</th>`;
-      if(selectedDriverName === "All drivers") tableHeaders += `<th>Driver</th>`;
-      tableHeaders += `<th>Km In</th><th>Km Out</th><th>Total KM</th><th>Time In</th><th>Time Out</th>`;
+      // Dynamic header (black & white)
+      let tableHeaders = `<th style="background:#fff;color:#000;border:1px solid #333;">Date</th>`;
+      if(selectedDriverName === "All drivers") tableHeaders += `<th style="background:#fff;color:#000;border:1px solid #333;">Driver</th>`;
+      tableHeaders += `<th style="background:#fff;color:#000;border:1px solid #333;">Km In</th><th style="background:#fff;color:#000;border:1px solid #333;">Km Out</th><th style="background:#fff;color:#000;border:1px solid #333;">Total KM</th><th style="background:#fff;color:#000;border:1px solid #333;">Time In</th><th style="background:#fff;color:#000;border:1px solid #333;">Time Out</th>`;
       const tableHtml = `
-        <table class="print-table" id="printTable" role="table" aria-label="Report table" style="border-radius:8px;overflow:hidden;">
+        <table class="print-table" id="printTable" role="table" aria-label="Report table" style="border-radius:8px;overflow:hidden;border-collapse:collapse;">
           <thead><tr>${tableHeaders}</tr></thead>
           <tbody>
             ${rows.map((r) => {
@@ -942,11 +967,11 @@
               const kmIn = r.kmIn || '';
               const kmOut = r.kmOut || '';
               const total = r.totalKm !== undefined ? r.totalKm : ((Number(kmOut)||0) - (Number(kmIn)||0));
-              let rowHtml = `<td>${escapeHtmlLocal(toDisplayDateLocal(r.date))}</td>`;
-              if(selectedDriverName === "All drivers") rowHtml += `<td>${escapeHtmlLocal(driver)}</td>`;
-              rowHtml += `<td>${escapeHtmlLocal(kmIn)}</td><td>${escapeHtmlLocal(kmOut)}</td>
-                <td>${escapeHtmlLocal(String(total))}</td>
-                <td>${escapeHtmlLocal(r.timeIn || '')}</td><td>${escapeHtmlLocal(r.timeOut || '')}</td>`;
+              let rowHtml = `<td style="border:1px solid #333;">${escapeHtmlLocal(toDisplayDateLocal(r.date))}</td>`;
+              if(selectedDriverName === "All drivers") rowHtml += `<td style="border:1px solid #333;">${escapeHtmlLocal(driver)}</td>`;
+              rowHtml += `<td style="border:1px solid #333;">${escapeHtmlLocal(kmIn)}</td><td style="border:1px solid #333;">${escapeHtmlLocal(kmOut)}</td>
+                <td style="border:1px solid #333;">${escapeHtmlLocal(String(total))}</td>
+                <td style="border:1px solid #333;">${escapeHtmlLocal(r.timeIn || '')}</td><td style="border:1px solid #333;">${escapeHtmlLocal(r.timeOut || '')}</td>`;
               return `<tr>${rowHtml}</tr>`;
             }).join('')}
           </tbody>
@@ -959,28 +984,29 @@
       printable.style.boxSizing = 'border-box';
       printable.style.padding = "16px 14px 18px 14px";
       printable.style.background = "#fff";
-      printable.style.color = "#111";
+      printable.style.color = "#000";
+      // Change font to a serif for PDF as requested
+      printable.style.fontFamily = "'Times New Roman', Times, serif";
       printable.innerHTML = `
         <div style="width:100%;display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-          <div style="font-weight:800;font-size:16px;">All Drivers KM Reports</div>
+          <div style="font-weight:800;font-size:16px;color:#000;">All Drivers KM Reports</div>
           <div style="font-size:11px;color:#444;">Generated: ${new Date().toLocaleString()}</div>
         </div>
         <div class="sheet-info">${infoHtml}</div>
         <div class="sheet-table">${tableHtml}</div>
       `;
 
-      // Extra CSS to help pagination: keep rows intact but allow table to split between rows; ensure header repeats
+      // Extra CSS to help pagination: ensure black & white, serif font and header repeats
       const style = document.createElement('style');
       style.innerHTML = `
-        .print-sheet { padding:12px; color:#111; background:#fff; }
-        .print-info td { border:1px solid #ccc; background:#f8fbfd; }
-        .print-table { width:100%; border-collapse:collapse; page-break-inside:auto; font-family: Arial, Helvetica, sans-serif; }
+        .print-sheet { padding:12px; color:#000; background:#fff; font-family: 'Times New Roman', Times, serif; }
+        .print-info td { border:1px solid #333; background:#fff; color:#000; }
+        .print-table { width:100%; border-collapse:collapse; page-break-inside:auto; font-family: 'Times New Roman', Times, serif; color:#000; }
         .print-table thead { display:table-header-group; }
         .print-table tbody { display:table-row-group; }
         .print-table tr { page-break-inside:avoid; page-break-after:auto; }
-        .print-table th,.print-table td { border:1px solid #bbb; padding:7px 8px; font-size:11.7px; color:#111; }
-        .print-table th { background:#e7f1fc; font-weight:800; text-align:center; }
-        /* ensure header repeated on each PDF page */
+        .print-table th,.print-table td { border:1px solid #333; padding:7px 8px; font-size:11.7px; color:#000; background:#fff; }
+        .print-table th { background:#fff; font-weight:800; text-align:center; }
         @media all {
           .print-table thead { display: table-header-group; }
           .print-table tbody { display: table-row-group; }
@@ -1197,7 +1223,10 @@
     // re-render on resize
     window.addEventListener('resize', () => {
       clearTimeout(window._renderResizeTimer);
-      window._renderResizeTimer = setTimeout(() => renderReportsView(), 120);
+      window._renderResizeTimer = setTimeout(() => {
+        redistributeMobileControls();
+        renderReportsView();
+      }, 120);
     });
 
     // ---------- Firebase listeners ----------
@@ -1228,10 +1257,80 @@
       renderReportsView();
     });
 
+    // ---------- Mobile control redistribution ----------
+    // Will move logout into controls-right next to Create on small screens and restore on large screens.
+    // Will also move Download and Delete All into the .table-top area on small screens so they appear top of table side-by-side.
+    let mobileActionsContainer = null;
+
+    function createMobileActionsContainerIfNeeded() {
+      if (!mobileActionsContainer) {
+        mobileActionsContainer = document.createElement('div');
+        mobileActionsContainer.id = 'mobileTableActions';
+        mobileActionsContainer.style.display = 'flex';
+        mobileActionsContainer.style.gap = '8px';
+        mobileActionsContainer.style.alignItems = 'center';
+        mobileActionsContainer.style.justifyContent = 'flex-end';
+      }
+      return mobileActionsContainer;
+    }
+
+    function redistributeMobileControls() {
+      const isMobile = window.innerWidth <= 500;
+      // restore first to avoid duplicates
+      if (!isMobile) {
+        // restore logout
+        moveNode(logoutHeader, domPositions.logout.parent, domPositions.logout.next);
+        // restore create, download, delete back to actions-bottom
+        const actionsBottom = controlsRight.querySelector('.actions-bottom');
+        if (actionsBottom) {
+          moveNode(createKmBtn, actionsBottom, domPositions.create.next);
+          moveNode(downloadBtn, actionsBottom, domPositions.download.next);
+          moveNode(deleteAllBtn, actionsBottom, domPositions.deleteAll.next);
+        }
+        // remove mobile actions container if exists
+        const tableTop = document.querySelector('.table-top');
+        const existing = document.getElementById('mobileTableActions');
+        if (existing && tableTop.contains(existing)) tableTop.removeChild(existing);
+        return;
+      }
+
+      // Mobile: place create and logout side-by-side inside controls-right.actions-bottom
+      const actionsBottom = controlsRight.querySelector('.actions-bottom');
+      if (actionsBottom) {
+        moveNode(createKmBtn, actionsBottom, null);
+        moveNode(logoutHeader, actionsBottom, null);
+      }
+
+      // Mobile: place download and delete into .table-top as a side-by-side group
+      const tableTop = document.querySelector('.table-top');
+      if (tableTop) {
+        const mobileActions = createMobileActionsContainerIfNeeded();
+        // style mobileActions to fit inside table-top right side
+        mobileActions.style.marginLeft = '12px';
+        // ensure placed in tableTop (right side)
+        // remove existing if already appended elsewhere
+        if (!tableTop.contains(mobileActions)) {
+          tableTop.appendChild(mobileActions);
+        }
+        // move download and delete into mobileActions
+        moveNode(downloadBtn, mobileActions, null);
+        moveNode(deleteAllBtn, mobileActions, null);
+        // make sure mobileActions is on the right by setting margin-left:auto if needed
+        mobileActions.style.marginLeft = 'auto';
+      }
+    }
+
+    // Run redistribution initially and on load
+    window.addEventListener('load', () => {
+      redistributeMobileControls();
+    });
+
     // ---------- Initial setup ----------
     (function init(){
       setActiveMode('daily');
       rowsPerPage = parseInt(document.getElementById('rowsPerPage').value,10) || 10;
+      // ensure redistribution runs once
+      setTimeout(redistributeMobileControls, 80);
     })();
   </script>
 </body>
