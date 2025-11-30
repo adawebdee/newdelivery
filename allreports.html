@@ -254,43 +254,71 @@
       .driver-header { flex-direction: column; align-items: flex-start; gap:8px; }
       .driver-header .right { text-align:left; }
     }
-    @media (max-width:500px){
-      .header,.container,.table-top, .driver-header, .table-wrap,.scroll-area {
-        padding-left:3px !important; padding-right:3px !important;
+
+    /* ----- MOBILE (<=500px) specific adjustments requested by user ----- */
+    @media (max-width:500px) {
+      /* Keep desktop layout unchanged outside these rules */
+
+      /* header: show create and logout on same line (middle) and equal size */
+      .header {
+        /* make header a horizontal row for mobile, but keep titles intact */
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
       }
-      .container{padding-left:2px !important; padding-right:2px !important;}
-      #logoutHeader { width:100%; margin-top:10px; }
-      .controls-right { width:100%; justify-content:flex-end; }
-      .controls-left { flex:1 1 auto; min-width:0; }
-      .actions-bottom { gap:6px; }
-      .btn { padding:8px 10px; font-size:0.94rem; }
+      .page-title { flex: 1 1 auto; min-width: 0; font-size:1.05rem; }
+      .page-desc { display:none; } /* hide description on tiny screens to keep header compact as user requested no desktop change */
 
-      /* MOBILE SPECIFIC:
-         Show mobile-only controls and hide desktop-only originals
-      */
-      .mobile-only { display:inline-flex !important; }
-      .desktop-only { display:none !important; }
-
-      /* style mobile logout placed next to create in controls right area */
-      .actions-bottom .mobile-logout {
-        background: var(--danger);
-        border-radius: 9px;
-        padding: 8px 10px;
-        font-weight:700;
-        display:inline-flex;
-        align-items:center;
-        gap:8px;
-      }
-
-      /* mobile table actions container placed inside .table-top */
-      .mobile-table-actions {
+      .header-right {
         display:flex;
         gap:8px;
         align-items:center;
+        justify-content:flex-end;
+        width:auto;
       }
-      .mobile-table-actions .btn { padding:8px 10px; font-size:0.94rem; }
 
+      /* buttons in header (create + logout) equal width and same height */
+      .mobile-header-btn {
+        flex: 0 0 120px; /* equal size */
+        min-width: 100px;
+        display:inline-flex;
+        justify-content:center;
+        align-items:center;
+        padding:8px 10px;
+        border-radius:9px;
+        font-weight:700;
+      }
+      /* style create specifically */
+      .mobile-header-create { background: linear-gradient(90deg,#33c37a,#159a54); color:#fff; border:none; }
+      .mobile-header-logout { background: var(--danger); color:#fff; border:none; }
+
+      /* Place download + delete near reports table top, outside table, centered same line equal size */
+      .table-top { flex-wrap:wrap; align-items:center; gap:10px; }
+      .mobile-table-controls {
+        display:flex;
+        gap:8px;
+        align-items:center;
+        justify-content:center;
+        width:100%;
+        margin-top:8px;
+      }
+      .mobile-table-controls .mobile-table-btn {
+        flex: 1 1 140px; /* equal size */
+        min-width:110px;
+        padding:8px 10px;
+        border-radius:9px;
+        text-align:center;
+        font-weight:700;
+      }
+      .mobile-table-btn.download { background: linear-gradient(90deg,var(--primary),var(--primary-hover)); color:#fff; border:none; }
+      .mobile-table-btn.delete { background: linear-gradient(90deg,#ff5b5b,#c93535); color:#fff; border:none; }
+
+      /* ensure scroll-area padding still fine */
+      .scroll-area { padding-bottom: 3.5vw; }
     }
+    /* ------------------------------------------------------------------ */
 
     /* Subheading multiline always */
     .page-desc {
@@ -331,63 +359,20 @@
     }
     select#modalMonthSelect.modal-dark { background:#0f1626; color:#fff; padding:10px; border-radius:8px; border:1px solid var(--border); }
 
-    /* Custom print table, using row/col separation for info */
-    .print-info {
-      width:100%; border-collapse:collapse; margin-bottom:12px; font-size:13px;
-    }
-    .print-info td {
-      padding:6px 8px; border:1px solid #ddd; color:#111; background: #f8fbfd;
-    }
-    .print-table {
-      width:100%;
-      border-collapse:collapse;
-      font-size:12px;
-    }
-    .print-table th, .print-table td {
-      padding:8px 10px; border:1px solid #ddd; text-align:center; color:#111;
-    }
-    .print-table thead th {background:#f0f3fb; color:#111; font-weight:800;}
-
-    /* PDF/print header repeat on new page; prevent row break */
-    .print-sheet table tr, .print-sheet table td, .print-sheet table th { page-break-inside: avoid; break-inside: avoid; }
-    .print-table thead { display: table-header-group; }
-    .print-table tbody { display: table-row-group; }
-    .print-table tr { page-break-inside:avoid; page-break-after:auto; }
-
-    /* Improved button sizes for mobile/tablet */
-    @media (max-width:900px) {
-      .btn, .mode-btn, select#driverSelect, select#rowsPerPage { font-size: 0.98rem !important; padding:9px 10px;}
-      .actions-bottom .btn { min-width:90px; }
-    }
-    @media (max-width:650px) {
-      .btn, .mode-btn, select#driverSelect, select#rowsPerPage { font-size: 0.94rem !important;}
-      .create-full { display:none; }
-      .create-short { display:inline-block; }
-    }
-
-    /* Small visual optimization: hide horizontal scrollbar in some browsers but keep scroll functionality */
-    .scroll-area::-webkit-scrollbar { height: 10px; }
-    .scroll-area::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.06); border-radius: 8px; }
-    .scroll-area::-webkit-scrollbar-track { background: transparent; }
-
-    /* Print-specific tweaks to ensure header repeats and the info block stays on top of each PDF page if small */
-    @media print {
-      body { background: #fff; color:#111; }
-      .container, .header, .controls-area, .table-wrap, .driver-header { display: none !important; } /* hide UI in print, we use generated print sheet for PDF */
-      .print-sheet { display:block !important; }
-    }
+    /* Print / PDF styles will be injected when generating PDF to keep UI unaffected */
   </style>
 </head>
 <body>
   <div class="container" id="appContainer">
-    <div class="header">
+    <div class="header" id="pageHeader">
       <div class="page-title"><i class="fas fa-chart-line"></i> All Drivers KM Reports</div>
       <div class="page-desc">
         Ravintola Tandoori Villa – view, manage and export drivers' KM/time reports.
         Filter by driver, select time range and export the logs to CSV or PDF.<br>
         (Page is fully responsive for mobile, tablet, and desktop.)
       </div>
-      <div class="header-right desktop-only">
+      <div class="header-right" id="headerRight">
+        <!-- Desktop logout -->
         <button id="logoutHeader">Logout</button>
       </div>
     </div>
@@ -415,21 +400,14 @@
       </div>
       <div class="controls-right" id="controlsRight">
         <div class="actions-top" aria-hidden="true"></div>
-        <div class="actions-bottom">
+        <div class="actions-bottom" id="actionsBottom">
           <button id="createKm" class="btn create-km" title="Create KM table">
             <i class="fas fa-plus-circle"></i>
             <span class="create-full">Create KM Table</span>
             <span class="create-short">Create</span>
           </button>
-
-          <!-- Mobile-only logout duplicate (shown side-by-side with Create on small screens) -->
-          <button id="logoutMobile" class="mobile-only mobile-logout" title="Logout (mobile)">
-            <i class="fas fa-sign-out-alt"></i> Logout
-          </button>
-
-          <!-- Original Download & Delete kept but marked desktop-only so they hide on mobile -->
-          <button id="downloadBtn" class="btn desktop-only" title="Download"><i class="fas fa-file-download"></i> Download</button>
-          <button id="deleteAllBtn" class="btn desktop-only" title="Delete all shown rows" style="background:linear-gradient(90deg,#ff5b5b,#c93535);">
+          <button id="downloadBtn" class="btn" title="Download"><i class="fas fa-file-download"></i> Download</button>
+          <button id="deleteAllBtn" class="btn" title="Delete all shown rows" style="background:linear-gradient(90deg,#ff5b5b,#c93535);">
             <i class="fas fa-trash-alt"></i> Delete All
           </button>
         </div>
@@ -438,16 +416,11 @@
 
     <div id="driverHeaderHolder"></div>
     <div class="table-wrap">
-      <div class="table-top">
+      <div class="table-top" id="tableTop">
         <div id="tableMeta" class="tableMetaSmall">No data</div>
 
-        <!-- Mobile-only container that will show Download & Delete side-by-side on top of reports table -->
-        <div class="mobile-table-actions mobile-only" id="mobileTableActions" style="display:none;">
-          <button id="downloadMobile" class="btn" title="Download (mobile)"><i class="fas fa-file-download"></i> Download</button>
-          <button id="deleteMobile" class="btn" title="Delete all shown rows (mobile)" style="background:linear-gradient(90deg,#ff5b5b,#c93535);">
-            <i class="fas fa-trash-alt"></i> Delete All
-          </button>
-        </div>
+        <!-- Mobile placeholders for Download+Delete - will be populated by JS on mobile only -->
+        <div id="mobileTableControlsPlaceholder"></div>
 
         <div class="pagination-top" id="paginationTop"></div>
       </div>
@@ -587,11 +560,22 @@
     const modalMonthSelect = document.getElementById('modalMonthSelect');
     const deleteAllBtn = document.getElementById('deleteAllBtn');
     const downloadBtn = document.getElementById('downloadBtn');
+    const createKmBtn = document.getElementById('createKm');
+    const headerRight = document.getElementById('headerRight');
+    const actionsBottom = document.getElementById('actionsBottom');
+    const tableTop = document.getElementById('tableTop');
 
-    // mobile clones
-    const logoutMobile = document.getElementById('logoutMobile');
-    const downloadMobile = document.getElementById('downloadMobile');
-    const deleteMobile = document.getElementById('deleteMobile');
+    // store original parents for restoration
+    const ORIGINAL = {
+      createParent: createKmBtn.parentElement,
+      createNext: createKmBtn.nextSibling,
+      downloadParent: downloadBtn.parentElement,
+      downloadNext: downloadBtn.nextSibling,
+      deleteParent: deleteAllBtn.parentElement,
+      deleteNext: deleteAllBtn.nextSibling,
+      logoutParent: document.getElementById('logoutHeader').parentElement,
+      logoutNext: document.getElementById('logoutHeader').nextSibling
+    };
 
     // helpers
     function pad2(n){ return String(n).padStart(2,'0'); }
@@ -940,6 +924,7 @@
     }
 
     function downloadReportPdf({ selectedDriverName, allUsers, groupedRows, currentMode, currentMonth, filenamePrefix }) {
+      // Utility helpers local to PDF
       function pad2(n){ return String(n).padStart(2,'0'); }
       function toDisplayDateLocal(iso){
         if(!iso) return '';
@@ -949,8 +934,11 @@
       }
       function escapeHtmlLocal(s){ if(s==null) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
       function sumKmLocal(rows){ return rows.reduce((s,r)=> s + (parseInt(r.totalKm||(((Number(r.kmOut)||0)-(Number(r.kmIn)||0)).toString()),10)||0), 0); }
+
       const rows = (groupedRows || []).flatMap(g => g.logs || []);
       const totalKm = sumKmLocal(rows);
+
+      // compute period text as before
       let periodText = '';
       if(currentMode === 'daily'){ periodText = toDisplayDateLocal(todayISO()); }
       else if(currentMode === 'weekly'){ const t = todayISO(), f = addDays(t,-6); periodText = `${toDisplayDateLocal(f)} — ${toDisplayDateLocal(t)}`; }
@@ -963,94 +951,113 @@
         if(dates.length) periodText = `${toDisplayDateLocal(dates[dates.length-1])} — ${toDisplayDateLocal(dates[0])}`;
         else periodText = '—';
       }
+
       let driverObj = (selectedDriverName && allUsers)
         ? (Object.values(allUsers).find(u=>u.name===selectedDriverName) || allUsers[selectedDriverName] || {}) : {};
       if(selectedDriverName === "All drivers") driverObj = {};
 
-      // Details / Info — full width; leave space below before table (like Google Sheets)
-      const infoHtml = `
-        <table class="print-info" style="font-size:13px;width:100%;max-width:100%;margin-bottom:18px;border-collapse:collapse;">
-          <tr><td style="width:28%;font-weight:700;padding:10px 12px 10px 12px;background:#fff;border:none;">Name</td><td style="width:72%;padding:10px 12px 10px 12px;background:#fff;border:none;">${escapeHtmlLocal(selectedDriverName || driverObj.name || "All drivers")}</td></tr>
-          <tr><td style="font-weight:700;padding:10px 12px;background:#fff;border:none;">Car Reg#</td><td style="padding:10px 12px;background:#fff;border:none;">${escapeHtmlLocal(driverObj.car || '')}</td></tr>
-          <tr><td style="font-weight:700;padding:10px 12px;background:#fff;border:none;">Address</td><td style="padding:10px 12px;background:#fff;border:none;">${escapeHtmlLocal(driverObj.address || '')}</td></tr>
-          <tr><td style="font-weight:700;padding:10px 12px;background:#fff;border:none;">Date selected</td><td style="padding:10px 12px;background:#fff;border:none;">${escapeHtmlLocal(periodText)}</td></tr>
-          <tr><td style="font-weight:700;padding:10px 12px;background:#fff;border:none;">Total KM</td><td style="padding:10px 12px;background:#fff;border:none;">${escapeHtmlLocal(String(totalKm) + ' km')}</td></tr>
-        </table>
+      // PDF layout per user's requirements:
+      // - Heading: "KM Reports" only (no generated text)
+      // - Driver details in a clear card box (full width)
+      // - Table styled like a sheet: alternating row colors, no gridlines, header uses theme color (dark), not condensed
+      // - Table header must repeat on subsequent PDF pages
+
+      const themeColor = '#1976d2'; // header color
+
+      // Driver details card (full width, clear)
+      const detailsHtml = `
+        <div style="width:100%;box-sizing:border-box;margin-bottom:16px;">
+          <div style="border-radius:8px;padding:12px 14px;background:#fff;border:1px solid #e0e0e0;box-shadow:0 1px 4px rgba(0,0,0,0.04);color:#000;">
+            <div style="font-weight:700;margin-bottom:8px;color:#222;font-size:14px;">Driver details</div>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;">
+              <div style="flex:1 1 40%;min-width:140px;"><strong>Name:</strong> ${escapeHtmlLocal(selectedDriverName || driverObj.name || "All drivers")}</div>
+              <div style="flex:1 1 30%;min-width:120px;"><strong>Car Reg#:</strong> ${escapeHtmlLocal(driverObj.car || '')}</div>
+              <div style="flex:1 1 30%;min-width:120px;"><strong>Total KM:</strong> ${escapeHtmlLocal(String(totalKm) + ' km')}</div>
+              <div style="flex-basis:100%;height:6px"></div>
+              <div style="flex:1 1 60%;min-width:160px;"><strong>Address:</strong> ${escapeHtmlLocal(driverObj.address || '')}</div>
+              <div style="flex:1 1 40%;min-width:120px;"><strong>Date selected:</strong> ${escapeHtmlLocal(periodText)}</div>
+            </div>
+          </div>
+        </div>
       `;
 
-      // Table: google-sheet like style — no gridlines, alternating row colors, decent padding (not condensed)
-      // Theme header color:
-      const themeColor = '#1976d2'; // matches --primary-hover used in interface
+      // Table header — ensure it contains Date, (Driver if all), Km In, Km Out, Total KM, Time In, Time Out
+      let headerHtml = `<th style="background:${themeColor};color:#fff;padding:12px 10px;text-align:center;font-weight:700;border-bottom:0;">Date</th>`;
+      if(selectedDriverName === "All drivers") headerHtml += `<th style="background:${themeColor};color:#fff;padding:12px 10px;text-align:center;font-weight:700;border-bottom:0;">Driver</th>`;
+      headerHtml += `
+        <th style="background:${themeColor};color:#fff;padding:12px 10px;text-align:center;font-weight:700;border-bottom:0;">Km In</th>
+        <th style="background:${themeColor};color:#fff;padding:12px 10px;text-align:center;font-weight:700;border-bottom:0;">Km Out</th>
+        <th style="background:${themeColor};color:#fff;padding:12px 10px;text-align:center;font-weight:700;border-bottom:0;">Total KM</th>
+        <th style="background:${themeColor};color:#fff;padding:12px 10px;text-align:center;font-weight:700;border-bottom:0;">Time In</th>
+        <th style="background:${themeColor};color:#fff;padding:12px 10px;text-align:center;font-weight:700;border-bottom:0;">Time Out</th>
+      `;
 
-      // Dynamic header
-      let tableHeaders = `<th style="background:${themeColor};color:#fff;padding:12px 10px;text-align:center;position:sticky;top:0;">Date</th>`;
-      if(selectedDriverName === "All drivers") tableHeaders += `<th style="background:${themeColor};color:#fff;padding:12px 10px;text-align:center;position:sticky;top:0;">Driver</th>`;
-      tableHeaders += `<th style="background:${themeColor};color:#fff;padding:12px 10px;text-align:center;position:sticky;top:0;">Km In</th>
-                       <th style="background:${themeColor};color:#fff;padding:12px 10px;text-align:center;position:sticky;top:0;">Km Out</th>
-                       <th style="background:${themeColor};color:#fff;padding:12px 10px;text-align:center;position:sticky;top:0;">Total KM</th>
-                       <th style="background:${themeColor};color:#fff;padding:12px 10px;text-align:center;position:sticky;top:0;">Time In</th>
-                       <th style="background:${themeColor};color:#fff;padding:12px 10px;text-align:center;position:sticky;top:0;">Time Out</th>`;
+      // Build table rows with alternating backgrounds and no borders (no gridlines)
+      const bodyRowsHtml = rows.map((r, idx) => {
+        const bg = idx % 2 === 0 ? '#ffffff' : '#f7fbff'; // subtle alternate
+        const driver = (allUsers[r.userId] && allUsers[r.userId].name) || r.name || '';
+        const kmIn = r.kmIn || '';
+        const kmOut = r.kmOut || '';
+        const total = r.totalKm !== undefined ? r.totalKm : ((Number(kmOut)||0) - (Number(kmIn)||0));
+        let row = `<tr style="background:${bg};">`;
+        row += `<td style="padding:10px 12px;text-align:center;border:none;color:#000;">${escapeHtmlLocal(toDisplayDateLocal(r.date))}</td>`;
+        if(selectedDriverName === "All drivers") row += `<td style="padding:10px 12px;text-align:center;border:none;color:#000;">${escapeHtmlLocal(driver)}</td>`;
+        row += `<td style="padding:10px 12px;text-align:center;border:none;color:#000;">${escapeHtmlLocal(kmIn)}</td>`;
+        row += `<td style="padding:10px 12px;text-align:center;border:none;color:#000;">${escapeHtmlLocal(kmOut)}</td>`;
+        row += `<td style="padding:10px 12px;text-align:center;border:none;color:#000;">${escapeHtmlLocal(String(total))}</td>`;
+        row += `<td style="padding:10px 12px;text-align:center;border:none;color:#000;">${escapeHtmlLocal(r.timeIn || '')}</td>`;
+        row += `<td style="padding:10px 12px;text-align:center;border:none;color:#000;">${escapeHtmlLocal(r.timeOut || '')}</td>`;
+        row += `</tr>`;
+        return row;
+      }).join('');
 
       const tableHtml = `
-        <table class="print-table" id="printTable" role="table" aria-label="Report table" style="border-collapse:separate;width:100%;margin-top:6px;">
-          <thead><tr>${tableHeaders}</tr></thead>
+        <table style="width:100%;border-collapse:separate;margin-top:6px;">
+          <thead>
+            <tr>${headerHtml}</tr>
+          </thead>
           <tbody>
-            ${rows.map((r, idx) => {
-              const driver = (allUsers[r.userId] && allUsers[r.userId].name) || r.name || '';
-              const kmIn = r.kmIn || '';
-              const kmOut = r.kmOut || '';
-              const total = r.totalKm !== undefined ? r.totalKm : ((Number(kmOut)||0) - (Number(kmIn)||0));
-              const bg = (idx % 2 === 0) ? '#ffffff' : '#f3f6fb'; // alternating colors, subtle
-              let rowHtml = `<td style="background:${bg};padding:10px 12px;border:none;text-align:center;">${escapeHtmlLocal(toDisplayDateLocal(r.date))}</td>`;
-              if(selectedDriverName === "All drivers") rowHtml += `<td style="background:${bg};padding:10px 12px;border:none;text-align:center;">${escapeHtmlLocal(driver)}</td>`;
-              rowHtml += `<td style="background:${bg};padding:10px 12px;border:none;text-align:center;">${escapeHtmlLocal(kmIn)}</td>
-                <td style="background:${bg};padding:10px 12px;border:none;text-align:center;">${escapeHtmlLocal(kmOut)}</td>
-                <td style="background:${bg};padding:10px 12px;border:none;text-align:center;">${escapeHtmlLocal(String(total))}</td>
-                <td style="background:${bg};padding:10px 12px;border:none;text-align:center;">${escapeHtmlLocal(r.timeIn || '')}</td>
-                <td style="background:${bg};padding:10px 12px;border:none;text-align:center;">${escapeHtmlLocal(r.timeOut || '')}</td>`;
-              return `<tr>${rowHtml}</tr>`;
-            }).join('')}
+            ${bodyRowsHtml}
           </tbody>
         </table>
       `;
 
-      // printable wrapper: details full width, space, then sheet-like table
+      // Build printable container
       const printable = document.createElement('div');
       printable.className = 'print-sheet';
       printable.style.boxSizing = 'border-box';
-      printable.style.padding = "18px 18px 22px 18px";
+      printable.style.padding = "18px";
       printable.style.background = "#fff";
       printable.style.color = "#000";
-      // use clean sans-serif that resembles Google Sheets printing
       printable.style.fontFamily = "Arial, Helvetica, sans-serif";
       printable.innerHTML = `
-        <div style="width:100%;display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-          <div style="font-weight:800;font-size:16px;color:#000;">All Drivers KM Reports</div>
-          <div style="font-size:11px;color:#444;">Generated: ${new Date().toLocaleString()}</div>
+        <div style="width:100%;margin-bottom:12px;">
+          <div style="font-weight:800;font-size:18px;color:#111;margin-bottom:8px;">KM Reports</div>
         </div>
-        ${infoHtml}
+        ${detailsHtml}
         <div style="height:10px"></div>
         ${tableHtml}
       `;
 
-      // CSS for printable sheet to control pagination and header repetition and no borders (gridlines removed)
-      const style = document.createElement('style');
-      style.innerHTML = `
+      // Inject print-specific styles to ensure no gridlines, header repeats on each page, dark header color, adequate padding
+      const styleEl = document.createElement('style');
+      styleEl.innerHTML = `
         .print-sheet { padding:12px; color:#000; background:#fff; font-family: Arial, Helvetica, sans-serif; }
-        .print-info td { background:#fff; color:#000; border:none; }
-        .print-table { width:100%; border-collapse:separate; page-break-inside:auto; font-family: Arial, Helvetica, sans-serif; color:#000; }
-        .print-table thead { display:table-header-group; }
-        .print-table tbody { display:table-row-group; }
-        .print-table tr { page-break-inside:avoid; page-break-after:auto; }
-        .print-table th { padding:12px 10px; font-size:12px; font-weight:700; border:none; }
-        .print-table td { padding:10px 12px; font-size:11.5px; border:none; }
-        /* ensure header repeats on each printed page */
+        .print-sheet table { width:100%; border-collapse:separate; page-break-inside:auto; }
+        .print-sheet thead { display: table-header-group; } /* ensure repeating header */
+        .print-sheet tbody { display: table-row-group; }
+        .print-sheet tr { page-break-inside:avoid; page-break-after:auto; }
+        .print-sheet th { padding:12px 10px; font-size:12px; color:#fff; border:none; }
+        .print-sheet td { padding:10px 12px; font-size:11.5px; color:#000; border:none; }
+        /* Remove gridlines: no borders on cells */
+        .print-sheet td, .print-sheet th { border: none !important; }
+        /* Ensure header repeats */
         @media all {
-          .print-table thead { display: table-header-group; }
-          .print-table tbody { display: table-row-group; }
+          .print-sheet thead { display: table-header-group; }
+          .print-sheet tbody { display: table-row-group; }
         }
       `;
-      printable.prepend(style);
+      printable.prepend(styleEl);
 
       document.body.appendChild(printable);
 
@@ -1067,7 +1074,6 @@
         pagebreak: { mode: ['css', 'legacy'] }
       };
 
-      // Render to PDF. Because header is display:table-header-group it should repeat on each page.
       html2pdf().set(opt).from(printable).toPdf().get('pdf').then(function(pdf) {
         const totalPages = pdf.internal.getNumberOfPages();
         const pageWidth = pdf.internal.pageSize.getWidth();
@@ -1207,12 +1213,10 @@
     };
     document.getElementById('modalCustom').onclick = (e) => { if(e.target === document.getElementById('modalCustom')) document.getElementById('modalCustom').classList.remove('active'); };
 
-    // Download modal open
     document.getElementById('downloadBtn').onclick = () => {
       document.getElementById('modalDownload').classList.add('active');
       setTimeout(()=> document.getElementById('modalDownloadCsv').focus(), 120);
     };
-
     document.getElementById('modalDownloadCancel').onclick = () => document.getElementById('modalDownload').classList.remove('active');
     document.getElementById('modalDownloadCsv').onclick = () => {
       document.getElementById('modalDownload').classList.remove('active');
@@ -1222,6 +1226,8 @@
       document.getElementById('modalDownload').classList.remove('active');
       const groupedRows = getRows(currentMode);
       const selectedDriverName = selectedDriver === '__all' ? 'All drivers' : (allUsers[selectedDriver] && allUsers[selectedDriver].name) || '';
+      // Provide a mapping object for driver lookup by id -> object
+      // downloadReportPdf expects allUsers keyed by id or containing the matching name
       downloadReportPdf({
         selectedDriverName,
         allUsers,
@@ -1235,29 +1241,15 @@
 
     document.getElementById('createKm').onclick = () => window.location.href = 'kmtable.html';
 
-    // Logout: original (desktop)
-    document.getElementById('logoutHeader')?.addEventListener('click', () => {
+    document.getElementById('logoutHeader').onclick = () => {
       if(confirm('Logout?')){
         localStorage.removeItem('user');
         window.location.href = 'login.html';
       }
-    });
-    // Logout: mobile duplicate triggers same behavior
-    logoutMobile?.addEventListener('click', () => {
-      if(confirm('Logout?')){
-        localStorage.removeItem('user');
-        window.location.href = 'login.html';
-      }
-    });
+    };
 
-    // Download / Delete mobile duplicates
-    downloadMobile?.addEventListener('click', () => {
-      // open download modal same as desktop
-      document.getElementById('modalDownload').classList.add('active');
-      setTimeout(()=> document.getElementById('modalDownloadCsv').focus(), 120);
-    });
-    deleteMobile?.addEventListener('click', () => {
-      // trigger same delete all action as desktop
+    // Delete All shown rows button - ask confirmation and delete only currently filtered rows
+    deleteAllBtn.onclick = () => {
       const grouped = getRows(currentMode);
       const flattened = grouped.flatMap(g => g.logs);
       if(flattened.length === 0){ alert('No rows to delete for the current filter/mode'); return; }
@@ -1270,43 +1262,119 @@
         }
         hideConfirm();
       }, 'Delete All', 'Cancel');
-    });
+    };
 
-    // Original desktop Download/Delete handlers
-    document.getElementById('downloadBtn')?.addEventListener('click', (e) => {
-      // already handled above with opening modal
-    });
-
-    deleteAllBtn?.addEventListener('click', () => {
-      const grouped = getRows(currentMode);
-      const flattened = grouped.flatMap(g => g.logs);
-      if(flattened.length === 0){ alert('No rows to delete for the current filter/mode'); return; }
-      showConfirm(`Delete ALL (${flattened.length}) shown records? This cannot be undone.`, async () => {
-        const ids = flattened.map(r => r.id).filter(Boolean);
-        const batchSize = 50;
-        for(let i=0;i<ids.length;i+=batchSize){
-          const batch = ids.slice(i, i+batchSize);
-          await Promise.all(batch.map(id => db.ref('logs/' + id).remove().catch(err => { console.error('Failed to remove', id, err); })));
-        }
-        hideConfirm();
-      }, 'Delete All', 'Cancel');
-    });
-
-    // re-render on resize and show/hide mobile table actions
-    function updateMobileVisibility() {
-      const isMobile = window.innerWidth <= 500;
-      const mobileTableActions = document.getElementById('mobileTableActions');
-      if (mobileTableActions) {
-        mobileTableActions.style.display = isMobile ? 'flex' : 'none';
+    // ---------- Mobile adjustments (only mobile behaviour changes) ----------
+    // We'll move the create button into header-right (beside logout) on mobile and make them equal size,
+    // and move download & delete buttons into a centered mobile container above the reports table.
+    const mobileThreshold = 500;
+    let mobileControlsContainer = null;
+    function ensureMobileControlsContainer(){
+      if(!mobileControlsContainer){
+        mobileControlsContainer = document.createElement('div');
+        mobileControlsContainer.className = 'mobile-table-controls';
       }
-      // ensure mobile-only/desktop-only elements respect classes (CSS handles display)
+      return mobileControlsContainer;
     }
+
+    function toMobileLayout(){
+      // move create button next to logout in header-right
+      try {
+        const create = document.getElementById('createKm');
+        const logout = document.getElementById('logoutHeader');
+        if(create && logout) {
+          // add mobile classes for equal sizing
+          create.classList.add('mobile-header-btn','mobile-header-create');
+          logout.classList.add('mobile-header-btn','mobile-header-logout');
+          // append into headerRight (ensure same line)
+          if(headerRight && !headerRight.contains(create)) headerRight.appendChild(create);
+          if(headerRight && !headerRight.contains(logout)) headerRight.appendChild(logout);
+        }
+      } catch(e){ console.error(e); }
+
+      // Move download and delete into table-top (centered)
+      try {
+        const download = document.getElementById('downloadBtn');
+        const del = document.getElementById('deleteAllBtn');
+        const container = ensureMobileControlsContainer();
+        // apply mobile btn classes
+        if(download) { download.classList.add('mobile-table-btn','download'); }
+        if(del) { del.classList.add('mobile-table-btn','delete'); }
+        if(download && !container.contains(download)) container.appendChild(download);
+        if(del && !container.contains(del)) container.appendChild(del);
+        // place container into tableTop (if not already)
+        const placeholder = document.getElementById('mobileTableControlsPlaceholder');
+        if(placeholder && !placeholder.contains(container)){
+          placeholder.appendChild(container);
+        }
+        // ensure container visible via CSS (handled in media queries)
+      } catch(e){ console.error(e); }
+    }
+
+    function toDesktopLayout(){
+      // restore create and logout to original places
+      try {
+        const create = document.getElementById('createKm');
+        const logout = document.getElementById('logoutHeader');
+        if(create){
+          create.classList.remove('mobile-header-btn','mobile-header-create');
+          if(ORIGINAL.createParent) {
+            if(ORIGINAL.createNext && ORIGINAL.createParent.contains(ORIGINAL.createNext)) ORIGINAL.createParent.insertBefore(create, ORIGINAL.createNext);
+            else ORIGINAL.createParent.appendChild(create);
+          }
+        }
+        if(logout){
+          logout.classList.remove('mobile-header-btn','mobile-header-logout');
+          if(ORIGINAL.logoutParent) {
+            if(ORIGINAL.logoutNext && ORIGINAL.logoutParent.contains(ORIGINAL.logoutNext)) ORIGINAL.logoutParent.insertBefore(logout, ORIGINAL.logoutNext);
+            else ORIGINAL.logoutParent.appendChild(logout);
+          }
+        }
+      } catch(e){ console.error(e); }
+
+      // restore download and delete to original places
+      try {
+        const download = document.getElementById('downloadBtn');
+        const del = document.getElementById('deleteAllBtn');
+        if(download){
+          download.classList.remove('mobile-table-btn','download');
+          if(ORIGINAL.downloadParent) {
+            if(ORIGINAL.downloadNext && ORIGINAL.downloadParent.contains(ORIGINAL.downloadNext)) ORIGINAL.downloadParent.insertBefore(download, ORIGINAL.downloadNext);
+            else ORIGINAL.downloadParent.appendChild(download);
+          }
+        }
+        if(del){
+          del.classList.remove('mobile-table-btn','delete');
+          if(ORIGINAL.deleteParent) {
+            if(ORIGINAL.deleteNext && ORIGINAL.deleteParent.contains(ORIGINAL.deleteNext)) ORIGINAL.deleteParent.insertBefore(del, ORIGINAL.deleteNext);
+            else ORIGINAL.deleteParent.appendChild(del);
+          }
+        }
+        // remove mobile container if present
+        if(mobileControlsContainer && mobileControlsContainer.parentElement) {
+          mobileControlsContainer.parentElement.removeChild(mobileControlsContainer);
+        }
+      } catch(e){ console.error(e); }
+    }
+
+    function updateLayoutForWidth(){
+      if(window.innerWidth <= mobileThreshold){
+        toMobileLayout();
+      } else {
+        toDesktopLayout();
+      }
+    }
+
     window.addEventListener('resize', () => {
-      clearTimeout(window._renderResizeTimer);
-      window._renderResizeTimer = setTimeout(() => {
-        updateMobileVisibility();
+      clearTimeout(window._mobileLayoutTimer);
+      window._mobileLayoutTimer = setTimeout(() => {
+        updateLayoutForWidth();
         renderReportsView();
       }, 120);
+    });
+
+    window.addEventListener('load', () => {
+      updateLayoutForWidth();
     });
 
     // ---------- Firebase listeners ----------
@@ -1329,7 +1397,6 @@
       driverSelect.value = selectedDriver;
       populateMonthModal();
       renderReportsView();
-      updateMobileVisibility();
     });
 
     db.ref('logs').on('value', snap => {
@@ -1342,8 +1409,8 @@
     (function init(){
       setActiveMode('daily');
       rowsPerPage = parseInt(document.getElementById('rowsPerPage').value,10) || 10;
-      // ensure mobile visibility updated initially
-      setTimeout(updateMobileVisibility, 60);
+      // ensure layout set
+      setTimeout(updateLayoutForWidth, 80);
     })();
   </script>
 </body>
