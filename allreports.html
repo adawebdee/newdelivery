@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>KM reports – Ravintola Tandoori Villa</title>
+  <title>All Drivers KM Reports – Ravintola Tandoori Villa</title>
 
   <!-- Fonts & Icons -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"/>
@@ -20,18 +20,17 @@
     :root{
       --main-bg: linear-gradient(135deg,#0d47a1 0%, #000 100%);
       --card-bg: #181c24;
-      --card-bg-2: #0f1626;
       --primary: #42a5f5;
       --primary-hover: #1976d2;
       --accent: #bbdefb;
       --muted: #98bcd9;
       --border: #212a40;
       --danger: #ff3b30;
+      --sheet-header: #373f6b;
       --gap: 16px;
       --radius: 12px;
-      --header-height: 64px; /* fixed header height */
+      --header-height: 64px;
     }
-
     html,body{
       margin:0; padding:0; box-sizing:border-box;
       min-height:100vh; width:100vw;
@@ -42,14 +41,14 @@
       overflow-x: hidden;
     }
 
-    /* fixed top header */
+    /* --- Top fixed header (from v5) --- */
     .top-header {
       position: fixed;
       top: 0;
       left: 0;
       right: 0;
       height: var(--header-height);
-      background: var(--card-bg-2);
+      background: #0f1626;
       border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
@@ -70,7 +69,7 @@
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
-      font-size: clamp(1rem, 3.5vw, 1.25rem); /* shrink if needed */
+      font-size: clamp(1rem, 3.5vw, 1.15rem);
       line-height:1;
       margin:0;
     }
@@ -102,19 +101,69 @@
       white-space:nowrap;
     }
 
-    /* Body container offset to account for fixed header */
-    .page-body {
-      padding-top: calc(var(--header-height) + 18px);
+    /* offset content for fixed header */
+    .container{
       max-width: 1600px;
       margin: 0 auto;
-      padding-left: max(1vw,9px);
-      padding-right: max(1vw,9px);
+      padding: calc(var(--header-height) + max(1vw, 9px)) max(1vw,9px) max(1vw,9px) max(1vw,9px);
       box-sizing: border-box;
+      width: 100%;
     }
 
-    /* Controls card (on mobile becomes a separate card) */
+    /* --- The rest of v4 CSS preserved unchanged --- */
+
+    .header{
+      background: var(--card-bg);
+      padding: 18px 20px 16px 20px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: 0 2px 12px rgba(66,165,245,0.06);
+      margin-bottom: 10px;
+      display: flex; flex-direction: column; align-items: flex-start; gap: 6px;
+    }
+    .page-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #fff;
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 1px;
+      line-height: 1.3;
+      flex-wrap: wrap;
+    }
+    .page-desc {
+      color: var(--accent);
+      opacity: 0.95;
+      font-weight: 500;
+      font-size:0.97rem;
+      padding-top:3px;
+      white-space: pre-line;
+      line-height: 1.45;
+      margin-bottom: 4px;
+      word-break: break-word;
+    }
+    /* header-right kept for compatibility with v4 JS (we'll add it to top-header right container) */
+    .header-right {
+      align-self: stretch;
+      width: 100%;
+      display: flex;
+      justify-content: flex-end;
+    }
+    #logoutHeader {
+      background: var(--danger);
+      border: none;
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 9px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 7px;
+      width: 100%;
+      font-size:1rem;
+      letter-spacing:.02em;
+    }
+    /* Controls area */
     .controls-area {
-      margin-top: 6px;
+      margin-top: var(--gap);
       display: flex;
       flex-direction: row;
       gap: 12px;
@@ -122,21 +171,6 @@
       justify-content: space-between;
       flex-wrap: wrap;
     }
-
-    .controls-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 12px;
-      width: 100%;
-      box-sizing: border-box;
-      display:flex;
-      gap:12px;
-      align-items:center;
-      justify-content:space-between;
-      flex-wrap:wrap;
-    }
-
     .controls-left {
       display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
       min-width: 0;
@@ -152,6 +186,9 @@
 
     select#rowsPerPage { background: #0f1522; min-width: 80px; }
     .controls-right { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+
+    .actions-top,
+    .actions-bottom { display: flex; gap: 8px; align-items: center; flex-wrap:nowrap; }
 
     .btn {
       background: linear-gradient(90deg,var(--primary),var(--primary-hover));
@@ -180,6 +217,7 @@
       display:flex; align-items:center; justify-content:space-between;
       border:1px solid var(--border);
       width: 100%;
+      max-width: 100vw;
       box-sizing: border-box;
     }
     .driver-header .left { font-weight:800; font-size:1.13rem; color:#fff; }
@@ -189,15 +227,15 @@
       margin-top: 14px;
       background: var(--card-bg);
       border-radius: var(--radius);
-      padding: 0;
+      padding: 0; /* for responsive full width */
       border:1px solid var(--border);
       overflow:hidden;
       width:100%;
-      box-sizing: border-box;
+      max-width: 100vw;
     }
     .table-top {
       display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:6px;
-      padding: 12px 22px 8px 22px;
+      padding: 12px 22px 2px 22px;
       background: rgba(255,255,255,0.01);
       border-radius: 0;
       width:100%;
@@ -213,9 +251,11 @@
       background: var(--card-bg);
       padding: 0 3vw 3vw 3vw;
       box-sizing: border-box;
-      -webkit-overflow-scrolling: touch;
+      -webkit-overflow-scrolling: touch; /* smooth scrolling on mobile */
+      /* allow scroll horizontally but flush with sides on mobile */
     }
 
+    /* modern full-width table style */
     table.driver-report-table {
       width:100%;
       min-width:900px;
@@ -231,9 +271,8 @@
       color: var(--muted);
       padding: 10px 10px; text-align: center;
       font-weight:800; font-size:1.01rem;
-      position: sticky; top: 0; z-index: 2;
+      position: sticky; top: 0; z-index: 1;
       border-bottom:1.5px solid var(--border);
-      white-space:nowrap;
     }
     .driver-report-table tbody td {
       padding: 10px 10px; color:#eaf6ff;
@@ -246,64 +285,124 @@
 
     .small-muted { color:var(--muted); font-weight:600; font-size:0.92rem; }
 
-    /* Mobile specific customizations requested */
+    /* Responsive full width and padding on sides for mobile/tablet */
+    @media (max-width:1100px) {
+      .container { max-width: none; width: 100vw; padding-left: 2vw; padding-right: 2vw; }
+      .table-wrap, .driver-header { border-radius:10px;}
+      .scroll-area { padding:0 1vw 1vw 1vw;}
+    }
     @media (max-width:900px) {
-      .controls-card { padding:10px; }
+      .header{padding:14px 6vw 12px 6vw;}
+      .table-top {padding: 7px 3vw 1px 3vw;}
+      .driver-header {padding:13px 2vw;}
+      .scroll-area {padding: 0 .7vw 1vw .7vw;}
+      .container { max-width:none; width: 100vw; padding-bottom:40px;}
     }
-    @media (max-width:500px) {
-      /* Header: keep fixed, single line, small logout on the right */
-      .top-sub { font-size:0.72rem; }
-
-      /* Controls become a distinct card below header */
-      .controls-card {
-        background: #0f1626;
-        border: 1px solid var(--border);
-        box-shadow: 0 6px 18px rgba(0,0,0,0.6);
-        padding: 12px;
-        margin-top: 8px;
+    @media (max-width:650px) {
+      .header {
+        padding:12px 1.7vw 11px 1.7vw;
+        border-radius:10px; gap: 1px;
       }
-
-      /* Make page-body padding smaller on very small screens */
-      .page-body { padding-left: 10px; padding-right:10px; }
-
-      /* Mobile table controls placed above table and centered.
-         Order: create | download | delete (create left of download as requested).
-         Buttons equal size. */
-      .mobile-table-controls {
-        display:flex;
-        gap:10px;
-        justify-content:center;
-        align-items:center;
-        width:100%;
-        margin-top:8px;
+      .table-top,
+      .driver-header { padding:11px .7vw 3px .7vw;}
+      .scroll-area{padding-left:0.5vw; padding-right:0.5vw;}
+      .container { padding-top: calc(var(--header-height) + 12px); }
+    }
+    @media (max-width:500px){
+      .header,.container,.table-top, .driver-header, .table-wrap,.scroll-area {
+        padding-left:3px !important; padding-right:3px !important;
       }
-      .mobile-table-controls .mobile-btn {
-        flex: 1 1 110px;
-        min-width: 90px;
-        padding:8px 10px;
-        border-radius:9px;
-        font-weight:700;
-        text-align:center;
-      }
-      .mobile-create { background: linear-gradient(90deg,#33c37a,#159a54); color:#fff; border:none; }
-      .mobile-download { background: linear-gradient(90deg,var(--primary),var(--primary-hover)); color:#fff; border:none; }
-      .mobile-delete { background: linear-gradient(90deg,#ff5b5b,#c93535); color:#fff; border:none; }
-
-      /* hide desktop-only duplicate controls in actions bottom */
-      .actions-bottom button { display:none; }
-
-      /* Keep table scroll area padding comfortable */
-      .scroll-area { padding: 0 3vw 4vw 3vw; }
+      .container{padding-left:2px !important; padding-right:2px !important;}
     }
 
-    /* Print-specific tweaks: PDF styles are created on the fly in JS; keep UI unaffected */
+    /* Subheading multiline always */
+    .page-desc {
+      white-space: pre-line!important; overflow-wrap: break-word; word-break: break-word; display: block;
+    }
+    /* Move logout button under heading on all screens */
+    .header-right { width:100%; justify-content: flex-end; }
+    #logoutHeader { width:100%; margin-top:10px; }
+
+    /* Action icon buttons */
+    .action-delete, .action-edit {
+      min-width:44px; min-height:40px; display:inline-flex; align-items:center; justify-content:center;
+      border-radius:8px; cursor:pointer; border:1px solid transparent; background:transparent; color:inherit;
+      margin-right:1px; margin-left:1px;
+    }
+    .action-edit { border-color: rgba(66,165,245,0.22); color:var(--primary); }
+    .action-delete { border-color: rgba(255,59,48,0.22); color:var(--danger); }
+
+    .action-edit i, .action-delete i { font-size:15px; }
+
+    /* Modal background tweaks - always 100vw/100vh padded */
+    .modal-bg {
+      display:none; position:fixed; inset:0; z-index:9999; background: rgba(13,32,70,0.82);
+      align-items:center; justify-content:center; padding:16px; width:100vw;height:100vh;
+    }
+    .modal-bg.active { display:flex; }
+    .modal{
+      background: var(--card-bg);
+      padding:18px; border-radius:12px; border: 2px solid var(--primary);
+      min-width:320px; max-width:95vw; color:var(--accent); box-shadow: 0 8px 28px rgba(0,0,0,0.6);
+    }
+    .modal .title { font-weight:800; color:#fff; margin-bottom:8px; display:flex; align-items:center; gap:8px; }
+    .modal .controls { display:flex; gap:8px; justify-content:flex-end; margin-top:12px; }
+    .form-row { display:flex; gap:8px; margin-top:8px; align-items:center; }
+    .form-row label { min-width:80px; color:var(--muted); font-weight:700; font-size:0.9rem; }
+    .form-row input[type="text"], .form-row input[type="number"], .form-row input[type="date"], .form-row input[type="time"], select.modal-dark {
+      background:#0f1522; color:#fff; border:1px solid var(--border); padding:8px 10px; border-radius:8px; font-weight:700; width:100%;
+    }
+    select#modalMonthSelect.modal-dark { background:#0f1626; color:#fff; padding:10px; border-radius:8px; border:1px solid var(--border); }
+
+    /* Custom print table, using row/col separation for info */
+    .print-info {
+      width:100%; border-collapse:collapse; margin-bottom:12px; font-size:13px;
+    }
+    .print-info td {
+      padding:6px 8px; border:1px solid #ddd; color:#111; background: #f8fbfd;
+    }
+    .print-table {
+      width:100%;
+      border-collapse:collapse;
+      font-size:12px;
+    }
+    .print-table th, .print-table td {
+      padding:8px 10px; border:1px solid #ddd; text-align:center; color:#111;
+    }
+    .print-table thead th {background:#f0f3fb; color:#111; font-weight:800;}
+
+    /* PDF/print header repeat on new page; prevent row break */
+    .print-sheet table tr, .print-sheet table td, .print-sheet table th { page-break-inside: avoid; break-inside: avoid; }
+    .print-table thead { display: table-header-group; }
+    .print-table tbody { display: table-row-group; }
+    .print-table tr { page-break-inside:avoid; page-break-after:auto; }
+
+    /* Improved button sizes for mobile/tablet */
+    @media (max-width:900px) {
+      .btn, .mode-btn, select#driverSelect, select#rowsPerPage { font-size: 0.98rem !important; padding:9px 10px;}
+      .actions-bottom .btn { min-width:90px; }
+    }
+    @media (max-width:650px) {
+      .btn, .mode-btn, select#driverSelect, select#rowsPerPage { font-size: 0.94rem !important;}
+      .create-full { display:none; }
+      .create-short { display:inline-block; }
+    }
+
+    /* Small visual optimization: hide horizontal scrollbar in some browsers but keep scroll functionality */
+    .scroll-area::-webkit-scrollbar { height: 10px; }
+    .scroll-area::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.06); border-radius: 8px; }
+    .scroll-area::-webkit-scrollbar-track { background: transparent; }
+
+    /* Print-specific tweaks to ensure header repeats and the info block stays on top of each PDF page if small */
     @media print {
-      .top-header, .controls-card, .table-wrap { display:none !important; }
+      body { background: #fff; color:#111; }
+      .container, .header, .controls-area, .table-wrap, .driver-header { display: none !important; } /* hide UI in print, we use generated print sheet for PDF */
+      .print-sheet { display:block !important; }
     }
   </style>
 </head>
 <body>
-  <!-- Fixed header -->
+  <!-- TOP HEADER (v5 header inserted into v4 code) -->
   <header class="top-header" role="banner" aria-label="Top header">
     <div class="header-left" style="min-width:0;">
       <div style="display:flex;flex-direction:column;min-width:0;">
@@ -312,73 +411,61 @@
       </div>
     </div>
 
-    <div class="top-header-right">
+    <!-- keep class 'header-right' for v4 JS compatibility -->
+    <div class="top-header-right header-right">
       <button id="logoutHeader" class="top-logout" title="Logout (small)">Logout</button>
     </div>
   </header>
 
-  <!-- Main content (offset for fixed header) -->
-  <main class="page-body" id="appContainer">
-    <!-- Controls card (always full width card on mobile; on desktop it's still a normal area) -->
+  <div class="container" id="appContainer">
+    <!-- Keep entire v4 content intact below header (unchanged except header replaced above) -->
+
     <div class="controls-area">
-      <div class="controls-card" id="controlsCard">
-        <div class="controls-left">
-          <label class="small" for="driverSelect">Driver</label>
-          <select id="driverSelect" aria-label="Select driver">
-            <option value="__all">All drivers</option>
-          </select>
-
-          <label class="small" for="rowsPerPage">Per page</label>
-          <select id="rowsPerPage" class="rows-per-page" title="Rows per page">
-            <option value="5">5</option>
-            <option value="10" selected>10</option>
-            <option value="20">20</option>
-            <option value="50">50</option>
-          </select>
-
-          <div style="width:8px"></div>
-
-          <div class="modes" role="tablist" aria-label="Mode switch">
-            <button class="mode-btn active" id="dailyBtn" role="tab">Daily</button>
-            <button class="mode-btn" id="weeklyBtn" role="tab">Last 7 Days</button>
-            <button class="mode-btn" id="monthlyBtn" role="tab">Monthly</button>
-            <button class="mode-btn" id="customBtn" role="tab">Custom</button>
-          </div>
+      <div class="controls-left">
+        <label class="small">Driver</label>
+        <select id="driverSelect" aria-label="Select driver">
+          <option value="__all">All drivers</option>
+        </select>
+        <label class="small">Per page</label>
+        <select id="rowsPerPage" class="rows-per-page" title="Rows per page">
+          <option value="5">5</option>
+          <option value="10" selected>10</option>
+          <option value="20">20</option>
+          <option value="50">50</option>
+        </select>
+        <div style="width:8px"></div>
+        <div class="modes" role="tablist" aria-label="Mode switch">
+          <button class="mode-btn active" id="dailyBtn" role="tab">Daily</button>
+          <button class="mode-btn" id="weeklyBtn" role="tab">Last 7 Days</button>
+          <button class="mode-btn" id="monthlyBtn" role="tab">Monthly</button>
+          <button class="mode-btn" id="customBtn" role="tab">Custom</button>
         </div>
-
-        <div class="controls-right">
-          <div class="actions-bottom" id="actionsBottom">
-            <!-- On desktop these are visible and unchanged -->
-            <button id="createKm" class="btn create-km" title="Create KM table">
-              <i class="fas fa-plus-circle"></i>
-              <span class="create-full">Create KM Table</span>
-              <span class="create-short">Create</span>
-            </button>
-            <button id="downloadBtn" class="btn" title="Download"><i class="fas fa-file-download"></i> Download</button>
-            <button id="deleteAllBtn" class="btn" title="Delete all shown rows" style="background:linear-gradient(90deg,#ff5b5b,#c93535);">
-              <i class="fas fa-trash-alt"></i> Delete All
-            </button>
-          </div>
+      </div>
+      <div class="controls-right" id="controlsRight">
+        <div class="actions-top" aria-hidden="true"></div>
+        <div class="actions-bottom">
+          <button id="createKm" class="btn create-km" title="Create KM table">
+            <i class="fas fa-plus-circle"></i>
+            <span class="create-full">Create KM Table</span>
+            <span class="create-short">Create</span>
+          </button>
+          <button id="downloadBtn" class="btn" title="Download"><i class="fas fa-file-download"></i> Download</button>
+          <button id="deleteAllBtn" class="btn" title="Delete all shown rows" style="background:linear-gradient(90deg,#ff5b5b,#c93535);">
+            <i class="fas fa-trash-alt"></i> Delete All
+          </button>
         </div>
       </div>
     </div>
 
-    <!-- driver header -->
     <div id="driverHeaderHolder"></div>
-
-    <!-- table area -->
-    <div class="table-wrap" id="tableWrap">
-      <div class="table-top" id="tableTop">
+    <div class="table-wrap">
+      <div class="table-top">
         <div id="tableMeta" class="tableMetaSmall">No data</div>
-
-        <!-- mobile-only controls area inserted here by JS when viewport <= mobile threshold -->
-        <div id="mobileTableControlsPlaceholder" style="display:flex;align-items:center;gap:8px;"></div>
-
-        <div class="pagination-top" id="paginationTop" aria-hidden="false"></div>
+        <div class="pagination-top" id="paginationTop"></div>
       </div>
-      <div class="scroll-area" id="tableScroll" aria-live="polite" aria-atomic="true"></div>
+      <div class="scroll-area" id="tableScroll"></div>
     </div>
-  </main>
+  </div>
 
   <!-- Month modal -->
   <div class="modal-bg" id="modalMonth">
@@ -393,7 +480,6 @@
       </div>
     </div>
   </div>
-
   <!-- Custom date modal -->
   <div class="modal-bg" id="modalCustom">
     <div class="modal" role="dialog" aria-modal="true">
@@ -412,7 +498,6 @@
       </div>
     </div>
   </div>
-
   <!-- Edit modal (per-row editing) -->
   <div class="modal-bg" id="modalEdit">
     <div class="modal" role="dialog" aria-modal="true">
@@ -444,7 +529,6 @@
       </div>
     </div>
   </div>
-
   <!-- Download modal -->
   <div class="modal-bg" id="modalDownload">
     <div class="modal" role="dialog" aria-modal="true">
@@ -458,7 +542,6 @@
       </div>
     </div>
   </div>
-
   <!-- Confirm modal (delete single and delete all) -->
   <div class="modal-bg" id="modalConfirm">
     <div class="modal" role="dialog" aria-modal="true">
@@ -515,10 +598,6 @@
     const modalMonth = document.getElementById('modalMonth');
     const modalMonthSelect = document.getElementById('modalMonthSelect');
     const deleteAllBtn = document.getElementById('deleteAllBtn');
-    const downloadBtn = document.getElementById('downloadBtn');
-    const createBtn = document.getElementById('createKm');
-    const mobilePlaceholder = document.getElementById('mobileTableControlsPlaceholder');
-    const logoutBtn = document.getElementById('logoutHeader');
 
     // helpers
     function pad2(n){ return String(n).padStart(2,'0'); }
@@ -636,7 +715,7 @@
       paginationTop.appendChild(next);
     }
 
-    // Render table (desktop/tablet/mobile - table scrolls horizontally when needed)
+    // Render desktop-style table; hides Driver column when a specific driver is selected
     function renderDesktop(logs) {
       const showDriverCol = (selectedDriver === "__all");
       totalPages = Math.max(1, Math.ceil(logs.length / rowsPerPage));
@@ -706,6 +785,7 @@
           if(logObj && (logObj.userId || logObj.name)) {
             name = (allUsers[logObj.userId] && allUsers[logObj.userId].name) || logObj.name || '';
           } else if(tr) {
+            // fallback: second cell might be driver if visible
             try { name = tr.children[1] ? tr.children[1].textContent : ''; } catch(e){}
           }
           showConfirm(`Delete log for <b>${escapeHtml(name)}</b>? This cannot be undone.`, async () => {
@@ -732,7 +812,7 @@
 
       renderDriverHeader(totalKm, periodText);
 
-      // Always render table view
+      // Always render desktop table view (full width table on all devices)
       renderDesktop(flattened);
     }
 
@@ -866,7 +946,6 @@
     }
 
     function downloadReportPdf({ selectedDriverName, allUsers, groupedRows, currentMode, currentMonth, filenamePrefix }) {
-      // Utility helpers local to PDF
       function pad2(n){ return String(n).padStart(2,'0'); }
       function toDisplayDateLocal(iso){
         if(!iso) return '';
@@ -876,11 +955,8 @@
       }
       function escapeHtmlLocal(s){ if(s==null) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
       function sumKmLocal(rows){ return rows.reduce((s,r)=> s + (parseInt(r.totalKm||(((Number(r.kmOut)||0)-(Number(r.kmIn)||0)).toString()),10)||0), 0); }
-
       const rows = (groupedRows || []).flatMap(g => g.logs || []);
       const totalKm = sumKmLocal(rows);
-
-      // compute period text as before
       let periodText = '';
       if(currentMode === 'daily'){ periodText = toDisplayDateLocal(todayISO()); }
       else if(currentMode === 'weekly'){ const t = todayISO(), f = addDays(t,-6); periodText = `${toDisplayDateLocal(f)} — ${toDisplayDateLocal(t)}`; }
@@ -893,99 +969,62 @@
         if(dates.length) periodText = `${toDisplayDateLocal(dates[dates.length-1])} — ${toDisplayDateLocal(dates[0])}`;
         else periodText = '—';
       }
-
       let driverObj = (selectedDriverName && allUsers)
         ? (Object.values(allUsers).find(u=>u.name===selectedDriverName) || allUsers[selectedDriverName] || {}) : {};
       if(selectedDriverName === "All drivers") driverObj = {};
 
-      const themeColor = '#1976d2';
-
-      // Build details box (without "Driver details" heading as requested)
-      const detailsHtml = `
-        <div style="width:100%;box-sizing:border-box;margin-bottom:14px;">
-          <div style="border-radius:8px;padding:12px 14px;background:#fff;border:1px solid #e0e0e0;color:#000;">
-            <div style="display:flex;flex-wrap:wrap;gap:8px;">
-              <div style="flex:1 1 40%;min-width:140px;"><strong>Name:</strong> ${escapeHtmlLocal(selectedDriverName || driverObj.name || "All drivers")}</div>
-              <div style="flex:1 1 30%;min-width:120px;"><strong>Car Reg#:</strong> ${escapeHtmlLocal(driverObj.car || '')}</div>
-              <div style="flex:1 1 30%;min-width:120px;"><strong>Total KM:</strong> ${escapeHtmlLocal(String(totalKm) + ' km')}</div>
-              <div style="flex-basis:100%;height:6px"></div>
-              <div style="flex:1 1 60%;min-width:160px;"><strong>Address:</strong> ${escapeHtmlLocal(driverObj.address || '')}</div>
-              <div style="flex:1 1 40%;min-width:120px;"><strong>Date selected:</strong> ${escapeHtmlLocal(periodText)}</div>
-            </div>
-          </div>
-        </div>
+      // Info table (with some style)
+      const infoHtml = `
+        <table class="print-info" style="font-size:13px;width:96%;max-width:650px;margin-bottom:12px;border-radius:8px;background:#f8fbfd;border:1.5px solid #dae9fc;">
+          <tr><td style="width:32%"><strong>Name</strong></td><td style="width:68%">${escapeHtmlLocal(selectedDriverName || driverObj.name || "All drivers")}</td></tr>
+          <tr><td><strong>Car Reg#</strong></td><td>${escapeHtmlLocal(driverObj.car || '')}</td></tr>
+          <tr><td><strong>Address</strong></td><td>${escapeHtmlLocal(driverObj.address || '')}</td></tr>
+          <tr><td><strong>Date selected</strong></td><td>${escapeHtmlLocal(periodText)}</td></tr>
+          <tr><td><strong>Total KM</strong></td><td>${escapeHtmlLocal(String(totalKm) + ' km')}</td></tr>
+        </table>
       `;
-
-      // Table header
-      let headerHtml = `<th style="background:${themeColor};color:#fff;padding:12px 10px;text-align:center;font-weight:700;">Date</th>`;
-      if(selectedDriverName === "All drivers") headerHtml += `<th style="background:${themeColor};color:#fff;padding:12px 10px;text-align:center;font-weight:700;">Driver</th>`;
-      headerHtml += `
-        <th style="background:${themeColor};color:#fff;padding:12px 10px;text-align:center;font-weight:700;">Km In</th>
-        <th style="background:${themeColor};color:#fff;padding:12px 10px;text-align:center;font-weight:700;">Km Out</th>
-        <th style="background:${themeColor};color:#fff;padding:12px 10px;text-align:center;font-weight:700;">Total KM</th>
-        <th style="background:${themeColor};color:#fff;padding:12px 10px;text-align:center;font-weight:700;">Time In</th>
-        <th style="background:${themeColor};color:#fff;padding:12px 10px;text-align:center;font-weight:700;">Time Out</th>
-      `;
-
-      const bodyRowsHtml = rows.map((r, idx) => {
-        const bg = idx % 2 === 0 ? '#ffffff' : '#f7fbff';
-        const driver = (allUsers[r.userId] && allUsers[r.userId].name) || r.name || '';
-        const kmIn = r.kmIn || '';
-        const kmOut = r.kmOut || '';
-        const total = r.totalKm !== undefined ? r.totalKm : ((Number(kmOut)||0) - (Number(kmIn)||0));
-        let row = `<tr style="background:${bg};">`;
-        row += `<td style="padding:10px 12px;text-align:center;border:none;color:#000;">${escapeHtmlLocal(toDisplayDateLocal(r.date))}</td>`;
-        if(selectedDriverName === "All drivers") row += `<td style="padding:10px 12px;text-align:center;border:none;color:#000;">${escapeHtmlLocal(driver)}</td>`;
-        row += `<td style="padding:10px 12px;text-align:center;border:none;color:#000;">${escapeHtmlLocal(kmIn)}</td>`;
-        row += `<td style="padding:10px 12px;text-align:center;border:none;color:#000;">${escapeHtmlLocal(kmOut)}</td>`;
-        row += `<td style="padding:10px 12px;text-align:center;border:none;color:#000;">${escapeHtmlLocal(String(total))}</td>`;
-        row += `<td style="padding:10px 12px;text-align:center;border:none;color:#000;">${escapeHtmlLocal(r.timeIn || '')}</td>`;
-        row += `<td style="padding:10px 12px;text-align:center;border:none;color:#000;">${escapeHtmlLocal(r.timeOut || '')}</td>`;
-        row += `</tr>`;
-        return row;
-      }).join('');
-
+      // Dynamic header
+      let tableHeaders = `<th>Date</th>`;
+      if(selectedDriverName === "All drivers") tableHeaders += `<th>Driver</th>`;
+      tableHeaders += `<th>Km In</th><th>Km Out</th><th>Total KM</th><th>Time In</th><th>Time Out</th>`;
       const tableHtml = `
-        <table style="width:100%;border-collapse:separate;margin-top:6px;">
-          <thead><tr>${headerHtml}</tr></thead>
-          <tbody>${bodyRowsHtml}</tbody>
+        <table class="print-table" id="printTable" role="table" aria-label="Report table" style="border-radius:8px;overflow:hidden;">
+          <thead><tr>${tableHeaders}</tr></thead>
+          <tbody>
+            ${rows.map((r) => {
+              const driver = (allUsers[r.userId] && allUsers[r.userId].name) || r.name || '';
+              const kmIn = r.kmIn || '';
+              const kmOut = r.kmOut || '';
+              const total = r.totalKm !== undefined ? r.totalKm : ((Number(kmOut)||0) - (Number(kmIn)||0));
+              let rowHtml = `<td>${escapeHtmlLocal(toDisplayDateLocal(r.date))}</td>`;
+              if(selectedDriverName === "All drivers") rowHtml += `<td>${escapeHtmlLocal(driver)}</td>`;
+              rowHtml += `<td>${escapeHtmlLocal(kmIn)}</td><td>${escapeHtmlLocal(kmOut)}</td>
+                <td>${escapeHtmlLocal(String(total))}</td>
+                <td>${escapeHtmlLocal(r.timeIn || '')}</td><td>${escapeHtmlLocal(r.timeOut || '')}</td>`;
+              return `<tr>${rowHtml}</tr>`;
+            }).join('')}
+          </tbody>
         </table>
       `;
 
-      // Build printable container
       const printable = document.createElement('div');
       printable.className = 'print-sheet';
       printable.style.boxSizing = 'border-box';
-      printable.style.padding = "18px";
-      printable.style.background = "#fff";
-      printable.style.color = "#000";
-      printable.style.fontFamily = "Arial, Helvetica, sans-serif";
-      printable.innerHTML = `
-        <div style="width:100%;margin-bottom:12px;">
-          <div style="font-weight:800;font-size:18px;color:#111;margin-bottom:8px;">KM Reports</div>
-        </div>
-        ${detailsHtml}
-        <div style="height:10px"></div>
-        ${tableHtml}
-      `;
+      printable.style.padding = "16px 0 18px 0";
+      printable.innerHTML = `<div class="sheet-header">${infoHtml}</div>${tableHtml}`;
 
-      // Inject print-specific styles to ensure header repeats and no gridlines and consistent sizing
-      const styleEl = document.createElement('style');
-      styleEl.innerHTML = `
-        .print-sheet { padding:12px; color:#000; background:#fff; font-family: Arial, Helvetica, sans-serif; }
-        .print-sheet table { width:100%; border-collapse:separate; page-break-inside:auto; }
-        .print-sheet thead { display: table-header-group; }
-        .print-sheet tbody { display: table-row-group; }
-        .print-sheet tr { page-break-inside:avoid; page-break-after:auto; }
-        .print-sheet th { padding:12px 10px; font-size:12px; color:#fff; border:none; }
-        .print-sheet td { padding:10px 12px; font-size:11.5px; color:#000; border:none; }
-        .print-sheet td, .print-sheet th { border: none !important; }
-        @media all {
-          .print-sheet thead { display: table-header-group; }
-          .print-sheet tbody { display: table-row-group; }
-        }
+      const style = document.createElement('style');
+      style.innerHTML = `
+        .print-sheet { padding:12px; color:#111; background:#fff; }
+        .print-info td { border:1px solid #ccc; background:#f8fbfd; }
+        .print-table { width:100%; border-collapse:collapse; page-break-inside:auto; }
+        .print-table thead { display:table-header-group; }
+        .print-table tbody { display:table-row-group; }
+        .print-table tr { page-break-inside:avoid; page-break-after:auto; }
+        .print-table th,.print-table td { border:1px solid #bbb; padding:7px 8px; font-size:11.7px; color:#111;}
+        .print-table th { background:#e7f1fc; font-weight:800; text-align:center;}
       `;
-      printable.prepend(styleEl);
+      printable.prepend(style);
 
       document.body.appendChild(printable);
 
@@ -994,10 +1033,10 @@
                        (new Date()).toISOString().slice(0,10) + '.pdf';
 
       const opt = {
-        margin: [8, 6, 18, 6],
+        margin: [8, 5, 18, 5],
         filename: filename,
         image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true, logging: false },
+        html2canvas: { scale: 2, useCORS: true },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
         pagebreak: { mode: ['css', 'legacy'] }
       };
@@ -1154,6 +1193,8 @@
       document.getElementById('modalDownload').classList.remove('active');
       const groupedRows = getRows(currentMode);
       const selectedDriverName = selectedDriver === '__all' ? 'All drivers' : (allUsers[selectedDriver] && allUsers[selectedDriver].name) || '';
+      // Provide a mapping object for driver lookup by id -> object
+      // downloadReportPdf expects allUsers keyed by id or containing the matching name
       downloadReportPdf({
         selectedDriverName,
         allUsers,
@@ -1190,88 +1231,10 @@
       }, 'Delete All', 'Cancel');
     };
 
-    // ---------- Mobile behaviour: move create to mobile controls left of download and show a centered card of mobile controls ----------
-    const MOBILE_THRESHOLD = 500;
-    let mobileContainer = null;
-    function ensureMobileContainer(){
-      if(!mobileContainer){
-        mobileContainer = document.createElement('div');
-        mobileContainer.className = 'mobile-table-controls';
-      }
-      return mobileContainer;
-    }
-
-    function applyMobileControls(){
-      if(window.innerWidth > MOBILE_THRESHOLD) return restoreDesktopControls();
-
-      // create mobile container and place in placeholder
-      const cont = ensureMobileContainer();
-      // Prepare mobile versions of buttons (we reuse existing elements to keep logic)
-      // Order required: create | download | delete (create left of download)
-      if(createBtn) {
-        createBtn.classList.add('mobile-btn','mobile-create');
-        createBtn.style.display = ''; // ensure visible
-        // move into mobile container as first child
-        if(!cont.contains(createBtn)) cont.appendChild(createBtn);
-      }
-      if(downloadBtn) {
-        downloadBtn.classList.add('mobile-btn','mobile-download');
-        if(!cont.contains(downloadBtn)) cont.appendChild(downloadBtn);
-      }
-      if(deleteAllBtn) {
-        deleteAllBtn.classList.add('mobile-btn','mobile-delete');
-        if(!cont.contains(deleteAllBtn)) cont.appendChild(deleteAllBtn);
-      }
-
-      // hide desktop duplicates in actions bottom (CSS also hides, but keep structure clean)
-      // insert container into mobile placeholder
-      if(mobilePlaceholder && !mobilePlaceholder.contains(cont)){
-        mobilePlaceholder.appendChild(cont);
-      }
-    }
-
-    function restoreDesktopControls(){
-      // move buttons back into actionsBottom container (original desktop location)
-      const actionsBottom = document.getElementById('actionsBottom');
-      if(!actionsBottom) return;
-
-      // restore create
-      if(createBtn && !actionsBottom.contains(createBtn)){
-        createBtn.classList.remove('mobile-btn','mobile-create');
-        actionsBottom.insertBefore(createBtn, actionsBottom.firstChild || null);
-      }
-      // restore download
-      if(downloadBtn && !actionsBottom.contains(downloadBtn)){
-        downloadBtn.classList.remove('mobile-btn','mobile-download');
-        actionsBottom.appendChild(downloadBtn);
-      }
-      // restore delete
-      if(deleteAllBtn && !actionsBottom.contains(deleteAllBtn)){
-        deleteAllBtn.classList.remove('mobile-btn','mobile-delete');
-        actionsBottom.appendChild(deleteAllBtn);
-      }
-
-      // remove mobile container if present
-      if(mobileContainer && mobileContainer.parentElement){
-        try{ mobileContainer.parentElement.removeChild(mobileContainer); }catch(e){}
-      }
-    }
-
-    function updateMobileLayout(){
-      if(window.innerWidth <= MOBILE_THRESHOLD) applyMobileControls();
-      else restoreDesktopControls();
-    }
-
+    // re-render on resize
     window.addEventListener('resize', () => {
-      clearTimeout(window._mobileTimer);
-      window._mobileTimer = setTimeout(() => {
-        updateMobileLayout();
-        renderReportsView();
-      }, 120);
-    });
-
-    window.addEventListener('load', () => {
-      updateMobileLayout();
+      clearTimeout(window._renderResizeTimer);
+      window._renderResizeTimer = setTimeout(() => renderReportsView(), 120);
     });
 
     // ---------- Firebase listeners ----------
@@ -1306,7 +1269,6 @@
     (function init(){
       setActiveMode('daily');
       rowsPerPage = parseInt(document.getElementById('rowsPerPage').value,10) || 10;
-      setTimeout(updateMobileLayout, 80);
     })();
   </script>
 </body>
